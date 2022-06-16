@@ -4,6 +4,8 @@ import numpy as np
 import time
 import sys
 
+
+######## COMPOSITION DATA ORGANIZING FUNCTION ###########
 #Function takes the data from the composition input file and organizes it in a large array
 #The created list has seperate values that reresent the particles
 #within these nested lists will be the hash and mass of the particles
@@ -18,18 +20,20 @@ def organize_compositions(init_compositions):
                 particle_data.append(int(line[i]))
             if i ==1: #Second value in each line is the particle mass so that'll automatically be added to the particle data list
                 particle_data.append(float(line[i]))
-            if i >= 2:
-                if line[i] != '&':
-                    layer_comp.append(float(line[i]))
-                if line[i] == '&':
-                    particle_data.append(layer_comp)
-                    layer_comp = []
-                if i == len(line)-1:
-                    particle_data.append(layer_comp)
-                    layer_comp = []
-        compositions.append(particle_data)
+            if i >= 2: #goes to the composition and layer parts of the particle
+                if line[i] != '&': #if it's a composition value
+                    layer_comp.append(float(line[i])) #add that to the layer list
+                if line[i] == '&': #if it reaches a delimiter between layers
+                    particle_data.append(layer_comp) #add the current layer to the data for the particle
+                    layer_comp = [] #reset the list for the next layer
+                if i == len(line)-1: #if it reaches the last composition value
+                    particle_data.append(layer_comp) #add the final layer to the particle list
+                    layer_comp = [] #reset the list for the next layer in next particle
+        compositions.append(particle_data) #add all the data about the particle to the compositions list
         
     return(compositions)
+    
+    
 
 start_time = time.time() #Timer to see how long running this code takes
 
@@ -39,7 +43,6 @@ def track_composition(): #Main function that gives the compositions that will be
     f = open("/Users/nferich/GitHub/REBOUND_fragmentation/test_case/mantle_stripping_input.txt", 'r')
     init_compositions = [line.split() for line in f.readlines()] #reads each line in file and splits its value into an array (hash - mass - composition fractions) (all values are strings)
     compositions = organize_compositions(init_compositions) #organzies the data from the file
-    
     for line in compositions: #loops through each particle in the array
         if sum([sum(x) for x in line[2:]]) != 1.0: #makes sure composition fractions add up to one for each particle (uses second value in list and onwards)
             print ('ERROR: Realative abundances do not add up to 1.0')
@@ -62,6 +65,7 @@ def track_composition(): #Main function that gives the compositions that will be
         collision_type = int(block[1]) #type of collision is second
         if collision_type == 0: #This is just an elastic bounce so it just continues to the next set of collision data in the blocks list
             continue
+
         target_hash = int(block[2]) #hash of the target
         target_mass = float(block[3]) #mass of the target after collision
         projectile_hash = int(block[4]) #hash of projectile
@@ -74,24 +78,123 @@ def track_composition(): #Main function that gives the compositions that will be
         no_frags = int((len(block)-5)/2) #gives number of frags formed in collision - gets rid of 5 values from length which are basically about the collision type and target and projectile then divides in half since the list contains both the fragment hash and its mass
         frag_hashes = [int(block[i*2+3]) for i in range(1,no_frags+1)] #list of the hashes of the fragments - jumps from hash to hash using (i*2+3) - range length uses no_frags variable to get the correct amount of hashes
         frag_masses = [float(block[i*2+4]) for i in range(1,no_frags+1)]#same thing as above except for a list of the fragment masses 
-        
+        frag_mass = frag_masses[0]
+          
+                                               
+ ######################## PERFECT MERGER ##########################
         if collision_type == 1: #perfect merger
             for i in range(no_layers): #index for each layer in target - (will change this once time dependence goes in)
                 for j in range(len(last_target_abundances[i])): #index for how many elements are in a specific layer in target
                     compositions[targ_idx][i+2][j] = (float(last_target_abundances[i][j])*last_target_mass+float(last_projectile_abundances[i][j])*last_proj_mass)/target_mass #changes the composition fraction for each specie in the target - basically weighted average of initial target compoisition and mass with the projectile mcomposition and mass
-
+ 
+ ####################### PARTIAL ACCRETION ######################
+   
         if collision_type == 2: #partial accretion
+           
             mass_accreted = target_mass-last_target_mass #change in mass of the target after the collision - this time mass is added to target
-            print(mass_accreted)
+            mass_loss_fractions = [.4, .6] #list inputted by user - tells what portion of the accreted mass comes from a certain layer of the projectile - first element is the innermost layer
+            layer_mass_accreted = [mass_accreted*i for i in mass_loss_fractions] #mass from a specific layer accreted by the target from the projectile 
+            
+            last_target_layer_abundances = []
+            last_projectile_layer_abundances = []
+            
+            #loop initializes the above two lists the correct dimensions
+            for i in range(no_layers):
+                zeroes = []
+                for j in range(len(last_target_abundances[i])):
+                    zeroes.append(0)
+                last_target_layer_abundances.append(zeroes)
+                last_projectile_layer_abundances.append(zeroes)
+                zeroes = []
+            
+            # This loop will change the two lists above into lists that describe the fractional make up of each individual layer instead of the entire body overall
+            for i in range(no_layers): 
+                for j in range(len(last_target_abundances[i])):
+                    last_target_layer_abundances[i][j] = last_target_abundances[i][j]/sum(last_target_abundances[i])
+                    last_projectile_layer_abundances[i][j] = last_projectile_abundances[i][j]/sum(last_projectile_abundances[i])  
+
+            for i in range(no_layers): #index for each layer in target - (will change this once time dependence goes in)
+                for j in range(len(last_target_abundances[i])): #index for how many elements are in a specific layer in target
+                    compositions[targ_idx][i+2][j]= ((float(last_target_abundances[i][j])*last_target_mass)+(last_projectile_layer_abundances[i][j]*layer_mass_accreted[i]))/target_mass #changes the compositional fraction of the element after the collision
+    
+            for j in range(no_frags):
+                frag_data = [frag_hashes[j], frag_masses[j]]+last_projectile_abundances #creates a list filled with the necessary data for the fragments to go into the compisitions array and the final output file - frags just given the composition of the projectile
+                compositions.append(frag_data)
+            
+            
+
+################# PARTIAL EROSION & SUPER-CATASTROPHIC ##################      
+                        
+        if collision_type == 3 or collision_type == 4: #partial errosion, target abundances stay the same
+            
+            mass_lost = last_target_mass-target_mass #change in mass of the target after the collision - this time mass is lost from target
+            mass_loss_fractions = [.4, .6] #list inputted by user - tells what portion of the accreted mass comes from a certain layer of the projectile - first element is the innermost layer
+            layer_mass_lost = [mass_lost*i for i in mass_loss_fractions] #mass from a specific layer eroded from the target
+            last_target_layer_abundances = []
+            last_projectile_layer_abundances = []
+            
+            #loop initializes the above two lists the correct dimensions
+            for i in range(no_layers):
+                zeroes = []
+                for j in range(len(last_target_abundances[i])):
+                    zeroes.append(0)
+                last_target_layer_abundances.append(zeroes)
+                last_projectile_layer_abundances.append(zeroes)
+                zeroes = [] 
+                
+             # This loop will change the two lists above into lists that describe the fractional make up of each individual layer instead of the entire body overall
+            for i in range(no_layers): 
+                for j in range(len(last_target_abundances[i])):
+                    last_target_layer_abundances[i][j] = last_target_abundances[i][j]/sum(last_target_abundances[i])
+                    last_projectile_layer_abundances[i][j] = last_projectile_abundances[i][j]/sum(last_projectile_abundances[i])  
+            
+            frag_abundances = []
+            
+            #goes through and creates the post-collision abundances for the fragments
+            for i in range(no_layers): 
+                layer = []
+                for j in range(len(last_target_abundances[i])):
+                    layer.append(((last_target_layer_abundances[i][j]*layer_mass_lost[i])+(last_projectile_abundances[i][j]*last_proj_mass))/(mass_lost+last_proj_mass))
+                frag_abundances.append(layer)
+            
+            #adds the necessary data about a fragment to a list and adds that 
+            for i in range(no_frags):
+                frag_data = [frag_hashes[i], frag_masses[i]]+frag_abundances
+                compositions.append(frag_data)
+                
+            
+        compositions[targ_idx][1] = target_mass #changes mass of target to its post-collision mass
+        
+        
+        
+        return(compositions)
+
+######## FILE WRITING FUNCTION ###########
+#output has same format as input file
+def write_output(compositions):
+    f = open("/Users/nferich/GitHub/REBOUND_fragmentation/test_case/mantle_stripping_output.txt", "w")
+    for body in compositions: #goes through each particle in compositions
+        for i in range(len(body)): #iterates over each index in the individual particle list
+            if i <=1: #these two indices are the particle's hash and mass
+                f.write(str(body[i]) + ' ')
+            else: #now goes to the composition lists for each layer
+                for comp in body[i]:#goes through each element in each layer
+                    f.write(str(comp)+ ' ')
+                if i != len(body)-1: #if this isn't the last layer
+                    f.write('& ')#add the delimiter that goes between layers
+                else:#when this is the last element
+                    f.write('\n')#go to a new line and to a new particle
+    f.close()
+        
+                    
 
 track_composition()
+write_output(track_composition())
 
 
 print("--- %s seconds ---" % (time.time() - start_time))
 
 
 
-
-###### EXTRA FUNCTIONS ######
 
 

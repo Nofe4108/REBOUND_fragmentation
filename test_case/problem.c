@@ -12,7 +12,7 @@
 //#################### FRAGMENTATION CODE ########################################
 
 
-double min_frag_mass = .001;
+double min_frag_mass = .1;
 int tot_no_frags = 0;  //if restarting a simulation this needs to be changed to the last number of frags in the simulation, otherwise new fragments added will rewrite exisiting frags
 
 
@@ -597,7 +597,7 @@ int main(int argc, char* argv[]){
         pa_body.vx = 4; pa_body.vy = 3; //vy can also be 0
         pa_body.m  = .2;
         pa_body.r  = 0.1;
-        reb_add(sim, pa_body);
+        //reb_add(sim, pa_body);
     }
     
     //Projectile that will cause elastic bounce with target - min frag mass .1
@@ -619,7 +619,7 @@ int main(int argc, char* argv[]){
         pe_body.vy = 70;
         pe_body.m  = 0.5;
         pe_body.r  = 0.01;
-        //reb_add(sim, pe_body);
+        reb_add(sim, pe_body);
     }
     
     //Projectile that will cause supercastostrophic collision with target .1-.01

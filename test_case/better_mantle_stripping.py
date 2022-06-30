@@ -55,12 +55,12 @@ def track_composition(): #Main function that gives the compositions that will be
     
     
   ############### MUST BE ENTERED BY USER #####################
-    no_species_in_layers = [1, 2] #gives a list that says how many species there are in each layer - INPUTTED BY USER
+    no_species_in_layers = [1, 2, 1] #gives a list that says how many species there are in each layer - INPUTTED BY USER
     diff_timescale = 1e6 #how long it takes for a layer to be differentiated
   ##########################################################
     
     no_species = sum(no_species_in_layers) #gives number of specie included in each layer - all lines in the input file must have the same number of elements so if an element in a certain body is 0 then it must be inputted as 0 and not left blank
-    no_layers = len(no_species_in_layers)#gives the number of layers that have been inputted - will remain constant
+    max_no_layers = len(no_species_in_layers)#gives the number of layers that have been inputted - will remain constant
      
     file = open("/Users/nferich/GitHub/REBOUND_fragmentation/test_case/collision_report.txt", 'r')
     blocks = file.read().split("\n")#pulls all the data out of the collision report - the list element for each collision is one big string 
@@ -80,55 +80,86 @@ def track_composition(): #Main function that gives the compositions that will be
         last_target_mass = float(compositions[targ_idx][1]) #gets the mass of target before collision - uses the targ_index variable to go to the right row
         last_proj_mass = float(compositions[proj_idx][1]) #same thing as above except for projectile
         last_target_abundances = compositions[targ_idx][-no_species:] #list of composition fractions for target before the collision - [-no.species:] -no.species means it goes back from the end of the list to the versy first composition fraction and the colon means it adds all values from the list past that into a list 
-        last_projectile_abundances = compositions[proj_idx][-no_species:] #same thing as above except for projectile
+        last_proj_abundances = compositions[proj_idx][-no_species:] #same thing as above except for projectile
         no_frags = int((len(block)-5)/2) #gives number of frags formed in collision - gets rid of 5 values from length which are basically about the collision type and target and projectile then divides in half since the list contains both the fragment hash and its mass
         frag_hashes = [int(block[i*2+3]) for i in range(1,no_frags+1)] #list of the hashes of the fragments - jumps from hash to hash using (i*2+3) - range length uses no_frags variable to get the correct amount of hashes
         frag_masses = [float(block[i*2+4]) for i in range(1,no_frags+1)]#same thing as above except for a list of the fragment masses 
+        targ_creation_time = compositions[targ_idx][2] #time in sim when target was created
+        proj_creation_time = compositions[proj_idx][2] #time in sim when projectile was created
+        targ_no_layers = compositions[targ_idx][3] #number of layers in target
+        proj_no_layers = compositions[proj_idx][3] #number of layers in projectile
+        
                                               
  ######################## PERFECT MERGER ##########################
          
         if collision_type == 1: #perfect merger
             for i in range(no_species): #index for each species in target 
-                    compositions[targ_idx][i+4] = (float(last_target_abundances[i])*last_target_mass+float(last_projectile_abundances[i])*last_proj_mass)/target_mass #changes the composition fraction for each specie in the target - basically weighted average of initial target compoisition and mass with the projectile mcomposition and mass
+                    compositions[targ_idx][i+4] = (float(last_target_abundances[i])*last_target_mass+float(last_proj_abundances[i])*last_proj_mass)/target_mass #changes the composition fraction for each specie in the target - basically weighted average of initial target compoisition and mass with the projectile mcomposition and mass
  
  ####################### PARTIAL ACCRETION ######################
    
         if collision_type == 2: #partial accretion
            
             mass_accreted = target_mass-last_target_mass #change in mass of the target after the collision - this time mass is added to target
-
-            if time - compositions[proj_idx][2] > diff_timescale and compositions[proj_idx][3] < no_layers: #if the projectile has been around longer than the differentiation timescale and isn't fully differentiated already
-                compositions[proj_idx][3] += math.floor((time - compositions[proj_idx][2])/diff_timescale) #add a number layers proportional to the floored integer of the age of the projectile divided by the differentiation timescale 
-                if compositions[proj_idx][3] > no_layers: #if the number of layers in the projectile is now over the max number
-                    compositions[proj_idx][3] = no_layers #change the number of layers to the max number
             
-            print(compositions)
+            time = 1.5e6
             
-            layer_mass_fractions = [sum(i) for i in last_projectile_abundances] #percentage of mass contained in each layer of projectile
+            #Following logic sees if the projectile has differentiated at all since its formation and the current collision it's a part of 
+            if time - proj_creation_time > diff_timescale and proj_no_layers < max_no_layers: #if the projectile has been around longer than the differentiation timescale and isn't fully differentiated already
+                proj_no_layers += math.floor((time - compositions[proj_idx][2])/diff_timescale) #add a number layers proportional to the floored integer of the age of the projectile divided by the differentiation timescale 
+                if proj_no_layers > max_no_layers: #if the number of layers in the projectile is now over the max number
+                    proj_no_layers = max_no_layers #change the number of layers to the max number
+            
+            layered_last_proj_abundances = [] #list that will contained the abundances of the projectile split into layers     
+            
+            #Following logic will split the abundances into a nested list where the sublists represent layers that the projectile has
+            layer = [] #holds a single layer before appending
+            comp_counter = 0 #this will keep track of the proper starting index for a new layer
+            for i in range(proj_no_layers): #for number of layers the projectile has
+                for j in range(no_species_in_layers[i]): #for the number of species that are supposed to be in a particular layer i 
+                    layer.append(last_proj_abundances[comp_counter+j]) #adds the proper element to the layer 
+                layered_last_proj_abundances.append(layer) #adds the completed layer to the layered abundance list
+                layer = [] #resets layer list for new layer
+                comp_counter += no_species_in_layers[i] #moves the starting index up to the next element in the abundances list
+            if proj_no_layers < max_no_layers: #if the number of layers in the projectile is less than the max numbers
+                remaining_composition = last_proj_abundances[comp_counter:] #creates a list filled with the remaining abundances that will just be placed in the top layer
+                for comp in remaining_composition: 
+                    layered_last_proj_abundances[-1].append(comp) #adds the remaining leftover elements to the topmost (which in the list is considered the rightmost) layer
+            
+            layer_mass_fractions = [sum(i) for i in layered_last_proj_abundances] #percentage of mass contained in each layer of projectile
             layer_mass_accreted = [mass_accreted*i for i in layer_mass_fractions] #mass from a specific layer accreted by the target from the projectile - directly proportional to the amount of mass contained in each layer
-            
-            
-            last_projectile_layer_abundances = []
+            print(layer_mass_accreted)
+            print(compositions)
+            projectile_relative_layer_abundances = []
             
             #loop initializes the list above to the correct dimensions
-            for i in range(no_layers):
+            for i in range(compositions[proj_idx][3]):
                 zeroes = []
-                for j in range(len(last_target_abundances[i])):
+                for j in range(len(layered_last_proj_abundances[i])):
                     zeroes.append(0)
-                last_projectile_layer_abundances.append(zeroes)
+                projectile_relative_layer_abundances.append(zeroes)
                 zeroes = []
             
-            # This loop will change the the list above into a list that describes the fractional make up of each individual layer instead of the entire body overall
-            for i in range(no_layers): 
-                for j in range(len(last_target_abundances[i])):
-                    if sum(last_projectile_abundances[i]) == 0: #if there's no mass in a layer
-                        last_projectile_layer_abundances[i][j] = 0 #then the relative abundances of that layer are just 0
+            # This logic will change the the list above into a list that describes the fractional make up of each individual layer instead of the entire body overall
+            for i in range(proj_no_layers): 
+                for j in range(len(layered_last_proj_abundances[i])):
+                    if sum(layered_last_proj_abundances[i]) == 0: #if there's no mass in a layer
+                        projectile_relative_layer_abundances[i][j] = 0 #then the relative abundances of that layer are just 0
                     else:
-                        last_projectile_layer_abundances[i][j] = last_projectile_abundances[i][j]/sum(last_projectile_abundances[i])  
-                    compositions[targ_idx][i+3][j] = ((float(last_target_abundances[i][j])*last_target_mass)+(last_projectile_layer_abundances[i][j]*layer_mass_accreted[i]))/target_mass #changes the compositional fraction of the element after the collision
+                        projectile_relative_layer_abundances[i][j] = layered_last_proj_abundances[i][j]/sum(layered_last_proj_abundances[i])  
+            
+            species_mass_accreted = [] #list will hold how much mass from each indicidual species was accreted by the target
+            
+            #This logic takes the list containing how much mass was accreted from each layer of the projectile and the list containing the abundances of each individual layer to figure out how much mass from each species the target gained
+            for i in range(proj_no_layers): #for number of layers in projectile
+                for j in range(len(projectile_relative_layer_abundances[i])): #for number of elements in each layer
+                    species_mass_accreted.append(layer_mass_accreted[i]*projectile_relative_layer_abundances[i][j]) #add the mass accreted for that particular species to the list
+            
+            for i in range(no_species):
+                compositions[targ_idx][i+4] = ((float(last_target_abundances[i])*last_target_mass)+(species_mass_accreted[i]))/target_mass #changes the compositional fraction of the element after the collision
 
             for j in range(no_frags):
-                frag_data = [frag_hashes[j], frag_masses[j], time]+last_projectile_abundances #creates a list filled with the necessary data for the fragments to go into the compisitions array and the final output file - frags just given the composition of the projectile
+                frag_data = [frag_hashes[j], frag_masses[j], time, proj_no_layers]+last_proj_abundances #creates a list filled with the necessary data for the fragments to go into the compisitions array and the final output file - frags just given the composition of the projectile
                 compositions.append(frag_data)
             
             #I don't think an error is necessary for this type of collision - covered by the error statement at the very end of the function
@@ -139,14 +170,14 @@ def track_composition(): #Main function that gives the compositions that will be
         if collision_type == 3 or collision_type == 4: #partial errosion, target abundances stay the same
             
             mass_lost = last_target_mass-target_mass #change in mass of the target after the collision - this time mass is lost from target
-            layer_mass_fractions = [sum(i) for i in last_projectile_abundances] #percentage of mass contained in each layer of projectile
+            layer_mass_fractions = [sum(i) for i in last_proj_abundances] #percentage of mass contained in each layer of projectile
             layer_mass_lost = [i*mass_accreted for i in layer_mass_fractions] #mass from a specific layer accreted by the target from the projectile - directly proportional to the amount of mass contained in each layer
 
             
             last_target_layer_abundances = []
             
             #loop initializes the list above to the correct dimensions
-            for i in range(no_layers):
+            for i in range(max_no_layers):
                 zeroes = []
                 for j in range(len(last_target_abundances[i])):
                     zeroes.append(0)
@@ -154,7 +185,7 @@ def track_composition(): #Main function that gives the compositions that will be
                 zeroes = [] 
                 
             # This loop will change the list above into list that describes the fractional make up of each individual layer instead of the entire body overall
-            for i in range(no_layers): 
+            for i in range(max_no_layers): 
                 for j in range(len(last_target_abundances[i])):
                     if sum(last_target_abundances[i]) == 0: #if the mass in a particular layer is 0
                         last_target_layer_abundances[i][j] = 0 #relative abundances in the layer are just 0
@@ -166,10 +197,10 @@ def track_composition(): #Main function that gives the compositions that will be
             frag_abundances = []
             
             #goes through and creates the post-collision abundances for the fragments
-            for i in range(no_layers): 
+            for i in range(max_no_layers): 
                 layer = []
                 for j in range(len(last_target_abundances[i])):
-                    layer.append(((last_target_layer_abundances[i][j]*layer_mass_lost[i])+(last_projectile_abundances[i][j]*last_proj_mass))/(mass_lost+last_proj_mass))
+                    layer.append(((last_target_layer_abundances[i][j]*layer_mass_lost[i])+(last_proj_abundances[i][j]*last_proj_mass))/(mass_lost+last_proj_mass))
                 frag_abundances.append(layer)
             
             

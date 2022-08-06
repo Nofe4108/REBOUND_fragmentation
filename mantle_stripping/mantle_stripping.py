@@ -33,7 +33,6 @@ def organize_compositions(init_compositions):
         
     return(compositions)
     
-    
 
 start_time = time.time() #Timer to see how long running this code takes
 
@@ -59,6 +58,8 @@ def track_composition(): #Main function that gives the compositions that will be
     file = open("/Users/nferich/GitHub/REBOUND_fragmentation/test_case/collision_report.txt", 'r')
     blocks = file.read().split("\n")#pulls all the data out of the collision report - the list element for each collision is one big string 
     blocks = [block for block in blocks if len(block) > 0] #gets rid of the empty string at the end of the list
+    
+    #START OF BIG LOOP
     for i in range(len(blocks)): #iterates through each value in blocks list - THIS IS A VERY BIG LOOP THAT CONTAINS ALL OF THE MASS TRANSFER DECISIONMAKING
         block = blocks[i].split() #seperates each long string full of the collision data into its own list to be parsed through
         time = float(block[0]) #time of collision is first value
@@ -79,6 +80,7 @@ def track_composition(): #Main function that gives the compositions that will be
         frag_hashes = [int(block[i*2+3]) for i in range(1,no_frags+1)] #list of the hashes of the fragments - jumps from hash to hash using (i*2+3) - range length uses no_frags variable to get the correct amount of hashes
         frag_masses = [float(block[i*2+4]) for i in range(1,no_frags+1)]#same thing as above except for a list of the fragment masses 
         frag_mass = frag_masses[0]
+
           
                                                
  ######################## PERFECT MERGER ##########################
@@ -92,8 +94,8 @@ def track_composition(): #Main function that gives the compositions that will be
         if collision_type == 2: #partial accretion
            
             mass_accreted = target_mass-last_target_mass #change in mass of the target after the collision - this time mass is added to target
-            mass_loss_fractions = [.4, .6] #list inputted by user - tells what portion of the accreted mass comes from a certain layer of the projectile - first element is the innermost layer
-            layer_mass_accreted = [mass_accreted*i for i in mass_loss_fractions] #mass from a specific layer accreted by the target from the projectile 
+            mass_accreted_fractions = [.4, .6] #list inputted by user - tells what portion of the accreted mass comes from a certain layer of the projectile - first element is the innermost layer
+            layer_mass_accreted = [mass_accreted*i for i in mass_accreted_fractions] #mass from a specific layer accreted by the target from the projectile 
             
             last_projectile_layer_abundances = []
             
@@ -105,15 +107,15 @@ def track_composition(): #Main function that gives the compositions that will be
                 last_projectile_layer_abundances.append(zeroes)
                 zeroes = []
             
-            # This loop will change the two lists above into lists that describe the fractional make up of each individual layer instead of the entire body overall
             for i in range(no_layers): 
                 for j in range(len(last_target_abundances[i])):
-                    last_projectile_layer_abundances[i][j] = last_projectile_abundances[i][j]/sum(last_projectile_abundances[i])  
+                    last_projectile_layer_abundances[i][j] = last_projectile_abundances[i][j]/sum(last_projectile_abundances[i]) #changes the the list above into a list that describes the fractional make up of each individual layer instead of the entire body overall
                     compositions[targ_idx][i+2][j]= ((float(last_target_abundances[i][j])*last_target_mass)+(last_projectile_layer_abundances[i][j]*layer_mass_accreted[i]))/target_mass #changes the compositional fraction of the element after the collision
     
             for j in range(no_frags):
                 frag_data = [frag_hashes[j], frag_masses[j]]+last_projectile_abundances #creates a list filled with the necessary data for the fragments to go into the compisitions array and the final output file - frags just given the composition of the projectile
                 compositions.append(frag_data)
+                
             
             #I don't think an error is necessary for this type of collision - covered by the error statement at the very end of the function
            

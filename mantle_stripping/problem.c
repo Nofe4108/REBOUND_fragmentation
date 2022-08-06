@@ -12,7 +12,7 @@
 //#################### FRAGMENTATION CODE ########################################
 
 
-double min_frag_mass = .001;
+double min_frag_mass = .01;
 int tot_no_frags = 0;  //if restarting a simulation this needs to be changed to the last number of frags in the simulation, otherwise new fragments added will rewrite exisiting frags
 
 
@@ -467,11 +467,19 @@ int reb_collision_resolve_fragment(struct reb_simulation* const r, struct reb_co
         Q_star = Q0;
     }
     double qratio = Q/Q_star;
-    if (qratio < 1.8){
-        Mlr = M_tot*(1.0-.5*qratio);
+    double qSC = 1.2645; //energy threshold for super-catastrophic collision - Reinhardt et al. (2022)
+    //if (qratio < 1.8){
+    if (qratio < qSC){
+        //Mlr = M_tot*(1.0-.5*qratio);
+        Mlr = M_tot*((.5*cos(.5*M_PI*qratio))+.5); //Reinhardt et al. (2022)
     }
     else{
-        Mlr = .1*M_tot*pow(qratio/1.8, -1.5);  //Chambers Eq.8
+        double eta = -8.1214;
+        double bM = .5*(cos(.5*M_PI*qSC)+1)/pow(qSC, eta);
+        printf( "%.5f\n", bM);
+        //Mlr = .1*M_tot*pow(qratio/1.8, -1.5);  //Chambers Eq.8
+        Mlr = M_tot*bM*pow(qratio, eta);  //Reinhardt et al. (2022)
+        printf( "%.30f\n", qratio);
     }
 
     double separation_distance = 4 * R_tot;  //seperation distance of fragments.  Should be userdefined but this is what chambers uses
@@ -597,7 +605,7 @@ int main(int argc, char* argv[]){
         pa_body.vx = 4; pa_body.vy = 3; //vy can also be 0
         pa_body.m  = .2;
         pa_body.r  = 0.1;
-        reb_add(sim, pa_body);
+        //reb_add(sim, pa_body);
     }
     
     //Projectile that will cause elastic bounce with target - min frag mass .1
@@ -619,26 +627,40 @@ int main(int argc, char* argv[]){
         pe_body.vy = 70;
         pe_body.m  = 0.5;
         pe_body.r  = 0.01;
-        //reb_add(sim, pe_body);
+        reb_add(sim, pe_body);
     }
     
     //Projectile that will cause supercastostrophic collision with target .1-.01
     {
         struct reb_particle sc_body = {0};
         sc_body.x  = -1; sc_body.y  = 0; sc_body.z  = 0;
-        sc_body.vx = 1000;
+        sc_body.vx = 65;
         sc_body.vy = 0;
         sc_body.m  = 0.5;
         sc_body.r  = 0.01;
         //reb_add(sim, sc_body);
     }
     
+    //Projectile that will cause a second partial accretion collision if added with the first partial accretion projectile - min frag mass .001
+    {
+        struct reb_particle pa_two_body = {0};
+        pa_two_body.x  = -3; pa_two_body.y  = 0; pa_two_body.z  = 0;
+        pa_two_body.vx = 4; pa_two_body.vy = 0; //vy can also be 0
+        pa_two_body.m  = .2;
+        pa_two_body.r  = 0.1;
+        //reb_add(sim, pa_two_body);
+    }
+    
     
     sim->particles[0].hash = 00;
     sim->particles[1].hash = 01;
+    //sim->particles[2].hash = 02;
 
     reb_move_to_com(sim);
     
     reb_integrate(sim, 2);
+    
+    float test = pow(2, 4);
+    printf( "%0.5f\n", test);
 }
 

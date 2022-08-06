@@ -81,7 +81,6 @@ def track_composition(): #Main function that gives the compositions that will be
         except:
             print ('ERROR: Negative value encountered at', time)
             sys.exit(1)"""
-    print(compositions)
             
     return compositions #will return the last composition value of all particles that were a part of the sim no matter if they last the whole time
 

@@ -1,18 +1,13 @@
-/**
- *
- * 
- *
- */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <math.h>
 #include "rebound.h"
 
-//#################### FRAGMENTATION CODE ########################################
 
 
-double min_frag_mass = .01;
+double min_frag_mass= 7.342e21/1.9885e30; //hundredth of the mass of the moon in units of Msun;
 int tot_no_frags = 0;  //if restarting a simulation this needs to be changed to the last number of frags in the simulation, otherwise new fragments added will rewrite exisiting frags
 
 
@@ -49,7 +44,7 @@ struct collision_params
     double xrel;
     int collision_type;
     int no_frags;
-};
+}; 
 
 
 void make_vector(double x1, double y1, double z1, double x2, double y2, double z2, double *x, double*y, double*z){   //Galilean transform
@@ -58,7 +53,7 @@ void make_vector(double x1, double y1, double z1, double x2, double y2, double z
     *z = z1-z2;
 }
 
-double get_dot(double x1, double y1, double z1, double x2, double y2, double z2){
+double get_dot(double x1, double y1, double z1, double x2, double y2, double z2){ 
     return (x1*x2)+(y1*y2)+(z1*z2);
         }  //return dot product of two vectors
 
@@ -113,12 +108,12 @@ void add_fragments(struct reb_simulation* const r, struct reb_collision c, struc
     }
 
     mxsum[0] = mxsum[0] + target->m*target->x;
-    mxsum[1] = mxsum[1] + target->m*target->y;
+    mxsum[1] = mxsum[1] + target->m*target->y;  
     mxsum[2] = mxsum[2] + target->m*target->z;
 
     mvsum[0] = mvsum[0] + target->m*target->vx;
-    mvsum[1] = mvsum[1] + target->m*target->vy;
-    mvsum[2] = mvsum[2] + target->m*target->vz;
+    mvsum[1] = mvsum[1] + target->m*target->vy; 
+    mvsum[2] = mvsum[2] + target->m*target->vz;         
     
     double theta_inc = (2.*M_PI)/new_bodies;
     
@@ -168,11 +163,11 @@ void add_fragments(struct reb_simulation* const r, struct reb_collision c, struc
         Slr1.hash = reb_hash(hash);
         printf("%s hash, mass:      %u %e\n", hash, Slr1.hash, Slr1.m);
         mxsum[0] += Slr1.m*Slr1.x;
-        mxsum[1] += Slr1.m*Slr1.y;
+        mxsum[1] += Slr1.m*Slr1.y;    
         mxsum[2] += Slr1.m*Slr1.z;
 
         mvsum[0] += Slr1.m*Slr1.vx;
-        mvsum[1] += Slr1.m*Slr1.vy;
+        mvsum[1] += Slr1.m*Slr1.vy;   
         mvsum[2] += Slr1.m*Slr1.vz;
         Slr1.lastcollision = r->t;
         reb_add(r, Slr1);
@@ -184,7 +179,7 @@ void add_fragments(struct reb_simulation* const r, struct reb_collision c, struc
     for (int i=(new_beginning_frag_index); i<(new_beginning_frag_index+no_frags); i++){          //add fragments
         struct reb_particle fragment = {0};
         int j = i - new_beginning_frag_index+1;
-        fragment.m = frag_mass;
+        fragment.m = frag_mass;                  
         fragment.x = com.x + params->separation_distance*(cos(theta_inc*j)*unit_vix + sin(theta_inc*j)*ox);
         fragment.y = com.y + params->separation_distance*(cos(theta_inc*j)*unit_viy + sin(theta_inc*j)*oy);
         fragment.z = com.z + params->separation_distance*(cos(theta_inc*j)*unit_viz + sin(theta_inc*j)*oz);
@@ -198,14 +193,14 @@ void add_fragments(struct reb_simulation* const r, struct reb_collision c, struc
         fragment.hash = reb_hash(hash);
         printf("%s hash, mass:      %u %e\n", hash, fragment.hash, fragment.m);
         mxsum[0] +=fragment.m*fragment.x;
-        mxsum[1] += fragment.m*fragment.y;
+        mxsum[1] += fragment.m*fragment.y;    
         mxsum[2] += fragment.m*fragment.z;
 
         mvsum[0] += fragment.m*fragment.vx;
-        mvsum[1] += fragment.m*fragment.vy;
+        mvsum[1] += fragment.m*fragment.vy;    
         mvsum[2] += fragment.m*fragment.vz;
 
-        reb_add(r, fragment);
+        reb_add(r, fragment); 
                                 }
     tot_no_frags += big_frags+no_frags;
 
@@ -218,14 +213,14 @@ void add_fragments(struct reb_simulation* const r, struct reb_collision c, struc
     double voff[3] = {com.vx - mvsum[0]/initial_mass, com.vy - mvsum[1]/initial_mass, com.vz - mvsum[2]/initial_mass};
 
 
-    target -> x +=  xoff[0]*target->m/initial_mass;
-    target -> y += xoff[1]*target->m/initial_mass;
-    target -> z += xoff[2]*target->m/initial_mass;
-    target -> vx += voff[0]*target->m/initial_mass;
-    target -> vy += voff[1]*target->m/initial_mass;
-    target -> vz += voff[2]*target->m/initial_mass;
+    target -> x +=  xoff[0]*target->m/initial_mass; 
+    target -> y += xoff[1]*target->m/initial_mass; 
+    target -> z += xoff[2]*target->m/initial_mass; 
+    target -> vx += voff[0]*target->m/initial_mass; 
+    target -> vy += voff[1]*target->m/initial_mass; 
+    target -> vz += voff[2]*target->m/initial_mass; 
 
-    for (int i=(tot_no_frags-new_bodies)+1; i<(tot_no_frags+1); i++){
+    for (int i=(tot_no_frags-new_bodies)+1; i<(tot_no_frags+1); i++){ 
         char frag[10];
         sprintf(frag, "FRAG%d", i);
         double mass_fraction = reb_get_particle_by_hash(r, reb_hash(frag))->m/initial_mass;
@@ -260,7 +255,7 @@ void merge(struct reb_simulation* const r, struct reb_collision c, struct collis
     pi->lastcollision = r->t;
 
 
-    return; //
+    return; // 
 }
 
 int hit_and_run(struct reb_simulation* const r, struct reb_collision c, struct collision_params *params){  //also includes partial accretion.  Mlr = M_target.  Projectile is erroded.
@@ -281,7 +276,7 @@ int hit_and_run(struct reb_simulation* const r, struct reb_collision c, struct c
         double A_interact = pow(projectile->r, 2)*((M_PI-(phi-sin(phi))/2.));  //Leinhardt Eq. 46;
         double L_interact = 2.*pow(pow(target->r,2)-(pow(target->r-params->l/2.,2)), .5);   //Leinhardt Eq. 47
         double beta = (A_interact*L_interact)/target->m;  //Chambers Eq. 11
-        double Rc1 = pow(3./(4.*M_PI*params->rho1)*(beta*target->m + projectile->m), 1./3.);
+        double Rc1 = pow(3./(4.*M_PI*params->rho1)*(beta*target->m + projectile->m), 1./3.); 
         double Q0 = .8*params->cstar*M_PI*params->rho1*r->G*pow(Rc1, 2);
         double gamma = (beta*target->m)/projectile->m;
         double Q_star = (pow(1+gamma, 2)/4*gamma)* Q0;
@@ -301,8 +296,8 @@ int hit_and_run(struct reb_simulation* const r, struct reb_collision c, struct c
         double v_crit = params->V_esc*(c1*zeta*fac + c2*zeta +c3*fac + c4);
 
         if (params->Vi <= v_crit){             //if impact velocity is low, the hit-and-run results in a merger.
-            printf("GRAZE AND MERGE\n");
-            params->collision_type = 1;
+            printf("GRAZE AND MERGE\n");  
+            params->collision_type = 1;          
             merge(r,c,params);
             return swap;
         }
@@ -332,14 +327,17 @@ int hit_and_run(struct reb_simulation* const r, struct reb_collision c, struct c
         }
     }
 
-void print_collision_array(struct reb_simulation* const r, struct reb_collision c, struct collision_params *params){
+void print_collision_array(struct reb_simulation* const r, struct reb_collision c, struct collision_params *params, double target_r, double projectile_r){
 //0=elastic bounce, 1=merger, 2=partial accretion, 3=partial erosion, 4=supercat
-    FILE* of = fopen("/Users/nferich/GitHub/REBOUND_fragmentation/test_case/collision_report.txt","a+");
+    FILE* of = fopen("/Users/nferich/GitHub/REBOUND_fragmentation/disk_simulations/collision_report.txt","a+");
     fprintf(of, "%e\t", r->t);
     fprintf(of, "%d\t", params->collision_type);
+    fprintf(of, "%e\t", params->b);
     fprintf(of, "%u\t", (r->particles[params->target].hash));
     fprintf(of, "%e\t", (r->particles[params->target].m));
+    fprintf(of, "%e\t", target_r);
     fprintf(of, "%u\t", (r->particles[params->projectile].hash));
+    fprintf(of, "%e\t", projectile_r);
     for(int i=(r->N - params->no_frags);i<r->N;i++){        //assuming Fragments are added to end of particle array
         fprintf(of, "%u\t", (r->particles[i].hash));
         fprintf(of, "%e\t", (r->particles[i].m));
@@ -389,7 +387,7 @@ struct collision_params* create_collision_params(){
 int reb_collision_resolve_fragment(struct reb_simulation* const r, struct reb_collision c){
     if (r->particles[c.p1].lastcollision==r->t || r->particles[c.p2].lastcollision==r->t) return 0;
     int i = c.p1;
-    int j = c.p2;
+    int j = c.p2; 
     if (i<j) return 0;      //only return one collision callback
 
     int swap = 2;
@@ -419,7 +417,7 @@ int reb_collision_resolve_fragment(struct reb_simulation* const r, struct reb_co
     double x2rel, xrel, v2rel, v2imp, Vi;
     double hx,hy,hz,h2,b;
     make_vector(particles[i].x, particles[i].y, particles[i].z, particles[j].x, particles[j].y, particles[j].z, &dx,&dy,&dz);  //find relative coordinates dx, dy,dz
-    x2rel = get_dot(dx,dy,dz,dx,dy,dz);
+    x2rel = get_dot(dx,dy,dz,dx,dy,dz); 
     make_vector(particles[i].vx, particles[i].vy, particles[i].vz, particles[j].vx, particles[j].vy, particles[j].vz, &Vix,&Viy,&Viz);  //find relative velocity
     v2rel = get_dot(Vix,Viy,Viz,Vix,Viy,Viz);
 
@@ -461,25 +459,17 @@ int reb_collision_resolve_fragment(struct reb_simulation* const r, struct reb_co
     if (G==39.476926421373 || G==1){rho1 = 1.684e6;}  //Msun/AU^3
     double Rc1 = pow((M_tot*3)/(4.*M_PI*rho1), 1./3.);  //Chambers Eq. 4, combined radius of target and projectile with constant density
     double Q0 = .8*cstar*M_PI*rho1*G*pow(Rc1,2);  //Chambers Eq. 3, critical value of impact energy for head-on collisions
-    double Q_star = pow(mu/alphamu, 1.5)*(pow(1+gamma, 2)/ (4*gamma))*Q0;  //Chambers Eq. 5, critical value for oblique or different mass collisons.
+    double Q_star = pow(mu/alphamu, 1.5)*(pow(1+gamma, 2)/ (4*gamma))*Q0;  //Chambers Eq. 5, critical value for oblique or different mass collisons.  
     if (alpha == 0.0){Q_star = 6364136223846793005.0;}
     if (b == 0 && imp_m == targ_m){
         Q_star = Q0;
     }
     double qratio = Q/Q_star;
-    double qSC = 1.2645; //energy threshold for super-catastrophic collision - Reinhardt et al. (2022)
-    //if (qratio < 1.8){
-    if (qratio < qSC){
-        //Mlr = M_tot*(1.0-.5*qratio);
-        Mlr = M_tot*((.5*cos(.5*M_PI*qratio))+.5); //Reinhardt et al. (2022)
+    if (qratio < 1.8){
+        Mlr = M_tot*(1.0-.5*qratio);
     }
     else{
-        double eta = -8.1214;
-        double bM = .5*(cos(.5*M_PI*qSC)+1)/pow(qSC, eta);
-        printf( "%.5f\n", bM);
-        //Mlr = .1*M_tot*pow(qratio/1.8, -1.5);  //Chambers Eq.8
-        Mlr = M_tot*bM*pow(qratio, eta);  //Reinhardt et al. (2022)
-        printf( "%.30f\n", qratio);
+        Mlr = .1*M_tot*pow(qratio/1.8, -1.5);  //Chambers Eq.8
     }
 
     double separation_distance = 4 * R_tot;  //seperation distance of fragments.  Should be userdefined but this is what chambers uses
@@ -525,10 +515,10 @@ int reb_collision_resolve_fragment(struct reb_simulation* const r, struct reb_co
             params->collision_type = 1;
             printf("EFFECTIVELY MERGED\n");
             merge(r,c,params);
-            print_collision_array(r,c,params);
+            print_collision_array(r,c,params, targ_r, imp_r);
             return swap;
                                              }
-        else{ // M_tot - params->Mlr >= min_frag_mass; fragments will be produced unless it is a graze and merge or elastic bounce
+        else{ // M_tot - params->Mlr >= min_frag_mass; fragments will be produced unless it is a graze and merge or elastic bounce 
             if (params->Mlr < targ_m){
                     if (params->Mlr <= 0.1*targ_m){
                         printf("SUPER-CATASTROPHIC\n");
@@ -546,7 +536,7 @@ int reb_collision_resolve_fragment(struct reb_simulation* const r, struct reb_co
                 else{  //if (params->Mlr >= targ_m)
                         if (b >= targ_r){  //Chambers Eq. 9, hit and run criteria, grazing regime
                             swap = hit_and_run(r,c,params);
-                                }
+                                } 
                         else{
                             printf("PARTIAL ACCRETION\n");
                             params->collision_type = 2;
@@ -557,110 +547,93 @@ int reb_collision_resolve_fragment(struct reb_simulation* const r, struct reb_co
         }
                                 
 
-print_collision_array(r,c,params);
+
+print_collision_array(r,c,params,targ_r, imp_r);
 return swap;
 }
 
+void heartbeat(struct reb_simulation* sim){
+    if (reb_output_check(sim, 100)){   //heartbeat is at every 100 years
+        reb_output_timing(sim, 0);
+        printf("Walltime(s) = %f \n", sim->walltime); 
+        }
+       }
 
-//################### SIMULATION CODE ######################################
 
 int main(int argc, char* argv[]){
+    char* filename = "simulationarchive.bin";
     struct reb_simulation* sim = reb_create_simulation();
-    // Setup constants
-    sim->integrator    = REB_INTEGRATOR_LEAPFROG;
-    sim->gravity    = REB_GRAVITY_BASIC;
-    sim->collision    = REB_COLLISION_DIRECT;
-    sim->collision_resolve = reb_collision_resolve_fragment;
-    sim->dt = 1e-4;
-    
+    sim->G                = 39.476926421373;   //units are now in AU, years, solar masses
+    sim->dt             = 0.003;               // initial timestep.  2% of innermost orbit
+    sim->integrator         = REB_INTEGRATOR_MERCURIUS;
+    sim->collision        = REB_COLLISION_DIRECT;
+    sim->collision_resolve     = reb_collision_resolve_fragment;        // Set function pointer for collision recording.
+    sim->heartbeat        = heartbeat;
+    sim->exit_max_distance = 100;  //remove particles that exceed 5 AU
+    sim->rand_seed = 4;
 
-    reb_configure_box(sim, 3.0, 10, 10, 10);
+
+
+    struct reb_particle star1 = {0};
+    star1.m = 1.;
+    star1.r = 0.01;    
+    star1.hash = reb_hash("STAR");
+    reb_add(sim, star1);
     
-    // Initial conditions
+    FILE* of_dmsi = fopen("/Users/nferich/GitHub/REBOUND_fragmentation/disk_simulations/disk_mantle_stripping_input.txt","a+");
+
+    double m,a,e,inc,Omega,omega,f; //Omega=longitude of ascending node, omega= argument of pericenter in RADIANS
+    double rho = 5.05e6; //3 g cm^-3
+    //double dust_mass = 5./333000.;
+    int no_mars_planetesimals = 25;
+    double m_mars = 6.4171e23/1.9885e30; //mass of mars in units of Msun
     
-    //Target particle at center
-    {
-        struct reb_particle target = {0};
-        target.x  = 0; target.y  = 0; target.z  = 0;
-        target.m  = 1;
-        target.r  = 1;
-        reb_add(sim, target);
+    for (int i=0;i<no_mars_planetesimals;i++){
+        double y = reb_random_uniform(sim,0,1.0);
+        double semi = 3.65*pow(y,1./.5)+.35;
+        struct reb_particle p = reb_tools_orbit_to_particle(sim->G, sim->particles[0], m=m_mars, a=semi, e=reb_random_uniform(sim,0.0,0.1), inc=reb_random_uniform(sim,0.0,0.5)*(M_PI/180), Omega=reb_random_uniform(sim,0.0,2*M_PI), omega=reb_random_uniform(sim,0.0,2*M_PI), f=reb_random_uniform(sim,0.0,2*M_PI));
+        p.r = 5*get_radii(p.m,rho); //Has an expansion factor
+        char hash[10];
+        sprintf(hash,"PL%d", i+1);
+        p.hash = reb_hash(hash);
+        reb_add(sim,p);
         
-    }
+        fprintf(of_dmsi, "%u\t", p.hash);
+        fprintf(of_dmsi, "%e\t", p.m);
+        fprintf(of_dmsi, "%e\t", 0.3); //core frac of body
+        fprintf(of_dmsi, "%e\t", 0.7); //mantle frac of body
+        fprintf(of_dmsi, "\n");
+         }
     
-    //Projectile that will merge with target
-    {
-        struct reb_particle merge_body = {0};
-        merge_body.x  = -1; merge_body.y  = 0; merge_body.z  = 0;
-        merge_body.vx = 0.5;
-        merge_body.m  = .2;
-        merge_body.r  = 0.1;
-        //reb_add(sim, merge_body);
-    }
+    int no_moon_planetesimals = 50;
+    double m_moon = 7.342e22/1.9885e30; //mass of moon in units of Msun
     
-    //Projectile that will cause partial accretion with target - min frag mass .001
-    {
-        struct reb_particle pa_body = {0};
-        pa_body.x  = -1; pa_body.y  = 0; pa_body.z  = 0;
-        pa_body.vx = 4; pa_body.vy = 3; //vy can also be 0
-        pa_body.m  = .2;
-        pa_body.r  = 0.1;
-        //reb_add(sim, pa_body);
-    }
+    for (int i=0;i<no_moon_planetesimals;i++){
+    double y = reb_random_uniform(sim,0,1.0);
+    double semi = 3.65*pow(y,1./.5)+.35;
+    struct reb_particle p = reb_tools_orbit_to_particle(sim->G, sim->particles[0], m=m_moon, a=semi, e=reb_random_uniform(sim,0.0,0.1), inc=reb_random_uniform(sim,0.0,0.5)*(M_PI/180), Omega=reb_random_uniform(sim,0.0,2*M_PI), omega=reb_random_uniform(sim,0.0,2*M_PI), f=reb_random_uniform(sim,0.0,2*M_PI));
+    p.r = 5*get_radii(p.m,rho); //Has an expansion factor
+    char hash[10];
+    sprintf(hash,"PL%d", i+1);
+    p.hash = reb_hash(hash);
+    reb_add(sim,p);
+        
+    fprintf(of_dmsi, "%u\t", p.hash);
+    fprintf(of_dmsi, "%e\t", p.m);
+    fprintf(of_dmsi, "%e\t", 0.3); //core frac of body
+    fprintf(of_dmsi, "%e\t", 0.7); //mantle frac of body
+    fprintf(of_dmsi, "\n");
+     }
     
-    //Projectile that will cause elastic bounce with target - min frag mass .1
-    {
-        struct reb_particle eb_body = {0};
-        eb_body.x  = -1; eb_body.y  = 0; eb_body.z  = 0;
-        eb_body.vx = .1;
-        eb_body.vy = 30;
-        eb_body.m  = 1;
-        eb_body.r  = .8;
-        //reb_add(sim, eb_body);
-    }
-    
-    //Projectile that will cause partial erosion with target - min frag mass .1-.01
-    {
-        struct reb_particle pe_body = {0};
-        pe_body.x  = -1; pe_body.y  = 0; pe_body.z  = 0;
-        pe_body.vx = 0.5;
-        pe_body.vy = 70;
-        pe_body.m  = 0.5;
-        pe_body.r  = 0.01;
-        reb_add(sim, pe_body);
-    }
-    
-    //Projectile that will cause supercastostrophic collision with target .1-.01
-    {
-        struct reb_particle sc_body = {0};
-        sc_body.x  = -1; sc_body.y  = 0; sc_body.z  = 0;
-        sc_body.vx = 65;
-        sc_body.vy = 0;
-        sc_body.m  = 0.5;
-        sc_body.r  = 0.01;
-        //reb_add(sim, sc_body);
-    }
-    
-    //Projectile that will cause a second partial accretion collision if added with the first partial accretion projectile - min frag mass .001
-    {
-        struct reb_particle pa_two_body = {0};
-        pa_two_body.x  = -3; pa_two_body.y  = 0; pa_two_body.z  = 0;
-        pa_two_body.vx = 4; pa_two_body.vy = 0; //vy can also be 0
-        pa_two_body.m  = .2;
-        pa_two_body.r  = 0.1;
-        //reb_add(sim, pa_two_body);
-    }
-    
-    
-    sim->particles[0].hash = 00;
-    sim->particles[1].hash = 01;
-    //sim->particles[2].hash = 02;
+    fclose(of_dmsi);
 
+    struct reb_particle Jup = reb_tools_orbit_to_particle(sim->G, sim->particles[0], m=9.543e-4, a=5.20349, e=0.048381, inc=0.365*(M_PI/180), Omega=0.0, omega=68.3155*(M_PI/180), f=227.0537*(M_PI/180));
+    Jup.r = get_radii(Jup.m, rho); 
+    Jup.hash = reb_hash("JUPITER");
+    reb_add(sim,Jup);
+    
     reb_move_to_com(sim);
     
-    reb_integrate(sim, 2);
-    
-    float test = pow(2, 4);
-    printf( "%0.5f\n", test);
+    reb_simulationarchive_automate_interval(sim,filename,1e5);
+    reb_integrate(sim, 1e3);
 }
-

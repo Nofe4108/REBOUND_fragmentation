@@ -1,0 +1,6 @@
+f = open("/Users/nferich/GitHub/REBOUND_fragmentation/mantle_stripping/disk_mantle_stripping_input.txt", "w")
+for body in compositions: #goes through each particle in compositions
+    for i in range(len(body)): #iterates over each index in the individual particle list
+        f.write(str(body[i]) + ' ')
+        f.write('\n')#go to a new line and to a new particle
+    f.close()

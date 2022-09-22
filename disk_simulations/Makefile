@@ -5,7 +5,7 @@ REB_DIR=/Users/nferich/GitHub/rebound
 all: librebound
 	@echo ""
 	@echo "Compiling problem file ..."
-	$(CC) -I /Users/nferich/GitHub/rebound/src/ -Wl,-rpath,./ $(OPT) $(PREDEF) mantle_stripping_frag.c -L. -lrebound $(LIB) -o rebound
+	$(CC) -I /Users/nferich/GitHub/rebound/src/ -Wl,-rpath,./ $(OPT) $(PREDEF) problem.c -L. -lrebound $(LIB) -o rebound
 	@echo ""
 	@echo "REBOUND compiled successfully."
 

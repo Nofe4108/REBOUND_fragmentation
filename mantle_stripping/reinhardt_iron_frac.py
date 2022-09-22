@@ -118,7 +118,7 @@ def track_composition(): #Main function that gives the compositions that will be
             frag_mantle_frac = 1 - frag_iron_frac
     
             for i in range(no_frags):
-                frag_data = [frag_hashes[i], frag_masses[i], frag_iron_frac, frag_mantle_frac] #creates a list filled with the necessary data for the fragments to go into the compisitions array and the final output file - frags just given the composition of the projectile
+                frag_data = [frag_hashes[i], frag_masses[i], frag_iron_frac, frag_mantle_frac] #creates a list filled with the necessary data for the fragments to go into the compositions array and the final output file - frags just given the composition of the projectile
                 compositions.append(frag_data)
         
             """mass_accreted = largest_remnant_mass-last_target_mass

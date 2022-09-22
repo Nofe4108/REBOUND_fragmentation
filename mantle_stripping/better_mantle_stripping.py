@@ -126,6 +126,28 @@ def track_composition(): #Main function that gives the compositions that will be
                     layered_last_proj_abundances[-1].append(comp) #adds the remaining leftover elements to the topmost (which in the list is considered the rightmost) layer
             
             proj_layer_mass_fractions = [sum(i) for i in layered_last_proj_abundances] #percentage of mass contained in each layer of projectile
+            
+            mass_accreted_single_frac = mass_accreted*((proj_no_layers**2)+proj_no_layers)/2 #Addition factorial of the number of layers currently in the projectile - will be used to determine mass lost from each layer - if 2 layers ratio will be 1 to 2 - if 3 layers ratio will be 1 to 2 to 3 - etc.
+            ideal_layer_mass_accreted = [mass_accreted_single_frac*(i+1) for i in range(proj_no_layers)] #the ideal amount of mass that would come from each layer in a collision - may not match up correctly
+            proj_layer_mass_accreted = [0 for i in range(proj_no_layers)]
+            
+            for i in range(proj_no_layers):
+                if ideal_layer_mass_accreted[i] > proj_layer_mass_fractions[i] and : #if there's not enough mass to take out of the layer
+                    leftover_mass = ideal_layer_mass_accreted[i] - proj_layer_mass_fractions[i]
+                elif
+                
+                else:
+                    proj_layer_mass_accreted[i] = ideal_layer_mass_accreted[i]
+                    
+                    
+                    
+            
+            proj_layer_mass_accreted = []
+            for i in range(proj_no_layers):
+                if i == proj_no_layers-1:
+                    for i in range()
+                
+            
             proj_layer_mass_accreted = [mass_accreted*i for i in proj_layer_mass_fractions] #mass from a specific layer accreted by the target from the projectile - directly proportional to the amount of mass contained in each layer
 
             proj_relative_layer_abundances = []

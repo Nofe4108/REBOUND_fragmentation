@@ -56,7 +56,7 @@ start_time = time.time() #Timer to see how long running this code takes
 
 ###### MAIN FUNCTION #########
 def track_composition(): #Main function that gives the compositions that will be outputted to the file
-    f = open("/Users/nferich/GitHub/REBOUND_fragmentation/mantle_stripping/iron_frac_input.txt", 'r')
+    f = open("/Users/nferich/GitHub/REBOUND_fragmentation/disk_simulations/disk_mantle_stripping_input.txt", 'r')
     init_compositions = [line.split() for line in f.readlines()] #reads each line in file and splits its value into an array (hash - mass - composition fractions) (all values are strings)
     compositions = organize_compositions(init_compositions) #organzies the data from the file
     for line in compositions: #loops through each particle in the array
@@ -70,7 +70,7 @@ def track_composition(): #Main function that gives the compositions that will be
         init_hashes = [x[0].value for x in init_compositions]
     
      
-    file = open("/Users/nferich/GitHub/REBOUND_fragmentation/mantle_stripping/collision_report.txt", 'r')
+    file = open("/Users/nferich/GitHub/REBOUND_fragmentation/disk_simulations/collision_report.txt", 'r')
     blocks = file.read().split("\n")#pulls all the data out of the collision report - the list element for each collision is one big string 
     blocks = [block for block in blocks if len(block) > 0] #gets rid of the empty string at the end of the list
     
@@ -112,17 +112,19 @@ def track_composition(): #Main function that gives the compositions that will be
                                                
  ######################## PERFECT MERGER ##########################
         if collision_type == 1: #perfect merger
+                
             compositions[targ_idx][2] = ((target_core_frac*target_mass)+(proj_core_frac*proj_mass))/largest_remnant_mass #changes the composition fraction for each specie in the target - basically weighted average of initial target compoisition and mass with the projectile composition and mass
             compositions[targ_idx][3] = 1 - compositions[targ_idx][2]
+            
  
  ####################### PARTIAL ACCRETION ######################
    
         if collision_type == 2: #partial accretion
         
             mass_accreted = largest_remnant_mass-target_mass #change in mass of the target after the collision - this time mass is added to target
-        
+ 
             min_core_collision_frac = 0.0 #minimum fraction of core material largest remnant gained in ejecta
-            max_core_collision_frac = 0.20 #maximum fraction of core material largest remnant gained in ejecta
+            max_core_collision_frac = 0.30 #maximum fraction of core material largest remnant gained in ejecta
             ejecta_core_frac = 0 #fraction of the accreted mass that is composed of core material (will depend on impact parameter)
             
             slope = (max_core_collision_frac-min_core_collision_frac)/(-2*proj_core_radius)
@@ -138,12 +140,12 @@ def track_composition(): #Main function that gives the compositions that will be
             elif impact_parameter <= min_impact_parameter: #if the impact parameter is small (usually means a more head-on impact)
                 ejecta_core_frac = max_core_collision_frac #most amount of core is lost because cross-section of target will fully intersect with core of projectile
             
-            
+
             ideal_mass_accreted= [(mass_accreted*ejecta_core_frac),(mass_accreted*(1-ejecta_core_frac))] #first is core mass, second if mantle mass - how much of each layer would ideally be accreted if the projectile has the right composition
             proj_layer_mass = [proj_mass*proj_core_frac, proj_mass*(1-proj_core_frac)] #how much mass is in each layer of projectile - core first, then mantle
             
             mass_accreted_fractions = [] #will hold the actual fractions of each layer that get accreted from the projectile
-            
+
             #these two loops make sure the correct amount of transferred mass is obtained from each layer - if there's not enough mass in a layer it takes the rest from the other layer
             if proj_layer_mass[0] >= ideal_mass_accreted[0]:
                 mass_accreted_fractions.append(ideal_mass_accreted[0])
@@ -157,23 +159,40 @@ def track_composition(): #Main function that gives the compositions that will be
                 mass_accreted_fractions.append(proj_layer_mass[1])
                 mass_accreted_fractions[0] += (ideal_mass_accreted[1]-proj_layer_mass[1])
                 
-           
             compositions[targ_idx][2] = ((target_mass*target_core_frac)+(mass_accreted_fractions[0]))/largest_remnant_mass
             compositions[targ_idx][3] = 1 - compositions[targ_idx][2]
-            
+
             total_core_mass = (target_core_frac*target_mass)+(proj_core_frac*proj_mass) #how much total iron mass there is between the target and projectile
             largest_remnant_core_mass = largest_remnant_mass*compositions[targ_idx][2] #how much iron mass got into the largest remnant
             total_frag_core_mass = total_core_mass - largest_remnant_core_mass #how much iron mass is now left over in the fragments
-            total_frag_mass = sum(frag_masses)
-
+            total_frag_mass = (target_mass+proj_mass) - largest_remnant_mass #total mass in fragments - THIS COULD CAUSE ERRORS MAYBE
             
             frag_core_frac = total_frag_core_mass/total_frag_mass #now gets the fraction of iron in each fragment by dividing the total fragment iron mass by the total fragment mass
+            
+            #If the frag_core_frac is just barely above 1 or just barely below 0, it will be rounded down to an even 1 or even 0
+            if frag_core_frac - 1 > 0 and frag_core_frac - 1 < 1e-8: 
+                frag_core_frac += 1.0 - frag_core_frac
+            if frag_core_frac < 0 and frag_core_frac > -1e-8:
+                frag_core_frac += 0.0 - frag_core_frac
+            
             frag_mantle_frac = 1 - frag_core_frac
-    
+            
+            #Error in case the fragments' core or mantle frac have a negative value
+            if frag_core_frac < 0 or frag_mantle_frac < 0: 
+                print ('ERROR: Negative value for fragment composition encountered at', time)
+                sys.exit(1)
+                
+                
             for i in range(no_frags):
                 frag_data = [frag_hashes[i], frag_masses[i], frag_core_frac, frag_mantle_frac] #creates a list filled with the necessary data for the fragments to go into the compositions array and the final output file - frags just given the composition of the projectile
+                
+                #Error in case a fragment has a negative mass
+                if frag_masses[i] < 0:
+                    print ('ERROR: Negative value for fragment mass encountered at', time)
+                    sys.exit(1)
+            
                 compositions.append(frag_data)
-           
+
 
 ################# PARTIAL EROSION & SUPER-CATASTROPHIC ##################      
                         
@@ -182,7 +201,7 @@ def track_composition(): #Main function that gives the compositions that will be
             mass_lost = target_mass-largest_remnant_mass #change in mass of the target after the collision - this time mass is lost from target
             
             min_core_collision_frac = 0.0 #minimum fraction of core material largest remnant lost in ejecta
-            max_core_collision_frac = 0.20 #maximum fraction of core material largest remnant lost in ejecta
+            max_core_collision_frac = 0.30 #maximum fraction of core material largest remnant lost in ejecta
             ejecta_core_frac = 0 #fraction of the eroded mass that is composed of core material (will depend on impact parameter)
             
             slope = (max_core_collision_frac-min_core_collision_frac)/(-2*target_core_radius)
@@ -223,13 +242,29 @@ def track_composition(): #Main function that gives the compositions that will be
             total_core_mass = (target_core_frac*target_mass)+(proj_core_frac*proj_mass) #how much total iron mass there is between the target and projectile
             largest_remnant_core_mass = largest_remnant_mass*compositions[targ_idx][2] #how much iron mass got into the largest remnant
             total_frag_core_mass = total_core_mass - largest_remnant_core_mass #how much iron mass is now left over in the fragments
-            total_frag_mass = sum(frag_masses)
+            total_frag_mass = (target_mass+proj_mass) - largest_remnant_mass #total mass in fragments - THIS COULD CAUSE ERRORS MAYBE
             
             frag_core_frac = total_frag_core_mass/total_frag_mass #now gets the fraction of iron in each fragment by dividing the total fragment iron mass by the total fragment mass
+            
+            #If the frag_core_frac is just barely above 1 or just barely below 0, it will be rounded down to an even 1 or even 0
+            if frag_core_frac - 1 > 0 and frag_core_frac - 1 < 1e-8: 
+                frag_core_frac += 1.0 - frag_core_frac
+            if frag_core_frac < 0 and frag_core_frac > -1e-8:
+                frag_core_frac += 0.0 - frag_core_frac
+            
             frag_mantle_frac = 1 - frag_core_frac
-    
+            
+            #Error in case the fragments' core or mantle frac have a negative value
+            if frag_core_frac < 0 or frag_mantle_frac < 0: 
+                print ('ERROR: Negative value for fragment composition encountered at', time)
+                sys.exit(1)
+            
             for i in range(no_frags):
                 frag_data = [frag_hashes[i], frag_masses[i], frag_core_frac, frag_mantle_frac] #creates a list filled with the necessary data for the fragments to go into the compositions array and the final output file - frags just given the composition of the projectile
+                #Error in case a fragment has a negative mass
+                if frag_masses[i] < 0:
+                    print ('ERROR: Negative value for fragment mass encountered at', time)
+                    sys.exit(1)
                 compositions.append(frag_data)
                 
             
@@ -243,6 +278,9 @@ def track_composition(): #Main function that gives the compositions that will be
                 break
             else:
                 continue
+        
+        if collision_type == 1: #Does the same thing as loop above - specifically for a merger 
+            compositions.pop(proj_idx) #IMPORTANT CHANGE - removes projectile particle from the compositions list if it gets destroyed in collision
             
         
         #checks to see if any composition values in the target particle are negative
@@ -253,6 +291,7 @@ def track_composition(): #Main function that gives the compositions that will be
                     sys.exit(1)
             elif i > 1:
                 if compositions[targ_idx][i] < 0:
+                    print(compositions[targ_idx][i])
                     print ('ERROR: Negative value encountered in target data at', time)
                     sys.exit(1)
             

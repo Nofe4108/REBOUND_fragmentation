@@ -47,7 +47,7 @@ def calc_radius(mass, core_frac, mantle_density, core_radius):
 
 
 ###### MAIN FUNCTION #########
-f = open("/Users/nferich/GitHub/REBOUND_fragmentation/disk_simulations/disk_mantle_stripping_input.txt", 'r')
+f = open("/Users/nferich/GitHub/REBOUND_fragmentation/mantle_stripping/custom_mantle_stripping_output.txt", 'r')
 init_compositions = [line.split() for line in f.readlines()] #reads each line in file and splits its value into an array (hash - mass - composition fractions) (all values are strings)
 compositions = organize_compositions(init_compositions) #organzies the data from the file
 for line in compositions: #loops through each particle in the array
@@ -98,6 +98,7 @@ for i in range(len(blocks)): #iterates through each value in blocks list - THIS 
 fig1, ax1 = plt.subplots()
 ax1.barh(collision_types, no_collisions)
 
+plt.savefig('/Users/nferich/GitHub/REBOUND_fragmentation/disk_simulations/collision_type_bar_graph.pdf', bbox_inches='tight', pad_inches=1.25)
 
 fig2, ax2 = plt.subplots()
 ax2.scatter(final_masses, final_core_fracs, color = 'black')
@@ -106,12 +107,13 @@ ax2.axvline((6.4171e23/1.9885e30)*334672.021419, label = 'Initial Embryo Mass', 
 ax2.axvline((7.342e22/1.9885e30)*334672.021419, label = 'Initial Planetesimal Mass', color = 'tab:green', linestyle = '--', alpha=.7)
 ax2.set_xlabel('Mass ($M_{\u2295}$)',fontsize='large')
 ax2.set_ylabel("Core Fraction", fontsize='large')
+plt.xscale('log')
 plt.grid()
 plt.legend()
 
 
 #plt.show()
 
-plt.savefig('/Users/nferich/GitHub/REBOUND_fragmentation/disk_simulations/collision_type_bar_graph.pdf', bbox_inches='tight', pad_inches=1.25)
+
 plt.savefig('/Users/nferich/GitHub/REBOUND_fragmentation/disk_simulations/final_core_fracs.pdf', bbox_inches='tight', pad_inches=1.25)
 

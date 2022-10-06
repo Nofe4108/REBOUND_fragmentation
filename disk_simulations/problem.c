@@ -7,7 +7,7 @@
 
 
 
-double min_frag_mass= 7.342e21/1.9885e30; //hundredth of the mass of the moon in units of Msun;
+double min_frag_mass= 7.342e21/1.9885e30; //tenth of the mass of the moon in units of Msun;
 int tot_no_frags = 0;  //if restarting a simulation this needs to be changed to the last number of frags in the simulation, otherwise new fragments added will rewrite exisiting frags
 
 
@@ -570,7 +570,7 @@ int main(int argc, char* argv[]){
     sim->collision_resolve     = reb_collision_resolve_fragment;        // Set function pointer for collision recording.
     sim->heartbeat        = heartbeat;
     sim->exit_max_distance = 100;  //remove particles that exceed 5 AU
-    sim->rand_seed = 4;
+    sim->rand_seed = 6;
 
 
 
@@ -605,7 +605,7 @@ int main(int argc, char* argv[]){
         fprintf(of_dmsi, "\n");
          }
     
-    int no_moon_planetesimals = 50;
+    int no_moon_planetesimals = 125;
     double m_moon = 7.342e22/1.9885e30; //mass of moon in units of Msun
     
     for (int i=0;i<no_moon_planetesimals;i++){
@@ -614,7 +614,7 @@ int main(int argc, char* argv[]){
     struct reb_particle p = reb_tools_orbit_to_particle(sim->G, sim->particles[0], m=m_moon, a=semi, e=reb_random_uniform(sim,0.0,0.1), inc=reb_random_uniform(sim,0.0,0.5)*(M_PI/180), Omega=reb_random_uniform(sim,0.0,2*M_PI), omega=reb_random_uniform(sim,0.0,2*M_PI), f=reb_random_uniform(sim,0.0,2*M_PI));
     p.r = 5*get_radii(p.m,rho); //Has an expansion factor
     char hash[10];
-    sprintf(hash,"PL%d", i+1);
+    sprintf(hash,"PL%d", i+1+no_mars_planetesimals);
     p.hash = reb_hash(hash);
     reb_add(sim,p);
         
@@ -635,5 +635,5 @@ int main(int argc, char* argv[]){
     reb_move_to_com(sim);
     
     reb_simulationarchive_automate_interval(sim,filename,1e5);
-    reb_integrate(sim, 1e3);
+    reb_integrate(sim, 10e3);
 }

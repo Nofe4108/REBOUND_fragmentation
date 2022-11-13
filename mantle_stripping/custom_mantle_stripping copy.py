@@ -62,8 +62,7 @@ def track_composition(): #Main function that gives the compositions that will be
     for line in compositions: #loops through each particle in the array
         if sum(line[2:]) != 1.0: #makes sure composition fractions add up to one for each particle (uses second value in list and onwards)
             print ('ERROR: Realative abundances do not add up to 1.0')
-            sys.exit(1)
-                
+            sys.exit(1)           
     try: 
         init_hashes = [int(x[0]) for x in init_compositions] 
     except:
@@ -90,6 +89,22 @@ def track_composition(): #Main function that gives the compositions that will be
         target_radius = float(block[5]) #radius of target before collision
         proj_hash = int(block[6]) #hash of projectile
         proj_radius = float(block[7]) #radius of projectile before collision
+        
+        #FIXME: This section is here in case a projectile collides with the star - make this better
+        star_collision = 1
+        for i in range(len(compositions)):
+            if target_hash==compositions[i][0]:
+                star_collision+= -1
+                break
+
+        if star_collision==1:
+            destroyed_object_hashes.append(proj_hash)
+            continue
+                
+            
+        #for i in range(len(compositions)):
+            #if int(compositions[i][0])==target_hash:
+                #print(i)
         targ_idx = [i for i in range(len(compositions)) if int(compositions[i][0])==target_hash][0] #this searches through the compositions array to see where the target hash matches up with a hash in the array - variable saves this index so it can go right to the correct row for the target in the compositions array during future oprations
         proj_idx = [i for i in range(len(compositions)) if int(compositions[i][0])==proj_hash][0]  #same thing as above except for projectile
         target_mass = float(compositions[targ_idx][1]) #gets the mass of target before collision - uses the targ_index variable to go to the right row
@@ -126,7 +141,7 @@ def track_composition(): #Main function that gives the compositions that will be
             mass_accreted = largest_remnant_mass-target_mass #change in mass of the target after the collision - this time mass is added to target
  
             min_core_collision_frac = 0.0 #minimum fraction of core material largest remnant gained in ejecta
-            max_core_collision_frac = 0.30 #maximum fraction of core material largest remnant gained in ejecta
+            max_core_collision_frac = 1.00 #maximum fraction of core material largest remnant gained in ejecta
             ejecta_core_frac = 0 #fraction of the accreted mass that is composed of core material (will depend on impact parameter)
             
             slope = (max_core_collision_frac-min_core_collision_frac)/(-2*proj_core_radius)
@@ -203,7 +218,7 @@ def track_composition(): #Main function that gives the compositions that will be
             mass_lost = target_mass-largest_remnant_mass #change in mass of the target after the collision - this time mass is lost from target
             
             min_core_collision_frac = 0.0 #minimum fraction of core material largest remnant lost in ejecta
-            max_core_collision_frac = 0.30 #maximum fraction of core material largest remnant lost in ejecta
+            max_core_collision_frac = 1.00 #maximum fraction of core material largest remnant lost in ejecta
             ejecta_core_frac = 0 #fraction of the eroded mass that is composed of core material (will depend on impact parameter)
             
             slope = (max_core_collision_frac-min_core_collision_frac)/(-2*target_core_radius)

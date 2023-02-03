@@ -18,14 +18,14 @@ import sys
 core_density = 7874.0 #kg m^-3 - density of iron
 mantle_density = 3330.0 #kg m^3 -  approximate density of Earth's upper mantle
 
-composition_input_file = "mantle_stripping_input/differentiated_mantle_stripping_input1.txt"
-composition_output_file = "mantle_stripping_output/custom_mantle_stripping_output1.txt"
+composition_input_file = "mantle_stripping_input/nu_mantle_stripping_input1.txt"
+composition_output_file = "mantle_stripping_output/nu_disk_mantle_stripping_output1.txt"
 collision_report_file = "new_collision_reports/new_collision_report1.txt"
 final_orbital_parameters_file = "final_orbital_parameters/final_orbital_parameters1.txt"
 fig1_file = 'graphs/collision_type_bar_graph1.pdf'
-fig2_file = 'graphs/final_core_fracs1.pdf'
-fig3_file = 'graphs/initial_disk1.png'
-fig4_file = 'graphs/final_planets1.png'
+fig2_file = 'graphs/nu_final_core_fracs1.pdf'
+fig3_file = 'graphs/nu_initial_disk1.png'
+fig4_file = 'graphs/nu_final_planet1.png'
 
 ######## COMPOSITION DATA ORGANIZING FUNCTION ###########
 #Function takes the data from the composition input file and organizes it in a list
@@ -60,9 +60,9 @@ f = open(composition_output_file, 'r')
 init_compositions = [line.split() for line in f.readlines()] #reads each line in file and splits its value into an array (hash - mass - composition fractions) (all values are strings)
 compositions = organize_compositions(init_compositions) #organzies the data from the file
 for line in compositions: #loops through each particle in the array
-    if sum(line[2:4]) != 1.0: #makes sure composition fractions add up to one for each particle (uses second value in list and onwards)
-        print ('ERROR: Realative abundances do not add up to 1.0')
-        sys.exit(1)
+    if line[2] > 1.0 or line[2] < 0.0: #makes sure CMF isn't negative or greater than one
+        print ('ERROR: CMF does not a realistic value')
+        sys.exit(1) 
                 
     try: 
         init_hashes = [int(x[0]) for x in init_compositions] 
@@ -120,8 +120,8 @@ init_compositions = [line.split() for line in f.readlines()] #reads each line in
 original_compositions = organize_compositions(init_compositions) #organzies the data from the file
 original_masses = [original_compositions[i][1]*334672.021419*1200 for i in range(len(original_compositions))]
 original_core_fracs = [original_compositions[i][2] for i in range(len(original_compositions))]
-original_a = [original_compositions[i][4] for i in range(len(original_compositions))]
-original_e = [original_compositions[i][5] for i in range(len(original_compositions))]
+original_a = [original_compositions[i][3] for i in range(len(original_compositions))]
+original_e = [original_compositions[i][4] for i in range(len(original_compositions))]
 
 f = open(final_orbital_parameters_file, 'r')
 final_orbital_parameters = [line.split() for line in f.readlines()]
@@ -229,7 +229,6 @@ print(len(original_masses))
 print(initial_mass)
 print(final_mass)
 print(non_uni_total_core_mass)
-print(uni_total_core_mass)
 print(final_total_core_mass)
 print(avg_initial_core_frac)
 

@@ -5,7 +5,7 @@ Created on Fri Dec 30 17:04:21 2022
 
 @author: nferich
 """
-f = open("/Users/nferich/Desktop/anna_collision_reports/REBOUND_output/collision_report_raw9.txt", 'r')
+f = open("/Users/nferich/Desktop/anna_collision_reports/REBOUND_output/collision_report_raw40.txt", 'r')
 collisions_raw = [line.split() for line in f.readlines()]
 times = []
 targ_hashes = []
@@ -17,7 +17,7 @@ collision_types = [] #gonna need to fix this for head-on smashed collisions - ne
 frags_raw = []
 
 
-print(collisions_raw[4])
+
 for lst in collisions_raw:
     if lst[0] == 'TIME':
         times.append(float(lst[3]))
@@ -66,14 +66,14 @@ frags = list(filter(None, frags_raw)) #gets rid of empty lists
 frag_idx = 0
 for i in range(len(collision_types)):
     if collision_types[i] == 2:
+        print(targ_hashes[i])
+        print(times[i])
         frag_list = frags[frag_idx]
         no_frags = int(len(frag_list)/2)
         frag_masses = [frag_list[(j*2)+1] for j in range(no_frags)]
         tot_frag_mass = sum(frag_masses)
         if proj_masses[i] < tot_frag_mass: #if there's more mass in the fragments than in the projectile, then this is a partial erosion
             collision_types[i] += 1
-            print(frag_idx)
-            print(times[i])
         frag_idx += 1
     elif collision_types[i] == 3:
         frag_list = frags[frag_idx]
@@ -113,7 +113,7 @@ for i in range(len(collision_types)):
 
 
 frag_idx = 0            
-o_f = open("/Users/nferich/Desktop/anna_collision_reports/new_collision_reports/new_collision_report9.txt", 'w')
+o_f = open("/Users/nferich/Desktop/anna_collision_reports/new_collision_reports/new_collision_report40.txt", 'w')
 for i in range(len(times)): #iterates over each index in the individual particle list
     o_f.write(str(times[i]) + ' ')
     o_f.write(str(collision_types[i]) + ' ')

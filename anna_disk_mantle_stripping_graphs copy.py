@@ -18,12 +18,12 @@ import sys
 core_density = 7874.0 #kg m^-3 - density of iron
 mantle_density = 3330.0 #kg m^3 -  approximate density of Earth's upper mantle
 
-composition_input_file = "mantle_stripping_input/low_exp_mantle_stripping_input1.txt"
-composition_output_file = "mantle_stripping_output/low_exp_mantle_stripping_output1.txt"
-collision_report_file = "new_collision_reports/new_collision_report1.txt"
+composition_input_file = "mantle_stripping_input/uni_mantle_stripping_input1.txt"
+composition_output_file = "mantle_stripping_output/uni_mantle_stripping_output17.txt"
+collision_report_file = "new_collision_reports/new_collision_report17.txt"
 final_orbital_parameters_file = "final_orbital_parameters/final_orbital_parameters1.txt"
-fig1_file = 'graphs/collision_type_bar_graph1.pdf'
-fig2_file = 'graphs/low_exp_final_core_fracs1.pdf'
+fig1_file = 'graphs/collision_type_bar_graph17.pdf'
+fig2_file = 'graphs/low_exp_final_core_fracs17.pdf'
 fig3_file = 'graphs/low_exp_initial_disk1.pdf'
 fig4_file = 'graphs/low_exp_final_planets1.pdf'
 
@@ -169,6 +169,7 @@ plt.legend()
 
 plt.savefig(fig2_file, bbox_inches='tight', pad_inches=1.25)
 
+"""
 fig3, ax3 = plt.subplots(figsize=(8,5))
 
 color_map = plt.get_cmap('jet_r')
@@ -209,7 +210,13 @@ ax4_legend = plt.legend(handles=ax3_legend_elements, loc = 'upper right', prop={
 
 plt.savefig(fig4_file, bbox_inches='tight', pad_inches=0.25, dpi=250)
 
+"""
 
+
+
+
+
+########## EXTRA STUFF ###############
 initial_mass = sum(original_masses)/1200
 final_mass = sum(final_masses)/1200
 initial_core_mass = 0
@@ -218,12 +225,10 @@ avg_initial_core_frac = sum(original_core_fracs)/len(original_core_fracs)
 
 for i in range(len(original_masses)):
     initial_core_mass += (original_masses[i]*original_core_fracs[i])/1200
-
     
 
 for i in range(len(final_masses)):
     final_core_mass += (final_masses[i]*final_core_fracs[i])/1200
-
 
 print(initial_mass)
 print(initial_core_mass)

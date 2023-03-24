@@ -14,6 +14,10 @@ time_conversion = 31557600 #sec to yrs
 core_density = 7874.0*(distance_conversion**3/mass_conversion) #kg m^-3 - density of iron
 mantle_density = 3000.0*(distance_conversion**3/mass_conversion) #kg m^3 -  value used in the simulation
 
+B_list = []
+ejecta_CMF = []
+collision_type_list = []
+
 ######## COMPOSITION DATA ORGANIZING FUNCTION ###########
 #Function takes the data from the composition input file and organizes it in a list
 #The created list has seperate values that represent the particle's hash, mass, core frac, and mantle frac
@@ -45,7 +49,8 @@ start_time = time.time() #Timer to see how long running this code takes
 
 
 ###### MAIN FUNCTION #########
-def track_composition(collision_report_file, composition_input_file, impact_parameter_file, ejection_file, ejec_comp_file, large_obj_collision_comp_file, min_core_collision_frac, max_core_collision_frac): #Main function that gives the compositions that will be outputted to the file
+def track_composition(collision_report_file, composition_input_file, impact_parameter_file, ejection_file, ejec_comp_file, large_obj_collision_comp_file, min_core_collision_frac, max_core_collision_frac, expansion_factor): #Main function that gives the compositions that will be outputted to the file
+    loccf = open(large_obj_collision_comp_file, "w")
     f = open(composition_input_file, 'r')
     init_compositions = [line.split() for line in f.readlines()] #reads each line in file and splits its value into an array (hash - mass - composition fractions) (all values are strings)
     compositions = organize_compositions(init_compositions) #organzies the data from the file
@@ -93,14 +98,12 @@ def track_composition(collision_report_file, composition_input_file, impact_para
             proj_idx = [i for i in range(len(compositions)) if int(compositions[i][0])==proj_hash][0]  #same thing as above except for projectile
             proj_mass = float(compositions[proj_idx][1]) #same thing as above except for projectile
             proj_core_frac = compositions[proj_idx][2] #same thing as above except for projectile
-            loccf = open(large_obj_collision_comp_file, "a+")
             loccf.write(str(time) + ' ')
             loccf.write(str(largest_remnant_mass) + ' ')
             loccf.write(str(proj_hash) + ' ')
             loccf.write(str(proj_mass) + ' ')
             loccf.write(str(proj_core_frac) + ' ')
             loccf.write('\n') #go to a new line and to a new particle
-            loccf.close()
             destroyed_object_hashes.append(proj_hash)
             continue   
 
@@ -118,7 +121,6 @@ def track_composition(collision_report_file, composition_input_file, impact_para
         impact_parameter = float(impact_parameters[i])*target_radius
         
         
-        
         #This sequence creates an estimate for the core radius of the target and projectile since the sim doesn't track that
         diff_target_core_radius = calc_core_radius(target_mass, target_core_frac, core_density)
         diff_proj_core_radius = calc_core_radius(proj_mass, proj_core_frac, core_density)
@@ -129,11 +131,15 @@ def track_composition(collision_report_file, composition_input_file, impact_para
         target_core_radius = target_radius_ratio*target_radius
         proj_core_radius = proj_radius_ratio*proj_radius
         
-        
                                                
  ######################## PERFECT MERGER ##########################
         if collision_type == 1: #perfect merger
-        
+            if time==26142830.0:    
+                print(target_core_frac)
+                print(proj_core_frac)
+                print(proj_mass)
+                print(target_mass)
+                print(largest_remnant_mass)
                 
             compositions[targ_idx][2] = ((target_core_frac*target_mass)+(proj_core_frac*proj_mass))/largest_remnant_mass #changes the composition fraction for each specie in the target - basically weighted average of initial target compoisition and mass with the projectile composition and mass
             compositions[targ_idx][3] = 1 - compositions[targ_idx][2]
@@ -142,16 +148,10 @@ def track_composition(collision_report_file, composition_input_file, impact_para
  ####################### PARTIAL ACCRETION ######################
    
         if collision_type == 2: #partial accretion
-        
+
             mass_accreted = largest_remnant_mass-target_mass #change in mass of the target after the collision - this time mass is added to target
             ejecta_core_frac = 0 #fraction of the accreted mass that is composed of core material (will depend on impact parameter)
-            """if mass_accreted < 0:
-                print(time)
-                print(mass_accreted)
-                print(target_mass)
-                print(largest_remnant_mass)
-                print(proj_mass)
-                print(frag_masses)"""
+
             if proj_core_radius == 0: #makes sure the core radius of the projectile isn't 0
                 ejecta_core_frac = 0
             else:
@@ -168,7 +168,16 @@ def track_composition(collision_report_file, composition_input_file, impact_para
                 elif impact_parameter <= min_impact_parameter: #if the impact parameter is small (usually means a more head-on impact)
                     ejecta_core_frac = max_core_collision_frac #most amount of core is lost because cross-section of target will fully intersect with core of projectile
             
-
+            #FOLLOWING LISTS USED FOR FIGURE 3
+            if target_mass == 2.791e-7 or target_mass == 2.791e-8:
+                B_list.append(float(impact_parameters[i])*(expansion_factor*target_radius)/((expansion_factor*target_radius)+proj_radius))
+            elif proj_mass == 2.791e-7 or proj_mass == 2.791e-8:
+                B_list.append(float(impact_parameters[i])*(target_radius)/(target_radius+(expansion_factor*proj_radius)))
+            else:
+                B_list.append(impact_parameter/(target_radius+proj_radius))
+            ejecta_CMF.append(ejecta_core_frac)
+            collision_type_list.append(collision_type)
+            
             ideal_mass_accreted= [(mass_accreted*ejecta_core_frac),(mass_accreted*(1-ejecta_core_frac))] #first is core mass, second if mantle mass - how much of each layer would ideally be accreted if the projectile has the right composition
             proj_layer_mass = [proj_mass*proj_core_frac, proj_mass*(1-proj_core_frac)] #how much mass is in each layer of projectile - core first, then mantle
             
@@ -220,13 +229,14 @@ def track_composition(collision_report_file, composition_input_file, impact_para
                 
                 
             for i in range(no_frags):
-                frag_data = [frag_hashes[i], frag_masses[i], frag_core_frac, frag_mantle_frac] #creates a list filled with the necessary data for the fragments to go into the compositions array and the final output file - frags just given the composition of the projectile
                 
+                frag_data = [frag_hashes[i], frag_masses[i], frag_core_frac, frag_mantle_frac] #creates a list filled with the necessary data for the fragments to go into the compositions array and the final output file - frags just given the composition of the projectile
+                    
                 #Error in case a fragment has a negative mass
                 if frag_masses[i] < 0:
                     print ('ERROR: Negative value for fragment mass encountered at', time)
                     sys.exit(1)
-            
+                
             
                 compositions.append(frag_data)
 
@@ -236,9 +246,7 @@ def track_composition(collision_report_file, composition_input_file, impact_para
         if collision_type == 3 or collision_type == 4: #partial erosion, target abundances stay the same
         
             mass_lost = target_mass-largest_remnant_mass #change in mass of the target after the collision - this time mass is lost from target
-            """if mass_lost < 0:
-                print(time)
-                print(mass_lost)"""
+
             ejecta_core_frac = 0 #fraction of the eroded mass that is composed of core material (will depend on impact parameter)
             
             if target_core_radius == 0: #makes sure the core radius of the target isn't 0
@@ -255,6 +263,17 @@ def track_composition(collision_report_file, composition_input_file, impact_para
                     ejecta_core_frac += min_core_collision_frac+(slope*(impact_parameter-max_impact_parameter)) #it will strip off a certain amount of core according to this line equation
                 elif impact_parameter <= min_impact_parameter: #if the impact parameter is small (often means a more head-on impact)
                     ejecta_core_frac += max_core_collision_frac #most amount of core is lost because cross-section of projectile will fully intersect with core of target
+            
+            #FOLLOWING LISTS USED FOR FIGURE 3
+            if target_mass == 2.791e-7 or target_mass == 2.791e-8:
+                B_list.append(float(impact_parameters[i])*(expansion_factor*target_radius)/((expansion_factor*target_radius)+proj_radius))
+            elif proj_mass == 2.791e-7 or proj_mass == 2.791e-8:
+                B_list.append(float(impact_parameters[i])*(target_radius)/(target_radius+(expansion_factor*proj_radius)))
+            else:
+                B_list.append(impact_parameter/(target_radius+proj_radius))
+            #B_list.append(impact_parameter/(target_radius+proj_radius))
+            ejecta_CMF.append(ejecta_core_frac)
+            collision_type_list.append(collision_type)
             
             ideal_mass_lost = [(mass_lost*ejecta_core_frac),(mass_lost*(1-ejecta_core_frac))] #first is core mass, second if mantle mass - how much of each layer would ideally be accreted if the projectile has the right composition
             target_layer_mass = [target_mass*target_core_frac, target_mass*(1-target_core_frac)] #how much mass is in each layer of projectile - core first, then mantle
@@ -337,9 +356,13 @@ def track_composition(collision_report_file, composition_input_file, impact_para
                     sys.exit(1)
             elif i > 1:
                 if compositions[targ_idx][i] < 0:
+                    print(compositions[targ_idx][i])
                     print ('ERROR: Negative value encountered in target data at', time)
                     sys.exit(1)
     
+    for i in range(len(compositions)):
+        if compositions[i][0] == 1495382923:
+                print(324234)
     #Destroys particles by hash      
     for hsh in destroyed_object_hashes:
         for i in range(len(compositions)):
@@ -367,7 +390,7 @@ def track_composition(collision_report_file, composition_input_file, impact_para
        
     e_file.close()
     ecf.close()
-    
+    loccf.close()
             
     return(compositions)
 
@@ -381,7 +404,7 @@ def write_output(compositions, composition_output_file):
         f.write('\n')#go to a new line and to a new particle
     f.close()
  
-
+############# OUTPUT LOOP ####################
 min_core_frac = 0.0 #mimimum fraction of core material in ejecta
 max_core_frac = 1.0 #maximum fraction of core material in ejecta
 
@@ -393,17 +416,28 @@ output_file_pw = "mantle_stripping_output/uni_mantle_stripping_output"
 ejection_compositions_pw = "ejections/uni_ejection_compositions" 
 large_obj_collision_compositions_pw = "large_obj_collision_compositions/uni_large_obj_collision_compositions"
 
-file_range = np.arange(1,7,1)
+file_range = np.arange(1,51,1)
 
 for i in file_range:
+    ef=0
     collision_file = collision_file_pw + str(i) + ".txt"
-    comp_input_file = comp_input_file_pw + str(i) + ".txt"
+    comp_input_file = comp_input_file_pw + str(1) + ".txt"
     impact_param_file = impact_param_file_pw + str(i) + ".txt"
     ejec_file = ejec_file_pw + str(i) + ".txt"
     output_file = output_file_pw + str(i) + ".txt"
     ejection_compositions_file = ejection_compositions_pw + str(i) + ".txt"
     large_obj_collision_compositions_file = large_obj_collision_compositions_pw + str(i) + ".txt"
-    write_output(track_composition(collision_file, comp_input_file, impact_param_file, ejec_file, ejection_compositions_file, large_obj_collision_compositions_file, min_core_frac, max_core_frac), output_file)
+    if i < 11:
+        ef+=3
+    elif 11 <= i < 21:
+        ef+=5
+    elif 21 <= i < 31:
+        ef+=7
+    elif 31 <= i < 41:
+        ef+=10
+    elif 41 <= i < 51:
+        ef+=15
+    write_output(track_composition(collision_file, comp_input_file, impact_param_file, ejec_file, ejection_compositions_file, large_obj_collision_compositions_file, min_core_frac, max_core_frac, ef), output_file)
 
 
 
@@ -511,6 +545,11 @@ plt.title('Minimum Ejecta CMF = 0.0')
 
 plt.savefig('graphs/Max_CMF.png', bbox_inches='tight', pad_inches=0.25, dpi=250)
 """
+
+fig3, ax3 = plt.subplots(figsize=(10,8))
+ax3.scatter(B_list, ejecta_CMF, s=1.0)
+plt.savefig('graphs/BvsCMF.pdf', bbox_inches='tight', pad_inches=0.25)
+
 print("--- %s seconds ---" % (time.time() - start_time))
 
 

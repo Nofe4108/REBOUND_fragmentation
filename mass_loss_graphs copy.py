@@ -9,6 +9,8 @@ from astropy import units as u
 import astropy.constants as constants
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
+import matplotlib.patches as mpatches
+import matplotlib as matplotlib
 import numpy as np
 import math
 import sys
@@ -32,11 +34,11 @@ comp_input_file_pw = "mantle_stripping_input/uni_mantle_stripping_input"
 comp_output_file_pw = "mantle_stripping_output/uni_mantle_stripping_output"
 ejection_compositions_pw = "ejections/uni_ejection_compositions" 
 large_obj_collision_compositions_pw = "large_obj_collision_compositions/uni_large_obj_collision_compositions"
-fig3_file = 'graphs/all_so_ejections50.pdf'
+fig3_file = 'graphs/all_so_ejections.pdf'
 fig4_file = 'graphs/all_so_collisions50.pdf'
 
 mass_conversion = 334672.021419
-artifical_espansion_factor = 1200
+artificial_expansion_factor = 500
 
 #NUMBER OF FILES
 file_range = np.arange(1,51,1)
@@ -84,7 +86,7 @@ for no in file_range:
     ejection_raw = [line.split() for line in ef.readlines()]
     ejection_time = [float(ejection_raw[i][1])/1.0e6 for i in range(len(ejection_raw))]
     ejection_hash = [int(ejection_raw[i][2]) for i in range(len(ejection_raw))]
-    ejection_mass = [float(ejection_raw[i][3])*mass_conversion*artifical_espansion_factor for i in range(len(ejection_raw))]
+    ejection_mass = [float(ejection_raw[i][3])*mass_conversion*artificial_expansion_factor for i in range(len(ejection_raw))]
     ejection_times.append(ejection_time)
     ejection_hashes.append(ejection_hash)
     ejection_masses.append(ejection_mass)
@@ -115,7 +117,7 @@ for no in file_range:
             except:
                 init_hashes = [x[0].value for x in init_compositions]
         init_hash.append(int(line[0]))
-        init_mass.append(float(line[1])*mass_conversion*artifical_espansion_factor)
+        init_mass.append(float(line[1])*mass_conversion*artificial_expansion_factor)
         init_core_frac.append(float(line[2]))
         init_a.append(float(line[3]))
         
@@ -130,7 +132,7 @@ for no in file_range:
                 init_hashes = [int(x[0]) for x in init_compositions] 
             except:
                 init_hashes = [x[0].value for x in init_compositions]
-        fin_mass.append(float(line[1])*mass_conversion*artifical_espansion_factor)
+        fin_mass.append(float(line[1])*mass_conversion*artificial_expansion_factor)
         fin_core_frac.append(float(line[2]))
     
     initial_hashes.append(init_hash)
@@ -145,7 +147,7 @@ for no in file_range:
     large_obj_collision_compositions_raw = [line.split() for line in loccf.readlines()]
     large_obj_collision_time = [float(large_obj_collision_compositions_raw[i][0])/1.0e6 for i in range(len(large_obj_collision_compositions_raw))]
     large_obj_collision_hash = [float(large_obj_collision_compositions_raw[i][2]) for i in range(len(large_obj_collision_compositions_raw))]
-    large_obj_collision_mass = [float(large_obj_collision_compositions_raw[i][3])*mass_conversion*artifical_espansion_factor for i in range(len(large_obj_collision_compositions_raw))]
+    large_obj_collision_mass = [float(large_obj_collision_compositions_raw[i][3])*mass_conversion*artificial_expansion_factor for i in range(len(large_obj_collision_compositions_raw))]
     large_obj_collision_core_frac = [float(large_obj_collision_compositions_raw[i][4]) for i in range(len(large_obj_collision_compositions_raw))]
     
     large_obj_collision_times.append(large_obj_collision_time)
@@ -210,17 +212,15 @@ for no in file_range:
 
 
 ############## FINDING TOTALS ####################
-initial_total_masses = [sum(initial_masses[i])/artifical_espansion_factor for i in range(len(initial_masses))]  
-initial_total_core_masses = [sum(initial_masses[i])*sum(initial_core_fracs[i])/(len(initial_core_fracs[i])*artifical_espansion_factor) for i in range(len(initial_masses))] 
+initial_total_masses = [sum(initial_masses[i])/artificial_expansion_factor for i in range(len(initial_masses))]  
+initial_total_core_masses = [sum(initial_masses[i])*sum(initial_core_fracs[i])/(len(initial_core_fracs[i])*artificial_expansion_factor) for i in range(len(initial_masses))] 
 initial_avg_core_fracs = [sum(initial_core_fracs[i])/len(initial_core_fracs[i]) for i in range(len(initial_masses))] 
-final_total_masses = [sum(final_masses[i])/artifical_espansion_factor for i in range(len(final_masses))]  
-final_total_core_masses = [sum(final_masses[i])*sum(final_core_fracs[i])/(len(final_core_fracs[i])*artifical_espansion_factor) for i in range(len(final_masses))] 
-total_ejected_masses = [sum(ejection_masses[i])/artifical_espansion_factor for i in range(len(ejection_masses))]   
+final_total_masses = [sum(final_masses[i])/artificial_expansion_factor for i in range(len(final_masses))]  
+final_total_core_masses = [sum(final_masses[i])*sum(final_core_fracs[i])/(len(final_core_fracs[i])*artificial_expansion_factor) for i in range(len(final_masses))] 
+total_ejected_masses = [sum(ejection_masses[i])/artificial_expansion_factor for i in range(len(ejection_masses))]   
 total_mass_differences = [initial_total_masses[i]-final_total_masses[i] for i in range(len(initial_total_core_masses))]
-total_collision_mass = [sum(large_obj_collision_masses[i])/artifical_espansion_factor for i in range(len(large_obj_collision_masses))]
-print(initial_total_core_masses)
-print(initial_total_masses)
-print(initial_avg_core_fracs)
+total_collision_mass = [sum(large_obj_collision_masses[i])/artificial_expansion_factor for i in range(len(large_obj_collision_masses))]
+
 
 ################ GRAPHING #######################
 min_frac_ejection = min(ejection_core_fracs[0])
@@ -259,20 +259,51 @@ all_collision_so_core_fracs = [core_frac for sublist in collision_so_core_fracs 
 all_collision_so_a = [a for sublist in collision_so_a for a in sublist]
 all_collision_so_times = [time for sublist in collision_so_times for time in sublist]
 
+all_ejection_so_a_embryo = []
+all_ejection_so_a_planetesimal = []
+
+for i in range(len(all_collision_so_masses)):
+    if all_collision_so_masses[i] < 0.09*artificial_expansion_factor:
+        all_ejection_so_a_planetesimal.append(all_collision_so_a[i])
+    else:
+        all_ejection_so_a_embryo.append(all_collision_so_a[i])
+        
+all_ejection_so_a_nested  = [all_ejection_so_a_planetesimal, all_ejection_so_a_embryo]
+print(all_ejection_so_masses[0:5])
 ########## FIGURE 3 ###############
-fig3, ax3 = plt.subplots(figsize=(11,8))
-plot3 = ax3.scatter(all_ejection_so_times, all_ejection_so_a, s=all_ejection_so_masses, marker='o')
-plt.title('Ejections', fontsize='large')
+bp_colors = ['tab:blue', 'tab:orange']
+hist_type = 'barstacked'
+n_bins = np.linspace(.5, 4.0, num=36, endpoint=True)
+fig3, ax3 = plt.subplots(figsize=(6,5))
+plot3 = ax3.hist(all_ejection_so_a_nested, n_bins, histtype=hist_type, color=bp_colors, lw=3.0, alpha = 1.0)
+ax3.set_xlabel('Initial Semi-major Axis (AU)',fontsize='large')
+ax3.set_ylabel("Number of Ejections", fontsize='large')
+#ax3.set_xlim(-0.01, 2.01)
+#ax3.set_ylim(-0.01, 0.40)
+ax3.minorticks_on()
+plt.grid()
+ax3_legend_elements = [matplotlib.patches.Rectangle((0,0), width=0.1, height=0.1, edgecolor='tab:blue', facecolor='tab:blue', label='planetesimal'),
+                       matplotlib.patches.Rectangle((0,0), width=0.1, height=0.1, edgecolor='tab:orange', facecolor='tab:orange', label='embryo')]
+legend = plt.legend(handles=ax3_legend_elements, loc = 'upper left', framealpha = .7)
+plt.gca().add_artist(legend)
+plt.savefig(fig3_file, bbox_inches='tight', pad_inches=0.01)
+
+
+"""########## FIGURE 3 ###############
+fig3, ax3 = plt.subplots(figsize=(7,5))
+plot3 = ax3.scatter(all_ejection_so_times, all_ejection_so_a, s=all_ejection_so_masses, color='black', marker='o')
 ax3.set_xlabel('Time of Ejection (Myr)',fontsize='large')
 ax3.set_ylabel("Initial Semi-major Axis (AU)", fontsize='large')
-ax3_legend_elements = [Line2D([], [], color='black', marker='o', lw=0.0, label='0.1 $M_{\u2295}$', markerfacecolor='black', markersize=np.sqrt(.1*artifical_espansion_factor))]                                                           
+ax3_legend_elements = [Line2D([], [], color='black', marker='o', lw=0.0, label='0.1 $M_{\u2295}$', markerfacecolor='black', markersize=np.sqrt(.1*artifical_expansion_factor))]                                                           
 ax3_legend = plt.legend(handles=ax3_legend_elements, loc = 'upper right', prop={"size": 10})
-#ax3.set_xlim(0.3, 4.2)
+ax3.set_xlim(-0.01, 2.01)
 #ax3.set_ylim(-0.01, 0.40)
 plt.grid()
-plt.savefig(fig3_file, bbox_inches='tight', pad_inches=0.25, dpi=250)
+plt.savefig(fig3_file, bbox_inches='tight', pad_inches=0.25, dpi=250)"""
 
-########## FIGURE 4 ###############
+
+
+"""########## FIGURE 4 ###############
 fig4, ax4 = plt.subplots(figsize=(11,8))
 plot4 = ax4.scatter(all_collision_so_times, all_collision_so_a, s=all_collision_so_masses, marker='o')
 plt.title('Sun/Jupiter/Saturn Collisions', fontsize='large')
@@ -283,4 +314,4 @@ ax4_legend = plt.legend(handles=ax3_legend_elements, loc = 'upper right', prop={
 #ax3.set_xlim(0.3, 4.2)
 #ax3.set_ylim(-0.01, 0.40)
 plt.grid()
-plt.savefig(fig4_file, bbox_inches='tight', pad_inches=0.25, dpi=250)
+plt.savefig(fig4_file, bbox_inches='tight', pad_inches=0.25, dpi=250)"""

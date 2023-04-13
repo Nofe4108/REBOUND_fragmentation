@@ -42,13 +42,13 @@ bp_CMF_exp7 = []
 bp_CMF_exp10 = []
 bp_CMF_exp15 = []
 
-comp_output_file_pw = "mantle_stripping_output/uni_mantle_stripping_output"
+comp_output_file_pw = "mantle_stripping_output/nu_mantle_stripping_output"
 final_orbital_parameters_file_pw = "final_orbital_parameters/final_orbital_parameters"
-fig1_file = 'graphs/uni_all_final_core_fracs.pdf'
-fig2_file = 'graphs/uni_all_final_planets.pdf'
-fig3_file = 'graphs/uni_all_final_core_fracs_efs.pdf'
-fig4_file = 'graphs/uni_planet_CMF_histogram.pdf'
-fig5_file = 'graphs/uni_planet_CMF_mass_histogram.pdf'
+fig1_file = 'graphs/nu_all_final_core_fracs.pdf'
+fig2_file = 'graphs/nu_all_final_planets.pdf'
+fig3_file = 'graphs/nu_all_final_core_fracs_efs.pdf'
+fig4_file = 'graphs/nu_planet_CMF_histogram.pdf'
+fig5_file = 'graphs/nu_planet_CMF_mass_histogram.pdf'
 
 file_range = np.arange(1,51,1)
 

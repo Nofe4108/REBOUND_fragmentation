@@ -18,13 +18,13 @@ import sys
 core_density = 7874.0 #kg m^-3 - density of iron
 mantle_density = 3330.0 #kg m^3 -  approximate density of Earth's upper mantle
 
-composition_input_file = "mantle_stripping_input/uni_mantle_stripping_input1.txt"
-composition_output_file = "mantle_stripping_output/uni_mantle_stripping_output17.txt"
-collision_report_file = "new_collision_reports/new_collision_report17.txt"
+composition_input_file = "mantle_stripping_input/nu_mantle_stripping_input1.txt"
+composition_output_file = "mantle_stripping_output/nu_mantle_stripping_output1.txt"
+collision_report_file = "new_collision_reports/new_collision_report1.txt"
 final_orbital_parameters_file = "final_orbital_parameters/final_orbital_parameters1.txt"
-fig1_file = 'graphs/collision_type_bar_graph17.pdf'
-fig2_file = 'graphs/low_exp_final_core_fracs17.pdf'
-fig3_file = 'graphs/low_exp_initial_disk1.pdf'
+fig1_file = 'graphs/collision_type_bar_graph1.pdf'
+fig2_file = 'graphs/low_exp_final_core_fracs1.pdf'
+fig3_file = 'graphs/nu_initial_disk1.pdf'
 fig4_file = 'graphs/low_exp_final_planets1.pdf'
 
 ######## COMPOSITION DATA ORGANIZING FUNCTION ###########
@@ -112,7 +112,6 @@ ax1.barh(collision_types, no_collisions)
 plt.savefig(fig1_file, bbox_inches='tight', pad_inches=1.25)
 
 
-#plt.show()
 
 
 f = open(composition_input_file, 'r')
@@ -153,6 +152,7 @@ else:
 
 uniform_core_fracs = [.3 for i in range(len(original_core_fracs))]
 
+"""
 fig2, ax2 = plt.subplots()
 ax2.scatter(final_masses_em, final_core_fracs_em, color = 'black')
 ax2.axhline(0.3, label = 'Initial Core Fraction', color = 'tab:blue', linestyle = '--', alpha=.7)
@@ -168,16 +168,16 @@ plt.grid()
 plt.legend()
 
 plt.savefig(fig2_file, bbox_inches='tight', pad_inches=1.25)
-
 """
-fig3, ax3 = plt.subplots(figsize=(8,5))
 
-color_map = plt.get_cmap('jet_r')
+fig3, ax3 = plt.subplots(figsize=(7,5))
+
+color_map = plt.get_cmap('jet')
 plot3 = ax3.scatter(original_a, original_e, marker='o', s=original_masses, c=original_core_fracs, cmap=color_map, vmin=min_frac, vmax=max_frac)
 ax3.set_xlabel('Semi-major Axis (AU)',fontsize='large')
 ax3.set_ylabel("Eccentricity", fontsize='large')
 ax3.set_xlim(0.0, 4.5)
-ax3.set_ylim(-0.01, 0.40)
+ax3.set_ylim(0.000, 0.0101)
 cbar3 = fig3.colorbar(plot3, location='right', anchor=(0,0.5), pad=0.0)
 cbar3.set_label(label='CMF', size='large')
 cbar3.minorticks_on()
@@ -187,12 +187,12 @@ plt.grid()
 
 #Line2D([], [], color='black', marker='o', lw=0.0, label='0.01 $M_{\u2295}$', markerfacecolor='black', markersize=np.sqrt(.01*1000))
  
-ax3_legend_elements = [Line2D([], [], color='black', marker='o', lw=0.0, label='0.1 $M_{\u2295}$', markerfacecolor='black', markersize=np.sqrt(.1*1200))]                                                           
-ax3_legend = plt.legend(handles=ax3_legend_elements, loc = 'upper right', prop={"size": 10})
+#ax3_legend_elements = [Line2D([], [], color='black', marker='o', lw=0.0, label='0.1 $M_{\u2295}$', markerfacecolor='black', markersize=np.sqrt(.1*1200))]                                                           
+#ax3_legend = plt.legend(handles=ax3_legend_elements, loc = 'upper right', prop={"size": 10})
 
-plt.savefig(fig3_file, bbox_inches='tight', pad_inches=0.25, dpi=250)
+plt.savefig(fig3_file, bbox_inches='tight', pad_inches=0.01)
 
-fig4, ax4 = plt.subplots(figsize=(8,5))
+"""fig4, ax4 = plt.subplots(figsize=(8,5))
 
 plot4 = ax4.scatter(final_a, final_e, marker='o', s=final_masses, c=final_core_fracs, cmap=color_map, vmin=min_frac, vmax=max_frac)
 ax4.set_xlabel('Semi-major Axis (AU)',fontsize='large')

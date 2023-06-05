@@ -70,8 +70,9 @@ def track_composition(collision_report_file, composition_input_file, impact_para
     impact_parameters_raw = b.split("\n")
     impact_parameters = [x.strip('b/Rtarg:     ') for x in impact_parameters_raw]
 
+
     destroyed_object_hashes = [] #list of objects that get destroyed in a collision
-    
+
     #START OF BIG LOOP
     for i in range(len(blocks)): #iterates through each value in blocks list - THIS IS A VERY BIG LOOP THAT CONTAINS ALL OF THE MASS TRANSFER DECISION MAKING
         block = blocks[i].split() #seperates each long string full of the collision data into its own list to be parsed through
@@ -86,8 +87,8 @@ def track_composition(collision_report_file, composition_input_file, impact_para
         
         #This section is here in case a projectile collides with the star or Jupiter - make this better
         big_object_collision = 1
-        for i in range(len(compositions)):
-            if target_hash==compositions[i][0]:
+        for j in range(len(compositions)):
+            if target_hash==compositions[j][0]:
                 big_object_collision+= -1
                 break
         if big_object_collision==1:
@@ -114,6 +115,13 @@ def track_composition(collision_report_file, composition_input_file, impact_para
         frag_masses = [float(block[i*2+4]) for i in range(1,no_frags+1)] #same thing as above except for a list of the fragment masses 
         target_radius = calc_core_radius(target_mass, 1.0, mantle_density) #radius of target in sim before collision
         proj_radius = calc_core_radius(proj_mass, 1.0, mantle_density) #radius of projectile in sim before collision
+        if float(impact_parameters[i]) > 2.0:
+            print(block)
+            print(impact_parameters[414])
+            print(target_hash)
+            print(blocks[i])
+            print(impact_parameters[i])
+            print(i)
         impact_parameter = float(impact_parameters[i])*target_radius
         
         
@@ -126,16 +134,9 @@ def track_composition(collision_report_file, composition_input_file, impact_para
         proj_radius_ratio =  diff_proj_core_radius/diff_proj_radius
         target_core_radius = target_radius_ratio*target_radius
         proj_core_radius = proj_radius_ratio*proj_radius
-        
                                                
  ######################## PERFECT MERGER ##########################
         if collision_type == 1: #perfect merger
-            if time==26142830.0:    
-                print(target_core_frac)
-                print(proj_core_frac)
-                print(proj_mass)
-                print(target_mass)
-                print(largest_remnant_mass)
                 
             compositions[targ_idx][2] = ((target_core_frac*target_mass)+(proj_core_frac*proj_mass))/largest_remnant_mass #changes the composition fraction for each specie in the target - basically weighted average of initial target compoisition and mass with the projectile composition and mass
             compositions[targ_idx][3] = 1 - compositions[targ_idx][2]
@@ -232,6 +233,8 @@ def track_composition(collision_report_file, composition_input_file, impact_para
                         
         if collision_type == 3 or collision_type == 4: #partial erosion, target abundances stay the same
         
+            
+        
             mass_lost = target_mass-largest_remnant_mass #change in mass of the target after the collision - this time mass is lost from target
 
             ejecta_core_frac = 0 #fraction of the eroded mass that is composed of core material (will depend on impact parameter)
@@ -325,20 +328,18 @@ def track_composition(collision_report_file, composition_input_file, impact_para
             destroyed_object_hashes.append(proj_hash) #IMPORTANT CHANGE - removes projectile particle from the compositions list if it gets destroyed in collision
             
         #checks to see if any composition values in the target particle are negative
-        for i in range(len(compositions[targ_idx])):
-            if i == 1:
-                if compositions[targ_idx][i] < 0: 
+        for k in range(len(compositions[targ_idx])):
+            if k == 1:
+                if compositions[targ_idx][k] < 0: 
                     print ('ERROR: Negative value for target mass encountered at', time)
                     sys.exit(1)
-            elif i > 1:
-                if compositions[targ_idx][i] < 0:
-                    print(compositions[targ_idx][i])
+            elif k > 1:
+                if compositions[targ_idx][k] < 0:
+                    print(compositions[targ_idx][k])
                     print ('ERROR: Negative value encountered in target data at', time)
                     sys.exit(1)
     
-    for i in range(len(compositions)):
-        if compositions[i][0] == 1495382923:
-                print(324234)
+
     #Destroys particles by hash      
     for hsh in destroyed_object_hashes:
         for i in range(len(compositions)):
@@ -385,16 +386,17 @@ min_core_frac = 0.0 #mimimum fraction of core material in ejecta
 max_core_frac = 0.0 #maximum fraction of core material in ejecta
 
 collision_file_pw = "/Users/nferich/Desktop/anna_collision_reports/new_collision_reports/new_collision_report"
-comp_input_file_pw = "/Users/nferich/Desktop/anna_collision_reports/mantle_stripping_input/exp_mantle_stripping_input"
+comp_input_file_pw = "/Users/nferich/Desktop/anna_collision_reports/mantle_stripping_input/2step_mantle_stripping_input"
 impact_param_file_pw = "impact_parameters/impact_parameters"
 ejec_file_pw = "ejections/ejections"
-output_file_pw = "mantle_stripping_output/exp_mantle_stripping_output"
-ejection_compositions_pw = "ejections/exp_ejection_compositions" 
-large_obj_collision_compositions_pw = "large_obj_collision_compositions/exp_large_obj_collision_compositions"
+output_file_pw = "mantle_stripping_output/2step_mantle_stripping_output"
+ejection_compositions_pw = "ejections/2step_ejection_compositions" 
+large_obj_collision_compositions_pw = "large_obj_collision_compositions/2step_large_obj_collision_compositions"
 
 file_range = np.arange(1,51,1)
 
 for i in file_range:
+    print(i)
     ef=0
     collision_file = collision_file_pw + str(i) + ".txt"
     comp_input_file = comp_input_file_pw + str(1) + ".txt"
@@ -415,112 +417,6 @@ for i in file_range:
         ef+=15
     write_output(track_composition(collision_file, comp_input_file, impact_param_file, ejec_file, ejection_compositions_file, large_obj_collision_compositions_file, min_core_frac, max_core_frac, ef), output_file)
 
-
-
-
-
-
-
-
-
-
-
-
-"""
-################# MINIMUM EJECTA CORE FRAC GRAPH #####################################
-final_average_core_fracs = []
-min_final_core_fracs = []
-max_final_core_fracs = []
-min_core_collision_fracs = np.arange(0, 1.1, 0.1)
-max_core_collision_fracs = np.arange(1, 2, 1)
-
-
-
-for ma in max_core_collision_fracs:
-    average_fracs = []
-    min_fracs = []
-    max_fracs = []
-    for mi in min_core_collision_fracs:
-        if ma >= mi: #ensures the max collision frac is never less than the minimum
-                final_composition = track_composition(collision_file, comp_input_file, impact_param_file, ejec_file, mi, ma)
-                final_embryo_composition = []
-                for obj in final_composition:
-                    if obj[1]*334672.021419 > 0.093: #if the object mass is bigger than original embryo mass
-                        final_embryo_composition.append(obj)
-                        final_core_fracs = [final_embryo_composition[k][2] for k in range(len(final_embryo_composition))]
-                        final_average_core_frac = sum(final_core_fracs)/len(final_core_fracs)
-                        average_fracs.append(final_average_core_frac)
-                        min_fracs.append(min(final_core_fracs))
-                        max_fracs.append(max(final_core_fracs))
-                    final_average_core_fracs.append(average_fracs)
-                    min_final_core_fracs.append(min_fracs)
-                    max_final_core_fracs.append(max_fracs)
-
-#print(final_average_core_fracs) 
-#print(min_final_core_fracs)
-#print(max_final_core_fracs)
-
-min_bars = [final_average_core_fracs[0][i]-min_final_core_fracs[0][i] for i in range(len(final_average_core_fracs[0]))]
-max_bars = [max_final_core_fracs[0][i]-final_average_core_fracs[0][i] for i in range(len(final_average_core_fracs[0]))]
-
-fig1, ax1 = plt.subplots()
-fig1 = plt.errorbar(min_core_collision_fracs, final_average_core_fracs[0], yerr=[min_bars, max_bars], fmt='o', color = 'black', capsize=5)
-plt.grid(color='black', linestyle='-', axis='y')
-plt.xticks(np.arange(0.0, 1.1, 0.1))
-plt.yticks(np.arange(0.25, 0.38, 0.01))
-ax1.axhline(0.3, label = 'Initial Core Fraction', color = 'tab:blue', linestyle = '-', alpha=1.0)
-plt.xlabel('Minimum Ejecta CMF')
-plt.ylabel('Final Embryo CMF')
-plt.title('Maximum Ejecta CMF = 1.0')
-
-plt.savefig('graphs/Min_CMF.png', bbox_inches='tight', pad_inches=0.25, dpi=250)
-print(min_final_core_fracs)
-################# MAXIMUM EJECTA CORE FRAC GRAPH #####################################
-final_average_core_fracs = []
-min_final_core_fracs = []
-max_final_core_fracs = []
-min_core_collision_fracs = np.arange(0, 1, 1)
-max_core_collision_fracs = np.arange(0, 1.1, 0.1)
-
-for mi in min_core_collision_fracs:
-    average_fracs = []
-    min_fracs = []
-    max_fracs = []
-    for ma in max_core_collision_fracs:
-        if mi <= ma: #ensures the max collision frac is never less than the minimum
-            final_composition = track_composition(collision_file, comp_input_file, impact_param_file, ejec_file, mi, ma)
-            final_embryo_composition = []
-            for obj in final_composition:
-                if obj[1]*334672.021419 > 0.093: #if the object mass is bigger than original embryo mass
-                    final_embryo_composition.append(obj)
-            final_core_fracs = [final_embryo_composition[k][2] for k in range(len(final_embryo_composition))]
-            final_average_core_frac = sum(final_core_fracs)/len(final_core_fracs)
-            average_fracs.append(final_average_core_frac)
-            min_fracs.append(min(final_core_fracs))
-            max_fracs.append(max(final_core_fracs))
-    final_average_core_fracs.append(average_fracs)
-    min_final_core_fracs.append(min_fracs)
-    max_final_core_fracs.append(max_fracs)
-
-#print(final_average_core_fracs) 
-#print(min_final_core_fracs)
-#print(max_final_core_fracs)
-
-min_bars_2 = [final_average_core_fracs[0][i]-min_final_core_fracs[0][i] for i in range(len(final_average_core_fracs[0]))]
-max_bars_2 = [max_final_core_fracs[0][i]-final_average_core_fracs[0][i] for i in range(len(final_average_core_fracs[0]))]
-fig2, ax2 = plt.subplots()
-print(min_final_core_fracs)
-fig2 = plt.errorbar(max_core_collision_fracs, final_average_core_fracs[0], yerr=[min_bars_2, max_bars_2], fmt='o', color = 'black', capsize=5)
-plt.grid(color='black', linestyle='-', axis='y')
-plt.xticks(np.arange(0.0, 1.1, 0.1))
-plt.yticks(np.arange(0.25, 0.38, 0.01))
-ax2.axhline(0.3, label = 'Initial Core Fraction', color = 'tab:blue', linestyle = '-', alpha=1.0)
-plt.xlabel('Maximum Ejecta CMF')
-plt.ylabel('Final Embryo CMF')
-plt.title('Minimum Ejecta CMF = 0.0')
-
-plt.savefig('graphs/Max_CMF.png', bbox_inches='tight', pad_inches=0.25, dpi=250)
-"""
 
 print("--- %s seconds ---" % (time.time() - start_time))
 

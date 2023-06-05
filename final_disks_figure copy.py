@@ -32,9 +32,9 @@ final_masses = []
 final_core_fracs = []
 compositions = []
 
-comp_output_file_pw = "mantle_stripping_output/"
-comp_output_file_name = "_mantle_stripping_output"
-fig_file = 'graphs/all_final_core_fracs.pdf'
+comp_output_file_pw = "comp_tracking_output/"
+comp_output_file_name = "_comp_tracking_output"
+fig_file = 'graphs/comp_tracking_all_final_core_fracs.pdf'
 
 
 file_range = np.arange(1,51,1)

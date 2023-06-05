@@ -18,13 +18,13 @@ import sys
 core_density = 7874.0 #kg m^-3 - density of iron
 mantle_density = 3330.0 #kg m^3 -  approximate density of Earth's upper mantle
 
-composition_input_file = "mantle_stripping_input/nu_mantle_stripping_input1.txt"
-composition_output_file = "mantle_stripping_output/nu_mantle_stripping_output1.txt"
+composition_input_file = "mantle_stripping_input/2step_mantle_stripping_input1.txt"
+composition_output_file = "mantle_stripping_output/2step_mantle_stripping_output1.txt"
 collision_report_file = "new_collision_reports/new_collision_report1.txt"
 final_orbital_parameters_file = "final_orbital_parameters/final_orbital_parameters1.txt"
 fig1_file = 'graphs/collision_type_bar_graph1.pdf'
 fig2_file = 'graphs/low_exp_final_core_fracs1.pdf'
-fig3_file = 'graphs/nu_initial_disk1.pdf'
+fig3_file = 'graphs/2step_initial_disk.pdf'
 fig4_file = 'graphs/low_exp_final_planets1.pdf'
 
 ######## COMPOSITION DATA ORGANIZING FUNCTION ###########
@@ -106,10 +106,10 @@ for i in range(len(blocks)): #iterates through each value in blocks list - THIS 
         no_collisions[4] += 1
         
 
-fig1, ax1 = plt.subplots()
+"""fig1, ax1 = plt.subplots()
 ax1.barh(collision_types, no_collisions)
 
-plt.savefig(fig1_file, bbox_inches='tight', pad_inches=1.25)
+plt.savefig(fig1_file, bbox_inches='tight', pad_inches=1.25)"""
 
 
 
@@ -170,7 +170,7 @@ plt.legend()
 plt.savefig(fig2_file, bbox_inches='tight', pad_inches=1.25)
 """
 
-fig3, ax3 = plt.subplots(figsize=(7,5))
+fig3, ax3 = plt.subplots(figsize=(6,5))
 
 color_map = plt.get_cmap('jet')
 plot3 = ax3.scatter(original_a, original_e, marker='o', s=original_masses, c=original_core_fracs, cmap=color_map, vmin=min_frac, vmax=max_frac)

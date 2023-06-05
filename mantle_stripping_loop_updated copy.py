@@ -414,8 +414,8 @@ start_time = time.time() #Timer to see how long running this code takes
 final_average_core_fracs = []
 min_final_core_fracs = []
 max_final_core_fracs = []
-min_core_collision_fracs = np.arange(0.0, 0.2, 0.1)
-max_core_collision_fracs = np.arange(0.0, 0.2, 0.1)
+min_core_collision_fracs = np.arange(0.0, 1.1, 0.1)
+max_core_collision_fracs = np.arange(0.0, 1.1, 0.1)
 
 for max_cmf in max_core_collision_fracs:
     average_fracs = []
@@ -452,15 +452,21 @@ print(max_final_core_fracs)
 
 color_map = plt.get_cmap('jet')
 
-fmin = [str(i) for i in min_core_collision_fracs]
-fmax = [str(i) for i in min_core_collision_fracs]
-
+fmin = [str(i/10) for i in range(len(min_core_collision_fracs))]
+fmax = [str(i/10) for i in range(len(max_core_collision_fracs))]
+print(fmin)
+print(fmax)
 min_final_frac = 0.0
 max_final_frac = 0.8
 
-fig, (ax1, ax2, ax3) = plt.subplots(nrows=1, ncols=3, sharex=True, sharey=True, gridspec_kw={'width_ratios': [9, 9, 10.8]}, figsize=(14,6))
+def truncate(n, decimals=3):
+    multiplier = 10 ** decimals
+    return int(n * multiplier) / multiplier
+
+
+fig, (ax1, ax2, ax3) = plt.subplots(nrows=1, ncols=3, sharex=True, sharey=True, gridspec_kw={'width_ratios': [9, 9, 9]}, figsize=(14,6))
 fig.subplots_adjust(wspace=0.03)
-#ax1.minorticks_on()
+
 
 plot1 = ax1.imshow(final_average_core_fracs, cmap=color_map, vmin=min_final_frac, vmax=max_final_frac)
 plot2 = ax2.imshow(min_final_core_fracs, cmap=color_map, vmin=min_final_frac, vmax=max_final_frac)
@@ -478,28 +484,21 @@ ax1.set_xlabel('f$_{min}$', fontsize='x-large', labelpad=10.0)
 ax2.set_xlabel('f$_{min}$', fontsize='x-large', labelpad=10.0)
 ax3.set_xlabel('f$_{min}$', fontsize='x-large', labelpad=10.0)
 ax1.set_ylabel("f$_{max}$", fontsize='x-large', labelpad=10.0)
-cbar = fig.colorbar(plot3, location='right', ax=ax3, anchor=(0,0), pad=0.0, ticks=[0.0, .1, .2, .3, .4, .5, .6, .7, .8, .9, 1.0])
+cax = fig.add_axes([ax3.get_position().x1+0.0065,ax3.get_position().y0,0.02,ax3.get_position().height])
+cbar = fig.colorbar(plot3, cax=cax, anchor=(0,0), ticks=[0.0, .1, .2, .3, .4, .5, .6, .7, .8, .9, 1.0])
 cbar.set_label(label='CMF', size='x-large', labelpad=10.0)
 cbar.minorticks_on()
 for i in range(len(fmax)):
     for j in range(len(fmin)):
-        if final_average_core_fracs[i][j] != np.nan:
-            text1 = ax1.text(j, i, round(final_average_core_fracs[i][j], 5),
-                           ha="center", va="center", color="w", fontsize='x-large')
-            text2 = ax2.text(j, i, round(min_final_core_fracs[i][j], 5),
-                           ha="center", va="center", color="w", fontsize='x-large')
-            text3 = ax3.text(j, i, round(max_final_core_fracs[i][j], 5),
-                           ha="center", va="center", color="w", fontsize='x-large')
+        if -10.0 < final_average_core_fracs[i][j] < 10.0: #avoids the np.nan
+            text1 = ax1.text(j, i, format(final_average_core_fracs[i][j], '.2f'),
+                           ha="center", va="center", color="w")
+            text2 = ax2.text(j, i, format(min_final_core_fracs[i][j], '.2f'),
+                           ha="center", va="center", color="w")
+            text3 = ax3.text(j, i, format(max_final_core_fracs[i][j], '.2f'),
+                           ha="center", va="center", color="w")
+
         
-"""plt.grid(color='black', linestyle='-', axis='y')
-plt.xticks(np.arange(0.0, 1.1, 0.1))
-plt.yticks(np.arange(0.00, 0.85, 0.05)) #.4
-ax1.axhline(0.3, label = 'Initial CMF', color = 'tab:blue', linestyle = '-', alpha=1.0)
-plt.xlabel('f$_{min}$', fontsize='x-large')
-plt.ylabel('Final Planet CMF', fontsize='large')
-plt.title('f$_{max}$ = 1.0', fontsize='x-large')
-ax1.minorticks_on()
-plt.legend(framealpha=1.0)"""
 
 plt.savefig('graphs/changing_ms_model.pdf', bbox_inches='tight', pad_inches=0.01, dpi=250)
 

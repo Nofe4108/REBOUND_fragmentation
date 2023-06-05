@@ -19,15 +19,24 @@ from matplotlib.lines import Line2D
 distance_conversion = 1.49597870691e11 #m to au
 mass_conversion = 1.9885e30 #kg to Msun
 time_conversion = 31557600 #sec to yrs
+obj_mass_conversion = 334672.021419
+G = 39.478
 
 core_density = 7874.0*(distance_conversion**3/mass_conversion) #kg m^-3 - density of iron
 mantle_density = 3000.0*(distance_conversion**3/mass_conversion) #kg m^3 -  value used in the simulation
 
-
+efs = []
 B_list = []
 ideal_ejecta_CMF = []
 actual_ejecta_CMF = []
 collision_types = []
+velocities = []
+disruptive_collision_velocities = []
+disruptive_collision_target_masses = []
+disruptive_collision_proj_masses = []
+disruptive_collision_lr_masses = []
+disruptive_collision_lr_cmfs = []
+disruptive_collision_target_cmfs = []
 ######## COMPOSITION DATA ORGANIZING FUNCTION ###########
 #Function takes the data from the composition input file and organizes it in a list
 #The created list has seperate values that represent the particle's hash, mass, core frac, and mantle frac
@@ -59,7 +68,7 @@ start_time = time.time() #Timer to see how long running this code takes
 
 
 ###### MAIN FUNCTION #########
-def track_composition(collision_report_file, composition_input_file, impact_parameter_file, ejection_file, min_core_collision_frac, max_core_collision_frac): #Main function that gives the compositions that will be outputted to the file
+def track_composition(collision_report_file, composition_input_file, impact_parameter_file, ejection_file, velocity_file, min_core_collision_frac, max_core_collision_frac, file_range_idx): #Main function that gives the compositions that will be outputted to the file
     f = open(composition_input_file, 'r')
     init_compositions = [line.split() for line in f.readlines()] #reads each line in file and splits its value into an array (hash - mass - composition fractions) (all values are strings)
     compositions = organize_compositions(init_compositions) #organzies the data from the file
@@ -82,6 +91,12 @@ def track_composition(collision_report_file, composition_input_file, impact_para
     b = b_file.read() #reads each line in file and splits its value into an array - these impact parameters are divided by R_targ
     impact_parameters_raw = b.split("\n")
     impact_parameters = [x.strip('b/Rtarg:     ') for x in impact_parameters_raw]
+    
+    #GETS COLLISIONAL VELOCITIES FOR GRAPHING
+    v_file = open(velocity_file, 'r')
+    v = v_file.read() #reads each line in file and splits its value into an array - these impact parameters are divided by R_targ
+    velocities_raw = v.split("\n")
+    collision_velocities = [x.strip('Vimp/Vesc:     ') for x in velocities_raw]
 
     destroyed_object_hashes = [] #list of objects that get destroyed in a collision
     
@@ -91,6 +106,7 @@ def track_composition(collision_report_file, composition_input_file, impact_para
         time = float(block[0]) #time of collision is first value
         collision_type = int(block[1]) #type of collision is second
         if collision_type == 0: #This is just an elastic bounce so it just continues to the next set of collision data in the blocks list
+            velocities.append(float(collision_velocities[i]))
             continue
         target_hash = int(block[2]) #hash of the target
         largest_remnant_mass = float(block[3]) #mass of the target after collision
@@ -134,7 +150,7 @@ def track_composition(collision_report_file, composition_input_file, impact_para
                                                
  ######################## PERFECT MERGER ##########################
         if collision_type == 1: #perfect merger
-                
+            velocities.append(collision_velocities[i])
             compositions[targ_idx][2] = ((target_core_frac*target_mass)+(proj_core_frac*proj_mass))/largest_remnant_mass #changes the composition fraction for each specie in the target - basically weighted average of initial target compoisition and mass with the projectile composition and mass
             compositions[targ_idx][3] = 1 - compositions[targ_idx][2]
             
@@ -142,7 +158,14 @@ def track_composition(collision_report_file, composition_input_file, impact_para
  ####################### PARTIAL ACCRETION ######################
    
         if collision_type == 2: #partial accretion
-
+            
+            velocities.append(collision_velocities[i])
+            disruptive_collision_velocities.append(float(collision_velocities[i]))
+            disruptive_collision_target_masses.append(target_mass*obj_mass_conversion)
+            disruptive_collision_proj_masses.append(proj_mass*obj_mass_conversion)
+            disruptive_collision_lr_masses.append(largest_remnant_mass*obj_mass_conversion)
+            disruptive_collision_target_cmfs.append(target_core_frac)
+        
             mass_accreted = largest_remnant_mass-target_mass #change in mass of the target after the collision - this time mass is added to target
             ejecta_core_frac = 0 #fraction of the accreted mass that is composed of core material (will depend on impact parameter)
 
@@ -190,10 +213,23 @@ def track_composition(collision_report_file, composition_input_file, impact_para
                 actual_ejecta_CMF.append(mass_accreted_fractions[0]/mass_accreted)
             collision_types.append('tab:blue')               
             
+            #FOLLOWING LISTS USED FOR FIGURE 7
+            if file_range_idx < 11:
+                efs.append('tab:blue')
+            elif 11 <= file_range_idx < 21:
+                efs.append('tab:orange')
+            elif 21 <= file_range_idx < 31:
+                efs.append('tab:green')
+            elif 31 <= file_range_idx < 41:
+                efs.append('tab:purple')
+            elif 41 <= file_range_idx < 51:
+                efs.append('tab:red')
             
             compositions[targ_idx][2] = ((target_mass*target_core_frac)+(mass_accreted_fractions[0]))/largest_remnant_mass #new core frac for largest remnant
             compositions[targ_idx][3] = 1 - compositions[targ_idx][2] #new mantle frac for largest remnant
-
+            
+            disruptive_collision_lr_cmfs.append(compositions[targ_idx][2])
+            
             total_core_mass = (target_core_frac*target_mass)+(proj_core_frac*proj_mass) #how much total iron mass there is between the target and projectile
             largest_remnant_core_mass = largest_remnant_mass*compositions[targ_idx][2] #how much iron mass got into the largest remnant
             total_frag_core_mass = total_core_mass - largest_remnant_core_mass #how much iron mass is now left over in the fragments
@@ -239,7 +275,14 @@ def track_composition(collision_report_file, composition_input_file, impact_para
 ################# PARTIAL EROSION & SUPER-CATASTROPHIC ##################      
                         
         if collision_type == 3 or collision_type == 4: #partial erosion, target abundances stay the same
-        
+            
+            velocities.append(collision_velocities[i])
+            disruptive_collision_velocities.append(float(collision_velocities[i]))
+            disruptive_collision_target_masses.append(target_mass*obj_mass_conversion)
+            disruptive_collision_proj_masses.append(proj_mass*obj_mass_conversion)
+            disruptive_collision_lr_masses.append(largest_remnant_mass*obj_mass_conversion)
+            disruptive_collision_target_cmfs.append(target_core_frac)
+            
             mass_lost = target_mass-largest_remnant_mass #change in mass of the target after the collision - this time mass is lost from target
 
             ejecta_core_frac = 0 #fraction of the eroded mass that is composed of core material (will depend on impact parameter)
@@ -286,9 +329,23 @@ def track_composition(collision_report_file, composition_input_file, impact_para
                 actual_ejecta_CMF.append(mass_lost_fractions[0]/mass_lost)
             collision_types.append('tab:orange')
             
+            #FOLLOWING LISTS USED FOR FIGURE 7
+            if file_range_idx < 11:
+                efs.append('tab:blue')
+            elif 11 <= file_range_idx < 21:
+                efs.append('tab:orange')
+            elif 21 <= file_range_idx < 31:
+                efs.append('tab:green')
+            elif 31 <= file_range_idx < 41:
+                efs.append('tab:purple')
+            elif 41 <= file_range_idx < 51:
+                efs.append('tab:red')
+            
             compositions[targ_idx][2] = ((target_mass*target_core_frac)-(mass_lost_fractions[0]))/largest_remnant_mass #new core frac for largest remnant
             compositions[targ_idx][3] = 1 - compositions[targ_idx][2] #new mantle frac for largest remnant
-
+            
+            disruptive_collision_lr_cmfs.append(compositions[targ_idx][2])
+            
             total_core_mass = (target_core_frac*target_mass)+(proj_core_frac*proj_mass) #how much total iron mass there is between the target and projectile
             largest_remnant_core_mass = largest_remnant_mass*compositions[targ_idx][2] #how much iron mass got into the largest remnant
             total_frag_core_mass = total_core_mass - largest_remnant_core_mass #how much iron mass is now left over in the fragments
@@ -398,16 +455,19 @@ collision_file_pw = "/Users/nferich/Desktop/anna_collision_reports/new_collision
 comp_input_file_pw = "/Users/nferich/Desktop/anna_collision_reports/mantle_stripping_input/uni_mantle_stripping_input"
 impact_param_file_pw = "impact_parameters/impact_parameters"
 ejec_file_pw = "ejections/ejections"
+velocity_file_pw = "velocities/velocities"
 
 file_range = np.arange(1,51,1)
 
 start_time = time.time() #Timer to see how long running this code takes
-################# MINIMUM EJECTA CORE FRAC GRAPH #####################################
+"""################# MINIMUM EJECTA CORE FRAC GRAPH #####################################
+all_final_core_fracs = []
 final_average_core_fracs = []
 min_final_core_fracs = []
 max_final_core_fracs = []
 min_core_collision_fracs = np.arange(0, 1.1, 0.1)
 max_core_collision_fracs = np.arange(1, 2, 1)
+
 
 for max_cmf in max_core_collision_fracs:
     average_fracs = []
@@ -426,6 +486,7 @@ for max_cmf in max_core_collision_fracs:
                     if obj[1]*334672.021419 > 0.093: #if the object mass is bigger than original embryo mass
                         final_embryo_composition.append(obj)      
         final_core_fracs = [final_embryo_composition[k][2] for k in range(len(final_embryo_composition))]
+        all_final_core_fracs.append(final_core_fracs)
         final_average_core_frac = sum(final_core_fracs)/len(final_core_fracs)
         average_fracs.append(final_average_core_frac)
         min_fracs.append(min(final_core_fracs))
@@ -455,8 +516,42 @@ plt.legend(framealpha=1.0)
 
 plt.savefig('graphs/changing_min_CMF.pdf', bbox_inches='tight', pad_inches=0.01, dpi=250)
 
+for i in range(len(all_final_core_fracs)):
+    extreme_cmfs = []
+    for j in range(len(all_final_core_fracs[i])):
+        if all_final_core_fracs[i][j] < 0.25 or all_final_core_fracs[i][j] > 0.35:
+            extreme_cmfs.append(all_final_core_fracs[i][j])
+    for cmf in extreme_cmfs:
+        for k in range(len(all_final_core_fracs[i])):
+            if all_final_core_fracs[i][k] == cmf:
+                all_final_core_fracs[i].pop(k)
+                break
+            else:
+                continue
+
+for i in range(len(all_final_core_fracs)):
+    all_final_core_fracs[i].pop(26)
+                
+
+labels=['0.0','0.1','0.2','0.3','0.4','0.5','0.6','0.7','0.8','0.9','1.0',]
+fig3, ax3 = plt.subplots(figsize=(6,5))
+fig3 = plt.violinplot(all_final_core_fracs, showmedians=True, widths=0.7)
+plt.grid(color='black', linestyle='-', axis='y')
+ax3.set_xticks(np.arange(1, len(labels) + 1), labels=labels)
+plt.yticks(np.arange(0.00, 0.85, 0.0125)) #.4
+ax3.set_ylim([0.275, 0.325])
+#plt.yticks(np.arange(0.275, 0.325, 0.005)) #.4
+plt.xlabel('f$_{min}$', fontsize='x-large')
+plt.ylabel('Final Planet CMF', fontsize='large')
+plt.title('f$_{max}$ = 1.0', fontsize='x-large')
+ax3.minorticks_on()
+
+
+plt.savefig('graphs/varying_fmin_vp.pdf', bbox_inches='tight', pad_inches=0.01, dpi=250)
+
 
 ################# MAXIMUM EJECTA CORE FRAC GRAPH #####################################
+all_final_core_fracs = []
 final_average_core_fracs = []
 min_final_core_fracs = []
 max_final_core_fracs = []
@@ -481,6 +576,7 @@ for min_cmf in min_core_collision_fracs:
                     if obj[1]*334672.021419 > 0.093: #if the object mass is bigger than original embryo mass
                         final_embryo_composition.append(obj)      
         final_core_fracs = [final_embryo_composition[k][2] for k in range(len(final_embryo_composition))]
+        all_final_core_fracs.append(final_core_fracs)
         final_average_core_frac = sum(final_core_fracs)/len(final_core_fracs)
         average_fracs.append(final_average_core_frac)
         min_fracs.append(min(final_core_fracs))
@@ -511,6 +607,39 @@ plt.legend(framealpha=1.0)
 
 plt.savefig('graphs/changing_max_CMF.pdf', bbox_inches='tight', pad_inches=0.01, dpi=250)
 print("--- %s seconds ---" % (time.time() - start_time))
+
+for i in range(len(all_final_core_fracs)):
+    extreme_cmfs = []
+    for j in range(len(all_final_core_fracs[i])):
+        if all_final_core_fracs[i][j] < 0.35 or all_final_core_fracs[i][j] > 0.35:
+            extreme_cmfs.append(all_final_core_fracs[i][j])
+    for cmf in extreme_cmfs:
+        for k in range(len(all_final_core_fracs[i])):
+            if all_final_core_fracs[i][k] == cmf:
+                all_final_core_fracs[i].pop(k)
+                break
+            else:
+                continue
+
+for i in range(len(all_final_core_fracs)):
+    all_final_core_fracs[i].pop(26)
+
+labels=['0.0','0.1','0.2','0.3','0.4','0.5','0.6','0.7','0.8','0.9','1.0',]
+fig4, ax4 = plt.subplots(figsize=(6,5))
+fig4 = plt.violinplot(all_final_core_fracs, showmedians=True, widths=0.7)
+plt.grid(color='black', linestyle='-', axis='y')
+ax4.set_xticks(np.arange(1, len(labels) + 1), labels=labels)
+#plt.ylim([0.0, 0.8001])
+plt.yticks(np.arange(0.00, 0.85, 0.0125)) #.4
+#plt.ylim([0.275, 0.325])
+#plt.yticks(np.arange(0.275, 0.325, 0.005)) #.4
+ax4.set_ylim([0.275, 0.325])
+plt.xlabel('f$_{max}$', fontsize='x-large')
+plt.ylabel('Final Planet CMF', fontsize='large')
+plt.title('f$_{min}$ = 0.0', fontsize='x-large')
+ax4.minorticks_on()
+
+plt.savefig('graphs/varying_fmax_vp.pdf', bbox_inches='tight', pad_inches=0.01, dpi=250)"""
 """############### B vs. IDEAL CMF #################################
 min_cmf = 0.0
 max_cmf  = 1.0
@@ -560,3 +689,246 @@ legend = plt.legend(handles=ax4_legend_elements, loc = 'upper right', framealpha
 plt.gca().add_artist(legend)
 
 plt.savefig('graphs/BvsactualCMF.pdf', bbox_inches='tight', pad_inches=0.01)"""
+
+
+############## MISCELLANEOUS GRAPHS #############
+
+min_cmf = 0.0
+max_cmf  = 1.0
+for i in file_range:
+    collision_file = collision_file_pw + str(i) + ".txt"
+    comp_input_file = comp_input_file_pw + str(1) + ".txt"
+    impact_param_file = impact_param_file_pw + str(i) + ".txt"
+    ejec_file = ejec_file_pw + str(i) + ".txt"
+    velo_file = velocity_file_pw + str(i) + ".txt"
+    final_composition = track_composition(collision_file, comp_input_file, impact_param_file, ejec_file, velo_file, min_cmf, max_cmf, i)
+
+fig3, (ax3, ax4) = plt.subplots(nrows=2, ncols=1, sharex=True, sharey=True, figsize=(6,10))
+fig3.subplots_adjust(hspace=0.03)
+ax3.scatter(B_list, ideal_ejecta_CMF, color=collision_types, s=5.0, marker='o', linewidths=0, alpha=0.6)
+ax3.set_ylabel('Ideal Ejecta CMF', fontsize='large')   
+ax3.tick_params(length=3, width=1, which='major')
+ax3.minorticks_on()
+ax3_legend_elements = [Line2D([], [], color='tab:blue', marker='o', lw=0.0, label='Accretive Collision', markerfacecolor='tab:blue', markersize=10.0),
+                      Line2D([], [], color='tab:orange', marker='o', lw=0.0, label='Erosive Collision', markerfacecolor='tab:orange', markersize=10.0)]
+legend3 = ax3.legend(handles=ax3_legend_elements, loc = 'upper right', framealpha = .7)
+ax4.scatter(B_list, actual_ejecta_CMF, color=collision_types, s=5.0, marker='o', linewidths=0, alpha=0.6)
+ax4.set_xlabel('B/$R_{targ}$', fontsize='large')
+ax4.set_ylabel('Actual Ejecta CMF', fontsize='large')   
+ax4.minorticks_on()
+
+plt.savefig('graphs/B_vs_ideal_and_actual_CMF.pdf', bbox_inches='tight', pad_inches=0.01)
+    
+fig7, ax7 = plt.subplots(figsize=(6,5))
+ax7.scatter(B_list, ideal_ejecta_CMF, color=efs, s=2.0, marker='o', linewidths=0, alpha=0.6)
+plt.xlabel('B/$R_{targ}$', fontsize='large')
+plt.ylabel('Ideal Ejecta CMF', fontsize='large')   
+ax7.minorticks_on()
+#plt.grid()
+ax7_legend_elements = [Line2D([], [], color='tab:blue', marker='o', lw=0.0, label='ef=3', markerfacecolor='tab:blue', markersize=np.sqrt(.1*1000)),
+                      Line2D([], [], color='tab:orange', marker='o', lw=0.0, label='ef=5', markerfacecolor='tab:orange', markersize=np.sqrt(.1*1000)),
+                      Line2D([], [], color='tab:green', marker='o', lw=0.0, label='ef=7', markerfacecolor='tab:green', markersize=np.sqrt(.1*1000)),
+                      Line2D([], [], color='tab:purple', marker='o', lw=0.0, label='ef=10', markerfacecolor='tab:purple', markersize=np.sqrt(.1*1000)),
+                      Line2D([], [], color='tab:red', marker='o', lw=0.0, label='ef=15', markerfacecolor='tab:red', markersize=np.sqrt(.1*1000)),]
+legend = plt.legend(handles=ax7_legend_elements, loc = 'upper right', framealpha = .7)
+plt.gca().add_artist(legend)
+plt.savefig('graphs/B_vs_ideal_CMF_with_ef.pdf', bbox_inches='tight', pad_inches=0.01)
+
+fig8, ax8 = plt.subplots(figsize=(6,5))
+ax8.scatter(B_list, disruptive_collision_velocities, c=collision_types, s=2.0, marker='o', linewidths=0, alpha=0.6)
+plt.xlabel('B/$R_{targ}$', fontsize='large')
+plt.ylabel('$v_{imp}/v_{esc}$', fontsize='large')
+plt.yscale("log")  
+plt.ylim([0.5,100])
+ax8_legend_elements = [Line2D([], [], color='tab:blue', marker='o', lw=0.0, label='accretive collision', markerfacecolor='tab:blue', markersize=10.0),
+                      Line2D([], [], color='tab:orange', marker='o', lw=0.0, label='erosive collision', markerfacecolor='tab:orange', markersize=10.0)] 
+legend = plt.legend(handles=ax8_legend_elements, loc = 'upper left', framealpha = .7)
+plt.savefig('graphs/B_vs_vimp_over_v_esc.pdf', bbox_inches='tight', pad_inches=0.01)
+
+fig9, ax9 = plt.subplots(figsize=(6,5))
+ax9.scatter(disruptive_collision_target_masses, disruptive_collision_velocities, c=collision_types, s=1.5, marker='o', linewidths=0, alpha=0.6)
+plt.xlabel('Target Mass ($M_{\u2295}$)', fontsize='large')
+plt.ylabel('$v_{imp}/v_{esc}$', fontsize='large')
+plt.yscale("log")  
+plt.xscale("log")
+ax9.axvline(.093, label = 'Embryo Mass', color = 'tab:red', linestyle = '--', alpha=.3)
+ax9.axvline(.0093, label = 'Planetesimal Mass', color = 'tab:green', linestyle = '--', alpha=.3)
+plt.ylim([0.5,100])
+plt.legend(loc='upper right')
+ax9_legend_elements = [Line2D([], [], color='tab:blue', marker='o', lw=0.0, label='accretive collision', markerfacecolor='tab:blue', markersize=10.0),
+                      Line2D([], [], color='tab:orange', marker='o', lw=0.0, label='erosive collision', markerfacecolor='tab:orange', markersize=10.0)] 
+legend = plt.legend(handles=ax9_legend_elements, loc = 'upper right', framealpha = .7)
+plt.savefig('graphs/target_mass_vs_vimp_over_vesc.pdf', bbox_inches='tight', pad_inches=0.01)
+
+fig10, ax10 = plt.subplots(figsize=(6,5))
+ax10.scatter(disruptive_collision_velocities, ideal_ejecta_CMF, c=collision_types, s=2.0, marker='o', linewidths=0, alpha=0.6)
+plt.xlabel('$v_{imp}/v_{esc}$', fontsize='large')
+plt.ylabel('Ideal Ejecta CMF', fontsize='large')
+plt.xscale("log")
+plt.xlim([0.5,100])
+ax10_legend_elements = [Line2D([], [], color='tab:blue', marker='o', lw=0.0, label='accretive collision', markerfacecolor='tab:blue', markersize=10.0),
+                      Line2D([], [], color='tab:orange', marker='o', lw=0.0, label='erosive collision', markerfacecolor='tab:orange', markersize=10.0)] 
+legend = plt.legend(handles=ax10_legend_elements, loc = 'upper left', framealpha = .7)
+plt.savefig('graphs/vimp_over_vesc_vs_ideal_CMF.pdf', bbox_inches='tight', pad_inches=0.01)
+
+fig11, ax11 = plt.subplots(figsize=(6,5))
+ax11.scatter(disruptive_collision_target_masses, ideal_ejecta_CMF, c=collision_types, s=2.0, marker='o', linewidths=0, alpha=0.6)
+plt.xlabel('Target Mass ($M_{\u2295}$)', fontsize='large')
+plt.ylabel('Ideal Ejecta CMF', fontsize='large')
+plt.xscale("log")
+ax11.axvline(.093, label = 'Embryo Mass', color = 'tab:red', linestyle = '--', alpha=.3)
+ax11.axvline(.0093, label = 'Planetesimal Mass', color = 'tab:green', linestyle = '--', alpha=.3)
+ax11_legend_elements = [Line2D([], [], color='tab:blue', marker='o', lw=0.0, label='accretive collision', markerfacecolor='tab:blue', markersize=10.0),
+                      Line2D([], [], color='tab:orange', marker='o', lw=0.0, label='erosive collision', markerfacecolor='tab:orange', markersize=10.0)] 
+legend = plt.legend(handles=ax11_legend_elements, loc = 'upper left', framealpha = .7)
+plt.savefig('graphs/targ_mass_vs_ideal_CMF.pdf', bbox_inches='tight', pad_inches=0.01)
+
+total_radius = [calc_radius(disruptive_collision_target_masses[i]/obj_mass_conversion, 0, mantle_density, 0)+calc_radius(disruptive_collision_proj_masses[i]/obj_mass_conversion, 0, mantle_density, 0) for i in range(len(disruptive_collision_target_masses))] #supposed to have units of au
+total_mass = [(disruptive_collision_target_masses[i]+disruptive_collision_proj_masses[i])/obj_mass_conversion for i in range(len(disruptive_collision_target_masses))]
+v_esc_au_yr = [np.sqrt(2*G*total_mass[i]/total_radius[i]) for i in range(len(disruptive_collision_target_masses))]
+v_esc = [v_esc_au_yr[i]*distance_conversion/(time_conversion*1000) for i in range(len(disruptive_collision_target_masses))] #should be km/s
+v_impact = [disruptive_collision_velocities[i]*v_esc[i] for i in range(len(disruptive_collision_target_masses))]
+
+fig12, (ax12, ax18) = plt.subplots(nrows=2, ncols=1, sharex=True, sharey=True, figsize=(6,10))
+fig12.subplots_adjust(hspace=0.03)
+ax12.scatter(v_impact, ideal_ejecta_CMF, c=collision_types, s=5.0, marker='o', linewidths=0, alpha=0.7)
+ax12.set_ylabel('Ideal Ejecta CMF', fontsize='large')
+plt.xscale("log")
+ax12.minorticks_on()
+ax12.set_xlim([1.0,400])
+ax12_legend_elements = [Line2D([], [], color='tab:blue', marker='o', lw=0.0, label='accretive collision', markerfacecolor='tab:blue', markersize=10.0),
+                      Line2D([], [], color='tab:orange', marker='o', lw=0.0, label='erosive collision', markerfacecolor='tab:orange', markersize=10.0)] 
+legend12 = ax12.legend(handles=ax12_legend_elements, loc = 'upper right', framealpha = .4)
+ax18.scatter(v_impact, actual_ejecta_CMF, c=collision_types, s=5.0, marker='o', linewidths=0, alpha=0.7)
+ax18.set_xlabel('$v_{imp}$ (km/s)', fontsize='large')
+ax18.set_ylabel('Actual Ejecta CMF', fontsize='large')
+plt.xscale("log")
+ax18.set_xlim([1.0,400])
+plt.savefig('graphs/vimp_vs_ideal_and_actual_ejecta_CMF.pdf', bbox_inches='tight', pad_inches=0.01)
+
+"""fig3, (ax3, ax4) = plt.subplots(nrows=2, ncols=1, sharex=True, sharey=True, figsize=(6,10))
+fig3.subplots_adjust(hspace=0.03)
+ax3.scatter(B_list, ideal_ejecta_CMF, color=collision_types, s=5.0, marker='o', linewidths=0, alpha=0.6)
+ax3.set_ylabel('Ideal Ejecta CMF', fontsize='large')   
+ax3.tick_params(length=3, width=1, which='major')
+ax3.minorticks_on()
+ax3_legend_elements = [Line2D([], [], color='tab:blue', marker='o', lw=0.0, label='Accretive Collision', markerfacecolor='tab:blue', markersize=10.0),
+                      Line2D([], [], color='tab:orange', marker='o', lw=0.0, label='Erosive Collision', markerfacecolor='tab:orange', markersize=10.0)]
+legend3 = ax3.legend(handles=ax3_legend_elements, loc = 'upper right', framealpha = .7)
+ax4.scatter(B_list, actual_ejecta_CMF, color=collision_types, s=5.0, marker='o', linewidths=0, alpha=0.6)
+ax4.set_xlabel('B/$R_{targ}$', fontsize='large')
+ax4.set_ylabel('Actual Ejecta CMF', fontsize='large')   
+ax4.minorticks_on()
+plt.savefig('graphs/B_vs_ideal_and_actual_CMF.pdf', bbox_inches='tight', pad_inches=0.01)"""
+
+fig13, ax13 = plt.subplots(figsize=(6,5))
+ax13.scatter(disruptive_collision_target_masses, v_impact, c=collision_types, s=5.0, marker='o', linewidths=0, alpha=0.6)
+plt.xlabel('Target Mass ($M_{\u2295}$)', fontsize='large')
+plt.ylabel('$v_{imp}$ (km/s)', fontsize='large')
+plt.yscale("log")  
+plt.xscale("log")
+ax13.axvline(.093, label='Embryo Mass', color='tab:red', linestyle='--', alpha=0.4)
+ax13.axvline(.0093, label = 'Planetesimal Mass', color = 'tab:green', linestyle = '--', alpha=0.4)
+plt.ylim([0.5,250])
+ax13_legend_elements = [Line2D([], [], color='tab:red', linestyle='--',label='Embryo Mass', alpha=0.4),
+                      Line2D([], [], color='tab:green', linestyle='--', label='Planetesimal Mass', alpha=0.4)] 
+ax13_legend_elements_2 = [Line2D([], [], color='tab:blue', marker='o', lw=0.0, label='Accretive Collision', markerfacecolor='tab:blue', markersize=10.0),
+                      Line2D([], [], color='tab:orange', marker='o', lw=0.0, label='Erosive Collision', markerfacecolor='tab:orange', markersize=10.0)] 
+legend = plt.legend(handles=ax13_legend_elements, loc='lower right', framealpha=0.7)
+legend2 = plt.legend(handles=ax13_legend_elements_2, loc = 'upper right', framealpha = 0.7)
+plt.gca().add_artist(legend)
+plt.gca().add_artist(legend2)
+plt.savefig('graphs/target_mass_vs_v_imp.pdf', bbox_inches='tight', pad_inches=0.01)
+
+fig14, ax14 = plt.subplots(figsize=(6,5))
+ax14.scatter(disruptive_collision_target_masses, B_list, c=collision_types, s=2.0, marker='o', linewidths=0, alpha=0.6)
+plt.xlabel('Target Mass ($M_{\u2295}$)', fontsize='large')
+plt.ylabel('B/$R_{targ}$', fontsize='large')
+plt.xscale("log")
+ax14.axvline(.093, label = 'Embryo Mass', color = 'tab:red', linestyle = '--', alpha=.3)
+ax14.axvline(.0093, label = 'Planetesimal Mass', color = 'tab:green', linestyle = '--', alpha=.3)
+ax14_legend_elements = [Line2D([], [], color='tab:blue', marker='o', lw=0.0, label='accretive collision', markerfacecolor='tab:blue', markersize=10.0),
+                      Line2D([], [], color='tab:orange', marker='o', lw=0.0, label='erosive collision', markerfacecolor='tab:orange', markersize=10.0)] 
+legend = plt.legend(handles=ax14_legend_elements, loc = 'lower right', framealpha = .7)
+plt.savefig('graphs/target_mass_vs_B.pdf', bbox_inches='tight', pad_inches=0.01)
+
+fig15, ax15 = plt.subplots(figsize=(6,5))
+ax15.scatter(disruptive_collision_lr_masses, v_impact, c=collision_types, s=1.5, marker='o', linewidths=0, alpha=0.6)
+plt.xlabel('Largest Remnant Mass ($M_{\u2295}$)', fontsize='large')
+plt.ylabel('$v_{imp}$ (km/s)', fontsize='large')
+plt.yscale("log")  
+plt.xscale("log")
+ax15.axvline(.093, label = 'Embryo Mass', color = 'tab:red', linestyle = '--', alpha=.3)
+ax15.axvline(.0093, label = 'Planetesimal Mass', color = 'tab:green', linestyle = '--', alpha=.3)
+plt.ylim([0.5,1000])
+ax15_legend_elements = [Line2D([], [], color='tab:blue', marker='o', lw=0.0, label='accretive collision', markerfacecolor='tab:blue', markersize=10.0),
+                      Line2D([], [], color='tab:orange', marker='o', lw=0.0, label='erosive collision', markerfacecolor='tab:orange', markersize=10.0)] 
+legend = plt.legend(handles=ax15_legend_elements, loc = 'lower right', framealpha = .7)
+plt.savefig('graphs/lr_mass_vs_vimp.pdf', bbox_inches='tight', pad_inches=0.01)
+
+fig16, ax16 = plt.subplots(figsize=(6,5))
+ax16.scatter(v_impact, disruptive_collision_lr_cmfs, c=collision_types, s=2.0, marker='o', linewidths=0, alpha=0.7)
+plt.xlabel('$v_{imp}$', fontsize='large')
+plt.ylabel('Largest Remnant CMF', fontsize='large')
+plt.xscale("log")
+plt.xlim([1.0,1000])
+ax16_legend_elements = [Line2D([], [], color='tab:blue', marker='o', lw=0.0, label='accretive collision', markerfacecolor='tab:blue', markersize=10.0),
+                      Line2D([], [], color='tab:orange', marker='o', lw=0.0, label='erosive collision', markerfacecolor='tab:orange', markersize=10.0)] 
+legend = plt.legend(handles=ax16_legend_elements, loc = 'upper right', framealpha = .7)
+plt.savefig('graphs/vimp_vs_lr_CMF.pdf', bbox_inches='tight', pad_inches=0.01)
+
+fig17, ax17 = plt.subplots(figsize=(6,5))
+ax17.scatter(disruptive_collision_target_masses, actual_ejecta_CMF, c=collision_types, s=2.0, marker='o', linewidths=0, alpha=0.6)
+plt.xlabel('Target Mass ($M_{\u2295}$)', fontsize='large')
+plt.ylabel('Actual Ejecta CMF', fontsize='large')
+plt.xscale("log")
+ax17.axvline(.093, label = 'Embryo Mass', color = 'tab:red', linestyle = '--', alpha=.3)
+ax17.axvline(.0093, label = 'Planetesimal Mass', color = 'tab:green', linestyle = '--', alpha=.3)
+ax17_legend_elements = [Line2D([], [], color='tab:blue', marker='o', lw=0.0, label='accretive collision', markerfacecolor='tab:blue', markersize=10.0),
+                      Line2D([], [], color='tab:orange', marker='o', lw=0.0, label='erosive collision', markerfacecolor='tab:orange', markersize=10.0)] 
+legend = plt.legend(handles=ax17_legend_elements, loc = 'lower right', framealpha = .7)
+plt.savefig('graphs/target_mass_vs_actual_ejecta_cmf.pdf', bbox_inches='tight', pad_inches=0.01)
+
+fig19, ax19 = plt.subplots(figsize=(6,5))
+ax19.scatter(disruptive_collision_target_masses, disruptive_collision_lr_cmfs, c=collision_types, s=2.0, marker='o', linewidths=0, alpha=0.6)
+plt.xlabel('Target Mass ($M_{\u2295}$)', fontsize='large')
+plt.ylabel('Largest Remnant CMF', fontsize='large')
+plt.xscale("log")
+ax19.axvline(.093, label = 'Embryo Mass', color = 'tab:red', linestyle = '--', alpha=.3)
+ax19.axvline(.0093, label = 'Planetesimal Mass', color = 'tab:green', linestyle = '--', alpha=.3)
+ax19_legend_elements = [Line2D([], [], color='tab:blue', marker='o', lw=0.0, label='accretive collision', markerfacecolor='tab:blue', markersize=10.0),
+                      Line2D([], [], color='tab:orange', marker='o', lw=0.0, label='erosive collision', markerfacecolor='tab:orange', markersize=10.0)] 
+legend = plt.legend(handles=ax19_legend_elements, loc = 'upper right', framealpha = .7)
+plt.savefig('graphs/target_mass_vs_lr_cmf.pdf', bbox_inches='tight', pad_inches=0.01)
+
+fig20, ax20 = plt.subplots(figsize=(6,5))
+ax20.scatter(disruptive_collision_target_cmfs, disruptive_collision_lr_cmfs, c=collision_types, s=3.0, marker='o', linewidths=0, alpha=0.6)
+plt.xlabel('Target CMF', fontsize='large')
+plt.ylabel('Largest Remnant CMF', fontsize='large')
+ax20_legend_elements = [Line2D([], [], color='tab:blue', marker='o', lw=0.0, label='accretive collision', markerfacecolor='tab:blue', markersize=10.0),
+                      Line2D([], [], color='tab:orange', marker='o', lw=0.0, label='erosive collision', markerfacecolor='tab:orange', markersize=10.0)] 
+legend = plt.legend(handles=ax20_legend_elements, loc = 'lower right', framealpha = .7)
+plt.savefig('graphs/target_CMF_vs_lr_CMF.pdf', bbox_inches='tight', pad_inches=0.01)
+
+fig21, ax21 = plt.subplots(figsize=(6,5))
+ax21.scatter(B_list, v_impact, c=collision_types, s=2.0, marker='o', linewidths=0, alpha=0.6)
+plt.xlabel('B/$R_{targ}$', fontsize='large')
+plt.ylabel('$v_{imp}$ (km/s)', fontsize='large')
+plt.yscale("log")  
+plt.ylim([1.0,1000])
+ax8_legend_elements = [Line2D([], [], color='tab:blue', marker='o', lw=0.0, label='accretive collision', markerfacecolor='tab:blue', markersize=10.0),
+                      Line2D([], [], color='tab:orange', marker='o', lw=0.0, label='erosive collision', markerfacecolor='tab:orange', markersize=10.0)] 
+legend = plt.legend(handles=ax8_legend_elements, loc = 'upper left', framealpha = .7)
+plt.savefig('graphs/B_vs_vimp.pdf', bbox_inches='tight', pad_inches=0.01)
+
+fig22, ax22 = plt.subplots(figsize=(6,5))
+ax22.scatter(ideal_ejecta_CMF, actual_ejecta_CMF, c=collision_types, s=4.0, marker='o', linewidths=0, alpha=0.6)
+plt.xlabel('Ideal Ejecta CMF', fontsize='large')  
+plt.ylabel('Actual Ejecta CMF', fontsize='large') 
+ax8_legend_elements = [Line2D([], [], color='tab:blue', marker='o', lw=0.0, label='accretive collision', markerfacecolor='tab:blue', markersize=10.0),
+                      Line2D([], [], color='tab:orange', marker='o', lw=0.0, label='erosive collision', markerfacecolor='tab:orange', markersize=10.0)] 
+legend = plt.legend(handles=ax8_legend_elements, loc = 'upper left', framealpha = .7)
+plt.savefig('graphs/ideal_CMF_vs_actual_CMF.pdf', bbox_inches='tight', pad_inches=0.01)
+
+
+

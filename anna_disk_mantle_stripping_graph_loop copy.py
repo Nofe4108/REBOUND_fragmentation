@@ -9,6 +9,7 @@ import time
 import sys
 import matplotlib.patches as mpatches
 from scipy.stats import norm
+from scipy import stats
 import statistics
 
 
@@ -65,16 +66,17 @@ ef15_collision_types = np.array([0,0,0,0,0])
 collision_types = ['elastic bounce','merger','partial accretion','partial erosion','super catastrophic']
 
 collision_report_file_pw = "new_collision_reports/new_collision_report"
-comp_output_file_pw = "mantle_stripping_output/2step_mantle_stripping_output"
+comp_output_file_pw = "mantle_stripping_output/uni_mantle_stripping_output"
 final_orbital_parameters_file_pw = "final_orbital_parameters/final_orbital_parameters"
 fig1_file = 'graphs/uni_all_final_core_fracs.pdf'
 fig2_file = 'graphs/uni_all_final_planets.pdf'
-fig3_file = 'graphs/2step_all_final_core_fracs_efs.pdf'
+fig3_file = 'graphs/uni_all_final_core_fracs_efs.pdf'
 fig4_file = 'graphs/uni_planet_CMF_histogram.pdf'
 fig5_file = 'graphs/uni_planet_CMF_mass_histogram.pdf'
 fig6_file = 'graphs/uni_planet_CMF_gaussians.pdf'
 fig7_file = 'graphs/ef_collision_types_bar.pdf'
-fig8_file = 'graphs/2step_all_final_core_fracs_cc.pdf'
+fig8_file = 'graphs/uni_all_final_core_fracs_cc.pdf'
+fig9_file = 'graphs/nu_planet_CDFs.pdf'
 
 file_range = np.arange(1,51,1)
 
@@ -247,7 +249,7 @@ ax2_legend_elements = [Line2D([], [], color='black', marker='o', lw=0.0, label='
 ax2_legend = plt.legend(handles=ax2_legend_elements, loc = 'upper right', prop={"size": 10})
 
 plt.savefig(fig2_file, bbox_inches='tight', pad_inches=0.25)
-
+"""
 
 
 fig4, ax4 = plt.subplots(figsize=(6,5))
@@ -257,9 +259,6 @@ n_bins = np.linspace(.25, .36, num=22, endpoint=False)
 #n_bins = np.linspace(0.00, 0.55, num=55, endpoint=False)
 hist_type = 'barstacked'
 bp_colors = ['tab:blue', 'tab:orange', 'tab:green', 'tab:purple', 'tab:red']
-
-
-
 ax4.hist(bp_CMFs, bins=n_bins, histtype=hist_type, lw=3.0, color=bp_colors, alpha = 1.0)
 ax4.set_xlim([0.24, 0.36])
 ax4.set_xlabel('CMF',fontsize='large')
@@ -267,7 +266,6 @@ ax4.set_ylabel('Number of Planets (M>0.093 $M_{\u2295}$)', fontsize='large')
 #plt.yticks(np.arange(0, 1.1, .1))
 ax4.minorticks_on()
 plt.grid()
-
 ax4_legend_elements = [matplotlib.patches.Rectangle((0,0), width=0.1, height=0.1, edgecolor='tab:blue', facecolor='tab:blue', label='ef=3'),
                        matplotlib.patches.Rectangle((0,0), width=0.1, height=0.1, edgecolor='tab:orange', facecolor='tab:orange', label='ef=5'),
                        matplotlib.patches.Rectangle((0,0), width=0.1, height=0.1, edgecolor='tab:green', facecolor='tab:green', label='ef=7'),
@@ -275,17 +273,46 @@ ax4_legend_elements = [matplotlib.patches.Rectangle((0,0), width=0.1, height=0.1
                        matplotlib.patches.Rectangle((0,0), width=0.1, height=0.1, edgecolor='tab:red', facecolor='tab:red', label='ef=15')]
 legend = plt.legend(handles=ax4_legend_elements, loc = 'upper right', framealpha = .7)
 plt.gca().add_artist(legend)
-
 plt.savefig(fig4_file, bbox_inches='tight', pad_inches=0.01)
 
-fig5, ax5 = plt.subplots(figsize=(10,8))
+n_bins = np.linspace(.25, .36, num=132, endpoint=False)
+fig9, ax9 = plt.subplots(figsize=(6,5))
+for i in range(len(bp_CMFs)):
+    ax9.hist(bp_CMFs[i], bins=n_bins, density='True', histtype='step', lw=1.8, color=bp_colors[i], alpha = 0.8, cumulative='True')
+ax9.set_xlabel('CMF',fontsize='large')
+ax9.set_ylabel('Probability of Occurrence', fontsize='large')
+ax9.grid()
+ax9.minorticks_on()
+ax9.set_xlim([0.25, 0.358])
+ax9_legend_elements = [matplotlib.patches.Rectangle((0,0), width=0.1, height=0.1, edgecolor='tab:blue', facecolor='tab:blue', label='ef=3'),
+                       matplotlib.patches.Rectangle((0,0), width=0.1, height=0.1, edgecolor='tab:orange', facecolor='tab:orange', label='ef=5'),
+                       matplotlib.patches.Rectangle((0,0), width=0.1, height=0.1, edgecolor='tab:green', facecolor='tab:green', label='ef=7'),
+                       matplotlib.patches.Rectangle((0,0), width=0.1, height=0.1, edgecolor='tab:purple', facecolor='tab:purple', label='ef=10'),
+                       matplotlib.patches.Rectangle((0,0), width=0.1, height=0.1, edgecolor='tab:red', facecolor='tab:red', label='ef=15')]
+legend = plt.legend(handles=ax9_legend_elements, loc = 'upper left', framealpha = .7)
+plt.gca().add_artist(legend)
+plt.savefig(fig9_file, bbox_inches='tight', pad_inches=0.01)
 
+
+statistics = []
+p_values = []
+for i in(range(len(bp_CMFs))):
+    stat = []
+    p_val = []
+    for j in range(len(bp_CMFs)):
+        test_result = stats.kstest(bp_CMFs[i], bp_CMFs[j], alternative='two-sided')
+        stat.append(test_result.statistic)
+        p_val.append(test_result.pvalue)
+    statistics.append(stat)
+    p_values.append(p_val)
+print(p_values)
+print(statistics)
+"""fig5, ax5 = plt.subplots(figsize=(10,8))
 n_bins = [20, 20]
 #n_bins = [25, 20]
 hist_type = 'barstacked'
 bin_limits = [[.25, .35],[0.0, 2.0]]
 #bin_limits = [[.05, .55],[0.0, 2.0]]
-
 fig5 = ax5.hist2d(bp_CMFs_flat, bp_final_masses, bins=n_bins, range=bin_limits, cmap=plt.cm.jet)
 ax5.set_xlim([0.25, 0.35])
 ax5.set_ylim([0.1, 2.0])
@@ -294,11 +321,8 @@ ax5.set_ylabel('$M_{\u2295}$', fontsize='large')
 #plt.yticks(np.arange(0, 1.1, .1))
 ax5.minorticks_on()
 #plt.grid()
-
 cbar5 = plt.colorbar(fig5[3], location='right', anchor=(0,0.5), pad=0.0)
-
-
-plt.savefig(fig5_file, bbox_inches='tight', pad_inches=0.25)
+plt.savefig(fig5_file, bbox_inches='tight', pad_inches=0.25)"""
 
 for i in range(len(bp_CMFs[0])):
     if bp_CMFs[0][i] < 0.1:
@@ -307,22 +331,18 @@ for i in range(len(bp_CMFs[0])):
     
 cmf_ef_means = [np.mean(bp_CMFs[i]) for i in range(len(bp_CMFs))]
 cmf_ef_sds = [np.std(bp_CMFs[i]) for i in range(len(bp_CMFs))]
-print(np.mean(bp_CMFs[0]))
-print(np.std(bp_CMFs[3]))
 
 # Plot between -10 and 10 with .001 steps.
 x_axis = np.arange(0.25, 0.35, 0.001)
 efs = ['3','5','7','10','15']
 fig6, ax6 = plt.subplots(figsize=(9,7))
-
 for i in range(len(bp_CMFs)):
     ax6.plot(x_axis, norm.pdf(x_axis, cmf_ef_means[i], cmf_ef_sds[i]), lw=3.0, label = 'ef='+efs[i], c=bp_colors[i])
 plt.grid()
 plt.legend()
 ax6.set_xlabel('CMF (M>0.1 $M_{\u2295}$)',fontsize='large')
 ax6.set_ylabel('$M_{\u2295}$', fontsize='large')
-
-plt.savefig(fig6_file, bbox_inches='tight', pad_inches=0.01)"""
+plt.savefig(fig6_file, bbox_inches='tight', pad_inches=0.01)
 
 """fig7, ax7 = plt.subplots(figsize=(9,7))
 ax7.minorticks_on()
@@ -343,7 +363,8 @@ plt.gca().add_artist(legend)
 
 plt.savefig(fig7_file, bbox_inches='tight', pad_inches=0.01)"""
 
-fig3, ax3 = plt.subplots(figsize=(13,10))
+
+"""fig3, ax3 = plt.subplots(figsize=(13,10))
 
 
 ax3.scatter(final_masses_comp, final_core_fracs, s=20.0, color = ef_colors)
@@ -400,4 +421,4 @@ ax8.minorticks_on()
 plt.grid()
 plt.legend()
 
-plt.savefig(fig8_file, bbox_inches='tight', pad_inches=0.01)
+plt.savefig(fig8_file, bbox_inches='tight', pad_inches=0.01)"""

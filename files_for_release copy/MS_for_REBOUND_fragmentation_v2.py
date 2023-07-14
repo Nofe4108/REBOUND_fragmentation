@@ -326,7 +326,7 @@ def track_composition(collision_report_file, composition_input_file, ejection_fi
     # Removes ejected objects from compositions list
     f = open(ejection_file, 'r')
     ejections_raw = [line.split() for line in f.readlines()]
-    ejections = [abs(int(ejections_raw[i][2])) for i in range(len(ejections_raw))]
+    ejections = [abs(int(ejections_raw[i][1])) for i in range(len(ejections_raw))]
     for hsh in ejections:
         for i in range(len(compositions)):
             if compositions[i][0] == hsh:
@@ -350,12 +350,12 @@ def write_output(compositions, composition_output_file):
  
 
 # Input Files
-collision_file = "collision_report.txt"
-comp_input_file = "disk_mantle_stripping_input.txt"
-ejec_file = "ejections.txt"
+collision_file = "collision_report_2.txt"
+comp_input_file = "disk_mantle_stripping_input_2.txt"
+ejec_file = "ejections_2.txt"
 
 # Output Files
-comp_output_file = "mantle_stripping_output.txt"
+comp_output_file = "mantle_stripping_output_2.txt"
 
 # Mantle Stripping Model Parameters
 min_ejecta_core_frac = 0.0

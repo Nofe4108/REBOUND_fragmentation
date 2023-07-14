@@ -7,8 +7,8 @@
 
 double min_frag_mass=0.002325/332954.355179; // of the mass of the planetesimals in units of Msun;
 int tot_no_frags = 0;  //if restarting a simulation this needs to be changed to the last number of frags in the simulation, otherwise new fragments added will rewrite exisiting frags
-double expansion_factor = 7.0; //done only on all intial particles
-double sim_time = 1.e7;
+double expansion_factor = 5.0; //done only on all intial particles
+double sim_time = 1.e4;
 double sim_archive_time = 1.e5;
 int archive_flag = 0;
 int seed_no = 1;
@@ -506,7 +506,7 @@ int reb_collision_resolve_fragment(struct reb_simulation* const r, struct reb_co
     printf("b/Rtarg:     %0.4f\n", b/targ_r);
     printf("Vimp/Vesc:     %0.4f\n",  Vi/V_esc);
     printf("Q/ Qstar:     %0.4f\n", Q/Q_star);
-    printf("tot_no_frags:     %0.4d\n", tot_no_frags);
+    printf("tot_no_frags:     %u\n", tot_no_frags);
     printf("COLLISION TYPE: ");
     
 
@@ -568,7 +568,11 @@ void heartbeat(struct reb_simulation* sim){
                 int removed_hash = sim->particles[i].hash;
                 reb_remove_by_hash(sim, removed_hash, keepSorted);
                 printf("PARTICLE REMOVED: semi-major axis grew bigger than 100 au\n");
-                printf("particle hash:     %0.4d\n", removed_hash);
+                printf("particle hash:     %u\n", removed_hash);
+                FILE* of_ejec = fopen("../disk_sim_data/ejections.txt","a+");
+                fprintf(of_ejec, "%e\t", sim->t);
+                fprintf(of_ejec, "%u\n", removed_hash);
+                fclose(of_ejec);
         }
         }
         }
@@ -581,6 +585,7 @@ int main(int argc, char* argv[]){
     //erases output files from previous sim
     fclose(fopen("../disk_sim_data/collision_report.txt","w+"));
     fclose(fopen("../disk_sim_data/disk_mantle_stripping_input.txt","w+"));
+    fclose(fopen("../disk_sim_data/ejections.txt","w+"));
 
     
     char* filename = "simulationarchive.bin";
@@ -600,7 +605,7 @@ int main(int argc, char* argv[]){
     star1.r = 0.01;    
     star1.hash = reb_hash("STAR");
     reb_add(sim, star1);
-    
+        
     FILE* of_dmsi = fopen("../disk_sim_data/disk_mantle_stripping_input.txt","a+");
 
     double m,a,e,inc,Omega,omega,f; //Omega=longitude of ascending node, omega= argument of pericenter in RADIANS
@@ -648,16 +653,15 @@ int main(int argc, char* argv[]){
     
     fclose(of_dmsi);
 
-    struct reb_particle Jup = reb_tools_orbit_to_particle(sim->G, sim->particles[0], m=9.543e-4, a=5.20349, e=0.048381, inc=0.365*(M_PI/180), Omega=0.0, omega=68.3155*(M_PI/180), f=227.0537*(M_PI/180));
+        struct reb_particle Jup = reb_tools_orbit_to_particle(sim->G, sim->particles[0], m=9.543e-4, a=5.20349, e=0.048381, inc=0.365*(M_PI/180), Omega=0.0, omega=68.3155*(3.14159/180), f=227.0537*(M_PI/180));
     Jup.r = get_radii(Jup.m, rho); 
     Jup.hash = reb_hash("JUPITER");
     reb_add(sim,Jup);
         
-        struct reb_particle Saturn = reb_tools_orbit_to_particle(sim->G, sim->particles[0], m=2.93325e-4, a=9.5826, e=0.0565, inc=0.93*(M_PI/180), Omega=113.665*(M_PI/180), omega=339.392*(M_PI/180), M=317.020*(M_PI/180));
+        struct reb_particle Saturn = reb_tools_orbit_to_particle(sim->G, sim->particles[0], m=2.93325e-4, a=9.5826, e=0.0565, inc=0.93*(M_PI/180), Omega=113.665*(M_PI/180), omega=339.392*(M_PI/180), f=317.020*(M_PI/180));
     Saturn.r = get_radii(Saturn.m, rho);
     Saturn.hash = reb_hash("SATURN");
     reb_add(sim,Saturn);
-        
     
     reb_move_to_com(sim);
     
@@ -672,7 +676,7 @@ int main(int argc, char* argv[]){
     char* filename = "simulationarchive.bin";
     struct reb_simulation* sim = reb_create_simulation_from_binary("simulationarchive.bin");
         sim->G                = 39.476926421373;   //units are now in AU, years, solar masses
-        sim->dt             = 0.003;               // initial timestep.  2% of innermost orbit
+        sim->dt             = 0.01;               // initial timestep.  2% of innermost orbit
         sim->integrator         = REB_INTEGRATOR_MERCURIUS;
         sim->collision        = REB_COLLISION_DIRECT;
         sim->collision_resolve     = reb_collision_resolve_fragment;        // Set function pointer for collision recording.

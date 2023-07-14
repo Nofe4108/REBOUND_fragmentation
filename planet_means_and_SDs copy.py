@@ -1,3 +1,11 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Jul  3 13:45:45 2023
+
+@author: nferich
+"""
+
 from astropy import units as u
 import astropy.constants as constants
 import matplotlib.pyplot as plt
@@ -34,7 +42,6 @@ compositions = []
 
 comp_output_file_pw = "mantle_stripping_output/"
 comp_output_file_name = "_mantle_stripping_output"
-fig_file = 'graphs/all_final_core_fracs.pdf'
 
 
 file_range = np.arange(1,51,1)
@@ -63,42 +70,41 @@ for distr in distribution_list:
             distribution_core_fracs.append(obj[2])
     final_masses.append(distribution_masses)
     final_core_fracs.append(distribution_core_fracs)
-        
-                
+ 
+final_planet_masses = []
+final_planet_cmfs = []
 
-############# END OF LOOP ############################        
 
-fig, (ax1, ax2, ax3) = plt.subplots(nrows=1, ncols=3, sharex=True, sharey=True, gridspec_kw={'width_ratios': [10, 10, 10]}, figsize=(13,5))
-fig.subplots_adjust(wspace=0.03)
-ax1.minorticks_on()
-ax1.axvline(.093, label = 'Embryo Mass', color = 'tab:orange', linestyle = '--', alpha=.7)
-ax1.axvline(.0093, label = 'Planetesimal Mass', color = 'tab:green', linestyle = '--', alpha=.7)
-ax1.axhline(0.294, label = 'Initial Average CMF', color = 'tab:blue', linestyle = '--', alpha=.7)
-ax2.axvline(.093, label = 'Embryo Mass', color = 'tab:orange', linestyle = '--', alpha=.7)
-ax2.axvline(.0093, label = 'Planetesimal Mass', color = 'tab:green', linestyle = '--', alpha=.7)
-ax2.axhline(0.314, label = 'Initial Average CMF', color = 'tab:blue', linestyle = '--', alpha=.7)
-ax3.axvline(.093, label = 'Embryo Mass', color = 'tab:orange', linestyle = '--', alpha=.7)
-ax3.axvline(.0093, label = 'Planetesimal Mass', color = 'tab:green', linestyle = '--', alpha=.7)
-ax3.axhline(0.326, label = 'Initial Average CMF', color = 'tab:blue', linestyle = '--', alpha=.7)
-ax1.scatter(final_masses[0], final_core_fracs[0], s=3.0, color = 'black')
-ax2.scatter(final_masses[1], final_core_fracs[1], s=3.0, color = 'black')
-ax3.scatter(final_masses[2], final_core_fracs[2], s=3.0, color = 'black')
-ax1.set_title('a)', fontsize='x-large')
-ax2.set_title('b)', fontsize='x-large')
-ax3.set_title('c)', fontsize='x-large')
-ax1.set_xlabel('Mass ($M_{\u2295}$)', fontsize='x-large', labelpad=10.0)
-ax2.set_xlabel('Mass ($M_{\u2295}$)', fontsize='x-large', labelpad=10.0)
-ax3.set_xlabel('Mass ($M_{\u2295}$)', fontsize='x-large', labelpad=10.0)
-ax1.set_ylabel("CMF", fontsize='x-large', labelpad=10.0)
-plt.xscale('log')
-plt.ylim(-0.01, 1.01)
-plt.yticks(np.arange(0.0, 1.1, 0.1))
-ax1.minorticks_on()
-ax1.grid()
-ax2.grid()
-ax3.grid()
-ax1.legend(framealpha=1.0, fontsize=8.0)
-ax2.legend(framealpha=1.0, fontsize=8.0)
-ax3.legend(framealpha=1.0, fontsize=8.0)
+for i in range(len(final_masses)):
+    bp_masses = []
+    bp_cmfs = []
+    for j in range(len(final_masses[i])):
+            if final_masses[i][j] >= 0.093:
+                bp_masses.append(final_masses[i][j])
+                bp_cmfs.append(final_core_fracs[i][j])
+    final_planet_masses.append(bp_masses)
+    final_planet_cmfs.append(bp_cmfs)
 
-plt.savefig(fig_file, bbox_inches='tight', pad_inches=0.01)
+final_cmf_sds = [np.std(final_planet_cmfs[i]) for i in range(len(final_planet_masses))]
+final_cmf_medians = [np.median(final_planet_cmfs[i]) for i in range(len(final_planet_masses))]
+final_cmf_means = [np.mean(final_planet_cmfs[i]) for i in range(len(final_planet_masses))]
+initial_cmf_means = [0.294, 0.314, 0.326]
+print(final_cmf_means)
+
+final_planet_extreme_masses = []
+final_planet_extreme_cmfs = []
+for i in range(len(final_planet_masses)):
+    masses = []
+    cmfs = []
+    for j in range(len(final_planet_masses[i])):
+        if final_planet_cmfs[i][j] < final_cmf_means[i]-final_cmf_sds[i] or final_planet_cmfs[i][j] > final_cmf_means[i]+final_cmf_sds[i]:
+            masses.append(final_planet_masses[i][j])
+            cmfs.append(final_planet_cmfs[i][j])
+    final_planet_extreme_masses.append(masses)
+    final_planet_extreme_cmfs.append(cmfs)
+            
+final_extreme_mass_means = [np.mean(final_planet_extreme_masses[i]) for i in range(len(final_planet_extreme_masses))]
+final_extreme_cmf_means = [np.mean(final_planet_extreme_cmfs[i]) for i in range(len(final_planet_extreme_cmfs))]
+print(final_cmf_sds)
+print(final_extreme_mass_means)
+print(final_cmf_medians)

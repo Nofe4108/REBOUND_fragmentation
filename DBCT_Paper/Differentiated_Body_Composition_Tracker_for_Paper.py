@@ -1,0 +1,357 @@
+"""
+Created on Thu Apr 27 13:45:18 2023
+
+@author: nferich
+
+ADD DESCRIPTION
+"""
+"""IMPORTANT: This version of the DBCT is setup to process data 
+from Childs et al. (2022). It should not be the one that gets released to the
+public."""
+
+import numpy as np
+import time
+import sys
+
+start_time = time.time() #Timer to see how long running this code takes
+
+# Conversions
+distance_conversion = 1.49597870691e11 #m to au
+mass_conversion = 1.9885e30 #kg to Msun
+time_conversion = 31557600 #sec to yrs
+
+# Densities
+core_density = 7874.0*(distance_conversion**3/mass_conversion) #kg m^-3 - density of iron
+mantle_density = 3000.0*(distance_conversion**3/mass_conversion) #kg m^3 -  density of mantle material
+
+def organize_compositions(init_compositions):
+    """Data organizing function
+    
+    Takes in raw string data extracted from mantle stripping input file
+    Creates a list filled with properties of each particle
+    The properties include hash, mass, and CMF
+    
+    Parameters:
+    init_compositions (list) -- raw particle data from input file
+
+    Returns:
+    compositions (list) -- nested list with properly formatted particle data
+    """
+    compositions = []
+    for particle in init_compositions: 
+        particle_data = [] 
+        for i in range(len(particle)): 
+            if i == 0: 
+                particle_data.append(int(particle[i])) # The particle's REBOUND hash
+            elif i < 3: 
+                particle_data.append(float(particle[i])) # Adds its mass than CMF
+        compositions.append(particle_data) 
+    return(compositions)
+
+def calc_core_radius(mass, core_frac, core_density):
+    """Returns the radius of a differentiated object's spherical, uniform core"""
+    core_mass = mass*core_frac
+    core_radius = ((3*core_mass)/(4*np.pi*core_density))**(1/3)
+    return(core_radius)
+
+def calc_radius(mass, core_frac, mantle_density, core_radius):
+    """Returns the outer radius of a differentiated object with a known core radius"""
+    mantle_frac = 1-core_frac
+    mantle_mass = mass*mantle_frac
+    radius = (core_radius**3+((3*mantle_mass)/(4*np.pi*mantle_density)))**(1/3)
+    return(radius)
+
+def calc_ejecta_core_frac(collision_type, impact_parameter, min_ejecta_cmf, max_ejecta_cmf, targ_radius, targ_core_radius, proj_radius, proj_core_radius):
+    """Mantle Stripping Model
+    
+    Calculates CMF in collisional ejecta based on impact parameters
+    See Ferich et al. (in prep) for details of model
+    
+    Parameters:
+    collision_type (int) -- can be either accretive (2) or erosive (3 & 4)
+    impact_parameter (float) -- B in model equations from Ferich et al. (in prep)
+    min_ejecta_cmf (float) -- minimum possible CMF of impact ejecta
+    max_ejecta_cmf (float) -- maximum possible CMF of impact ejecta
+    targ_radius (float) -- outer radius of target
+    targ_core_radius (float) -- radius of target's core
+    proj_radius (float) -- outer radius of projectile
+    proj_core_radius (float) -- radius of projectile's core
+    
+    Returns:
+    ejecta_cmf (float) -- The ideal fraction of core material in the collision ejecta
+    """
+    ejecta_cmf = 0.0
+    if collision_type == 2:
+        if proj_core_radius != 0:
+            slope = (max_ejecta_cmf-min_ejecta_cmf)/(-2*proj_core_radius)
+            max_impact_parameter = targ_radius+proj_core_radius 
+            min_impact_parameter = targ_radius-proj_core_radius 
+            if impact_parameter >= max_impact_parameter: # Oblique collisions
+                ejecta_cmf = min_ejecta_cmf 
+            elif max_impact_parameter > impact_parameter > min_impact_parameter: 
+                ejecta_cmf = min_ejecta_cmf+(slope*(impact_parameter-max_impact_parameter)) 
+            elif impact_parameter <= min_impact_parameter: # Head-on collisions 
+                ejecta_cmf = max_ejecta_cmf 
+    elif collision_type == 3 or collision_type == 4:
+        if targ_core_radius != 0:
+            slope = (max_ejecta_cmf-min_ejecta_cmf)/(-2*targ_core_radius)
+            max_impact_parameter = proj_radius+targ_core_radius
+            min_impact_parameter = proj_radius-targ_core_radius 
+            if impact_parameter >= max_impact_parameter:  # Oblique collisions
+                ejecta_cmf += min_ejecta_cmf 
+            elif max_impact_parameter > impact_parameter > min_impact_parameter: 
+                ejecta_cmf += min_ejecta_cmf+(slope*(impact_parameter-max_impact_parameter)) 
+            elif impact_parameter <= min_impact_parameter: # Head-on collisions
+                ejecta_cmf += max_ejecta_cmf         
+    return(ejecta_cmf)
+
+def calc_ejecta_core_mantle_masses(targ_mass, lr_mass, obj_mass, obj_radius, obj_cmf, ejecta_cmf):
+    """Calculates amount of core and mantle material in ejecta
+    
+    If the core or mantle of the stripped object doesn't have enough
+    material to reach the ideal CMF for the collision ejecta, then
+    this function will pull more material out of the other layer.
+    Basically makes sure that the code doesn't put core or mantle material that
+    the stripped object doesn't have into the ejecta.
+    
+    
+    Parameters:
+    targ_mass (float) -- Mass of the target
+    lr_mass (float) -- Mass of the largest remnant
+    obj_mass (float) -- Radius of the stripped object in collision
+    obj_radius (float) -- Radius of the stripped object in collision
+    obj_cmf (float) -- Core mass fraction of stripped object
+    ejecta_cmf (float) -- the ideal CMF of the collision ejecta
+
+    Returns:
+    actual_ejecta_masses (list) -- non-ideal core and mantle masses of the ejecta
+    """
+    ejecta_mass = abs(targ_mass-lr_mass)
+    ideal_ejecta_masses = [(ejecta_mass*ejecta_cmf),(ejecta_mass*(1-ejecta_cmf))] # Ideal masses of the ejecta's core and mantle
+    obj_layer_masses = [obj_mass*obj_cmf, obj_mass*(1-obj_cmf)] # How much mass the object actually has in each layer
+    actual_ejecta_masses = [] # Actual masses of the ejecta's core and mantle
+    if obj_layer_masses[0] >= ideal_ejecta_masses[0]:
+        actual_ejecta_masses.append(ideal_ejecta_masses[0])
+    else:
+        actual_ejecta_masses.append(obj_layer_masses[0])
+        ideal_ejecta_masses[1] += (ideal_ejecta_masses[0]-obj_layer_masses[0])
+    if obj_layer_masses[1] >= ideal_ejecta_masses[1]:
+        actual_ejecta_masses.append(ideal_ejecta_masses[1])
+    else:
+        actual_ejecta_masses.append(obj_layer_masses[1])
+        actual_ejecta_masses[0] += (ideal_ejecta_masses[1]-obj_layer_masses[1])
+    return(actual_ejecta_masses)
+
+
+
+def track_composition(collision_report_file, composition_input_file, ejection_file, impact_parameter_file, min_core_collision_frac, max_core_collision_frac):
+    """Main function
+    
+    Tracks how collisions change the CMFs of objects from REBOUND fragmentation sim
+    Returns the final compositions of all remaining objects 
+    Has 2 main sections for mergers and disruptive collisions (accretive and erosive)
+    
+    
+    Parameters:
+    collision_report_file (str) -- pathway to collision report file
+    collision_input_file (str) -- pathway to the mantle stripping input file
+    ejection_file (str) -- pathway to file that lists objects ejected from sim
+    impact_parameter_file (str) -- pathway to file that lists impact parameters of collisions
+    min_core_collision_frac (float) -- minimum possible CMF of impact ejecta
+    max_core_collision_frac (float) -- maximum possible CMF of impact ejecta
+
+    Returns:
+    compositions (list) -- nested list with compositional data of final objects
+    """
+    # Extracts compositional data
+    f = open(composition_input_file, 'r')
+    raw_compositions = [line.split() for line in f.readlines()]
+    compositions = organize_compositions(raw_compositions) # This list keeps track of all the particle data
+    for obj in compositions:
+        if obj[2] > 1.0 or obj[2] < 0.0:
+            print ('ERROR: CMF does not have a realistic value')
+            sys.exit(1) 
+    f.close() 
+    
+    # Extracts collisional data  
+    f = open(collision_report_file, 'r')
+    collision_blocks = f.read().split("\n")
+    collisions = [block for block in collision_blocks if len(block) > 0]
+    f.close()
+    
+    # Extracts the impact parameters for each collision
+    f = open(impact_parameter_file, 'r')
+    b = f.read() #reads each line in file and splits its value into an array - these impact parameters are divided by R_targ
+    impact_parameters_raw = b.split("\n")
+    impact_parameters = [x.strip('b/Rtarg:     ') for x in impact_parameters_raw]
+    f.close()
+    
+    destroyed_object_hashes = [] # Keeps track of objects that get destroyed in collisions
+    
+    ############### START OF MAIN LOOP ############### 
+    # Iterates through every collision from sim
+    # Determines the change in objects' compositions from each collision
+    # Adds new fragments to the compositions list when necessary
+    for i in range(len(collisions)): 
+        collision = collisions[i].split() 
+        time = float(collision[0]) 
+        collision_type = int(collision[1]) 
+        if collision_type == 0: # Elastic bounces do nothing so loop moves to next collision
+            continue
+        target_hash = int(collision[2]) 
+        largest_remnant_mass = float(collision[3]) # Mass of the target after collision
+        proj_hash = int(collision[4]) 
+        no_frags = int((len(collision)-5)/2) #gives number of frags formed in collision - gets rid of 5 values from length which are basically about the collision type and target and projectile then divides in half since the list contains both the fragment hash and its mass
+        frag_hashes = [int(collision[j*2+3]) for j in range(1,no_frags+1)] #list of the hashes of the fragments - jumps from hash to hash using (i*2+3) - range length uses no_frags variable to get the correct amount of hashes
+        frag_masses = [float(collision[j*2+4]) for j in range(1,no_frags+1)]
+
+        # Determines if object collided with something not in the compositions list (Star, Jupiter, etc.)
+        # If so, just destroys projectile and moves to the next collision
+        # If fragments created, adds those to compositions list with CMF of 0.3
+        #FIXME: Check to make sure this doesn't break anything
+        big_obj_collision_flag = 1
+        for j in range(len(compositions)):
+            if target_hash == compositions[j][0]:
+                big_obj_collision_flag += -1
+                break
+        if big_obj_collision_flag == 1:
+            destroyed_object_hashes.append(proj_hash)
+            if no_frags != 0:
+                for k in range(no_frags):
+                     frag_data = [frag_hashes[k], frag_masses[k], 0.3]
+                     compositions.append(frag_data) 
+            continue   
+
+        targ_idx = [idx for idx in range(len(compositions)) if int(compositions[idx][0])==target_hash][0] # Index of target in the compositions list
+        proj_idx = [idx for idx in range(len(compositions)) if int(compositions[idx][0])==proj_hash][0] # Index of projectile in the compositions list
+        target_mass = float(compositions[targ_idx][1]) 
+        proj_mass = float(compositions[proj_idx][1]) 
+        target_core_frac = compositions[targ_idx][2]
+        proj_core_frac = compositions[proj_idx][2] 
+        
+        # This sequence estimates the core radii of the target and projectile and the impact parameter
+        target_sim_radius = calc_core_radius(target_mass, 1.0, mantle_density)
+        proj_sim_radius = calc_core_radius(proj_mass, 1.0, mantle_density)
+        target_core_radius = calc_core_radius(target_mass, target_core_frac, core_density)
+        target_radius = calc_radius(target_mass, target_core_frac, mantle_density, target_core_radius)
+        proj_core_radius = calc_core_radius(proj_mass, proj_core_frac, core_density)
+        proj_radius = calc_radius(proj_mass, proj_core_frac, mantle_density, proj_core_radius)
+        sim_impact_param = float(impact_parameters[i])*target_sim_radius
+        sine_of_impact_angle = sim_impact_param/(target_sim_radius+proj_sim_radius)
+        impact_parameter = (target_radius+proj_radius)*sine_of_impact_angle
+                                                
+    ############### PERFECT MERGER ############### 
+        if collision_type == 1: #perfect merger
+            compositions[targ_idx][2] = ((target_core_frac*target_mass)+(proj_core_frac*proj_mass))/largest_remnant_mass #changes the composition fraction for each specie in the target - basically weighted average of initial target compoisition and mass with the projectile composition and mass
+ 
+    ############### DISRUPTIVE COLLISIONS ############### 
+        elif collision_type == 2 or collision_type == 3 or collision_type == 4:
+            ejecta_core_frac = calc_ejecta_core_frac(collision_type, impact_parameter, min_core_collision_frac, max_core_collision_frac, target_radius, target_core_radius, proj_radius, proj_core_radius)
+            if collision_type == 2:
+                ejecta_layer_masses = calc_ejecta_core_mantle_masses(target_mass, largest_remnant_mass, proj_mass, proj_radius, proj_core_frac, ejecta_core_frac)
+                compositions[targ_idx][2] = ((target_mass*target_core_frac)+(ejecta_layer_masses[0]))/largest_remnant_mass # Changes target CMF to largest remnant CMF for accretion
+            else:
+                ejecta_layer_masses = calc_ejecta_core_mantle_masses(target_mass, largest_remnant_mass, target_mass, target_radius, target_core_frac, ejecta_core_frac)
+                compositions[targ_idx][2] = ((target_mass*target_core_frac)-(ejecta_layer_masses[0]))/largest_remnant_mass # Changes target CMF to largest remnant CMF for erosion
+                
+            
+            # Target CMF calculation tolerance
+            if compositions[targ_idx][2] - 1.0 > 0.0 and compositions[targ_idx][2] - 1.0 < 1.0e-5: # If target CMF is just above 1.0
+                compositions[targ_idx][2] = 1.0
+            if compositions[targ_idx][2] < 0.0 and compositions[targ_idx][2] > -1.0e-5: # If target CMF is just below 0.0
+                compositions[targ_idx][2] = 0.0
+            
+            total_core_mass = (target_core_frac*target_mass)+(proj_core_frac*proj_mass) 
+            largest_remnant_core_mass = largest_remnant_mass*compositions[targ_idx][2] 
+            total_frag_core_mass = total_core_mass - largest_remnant_core_mass 
+            total_frag_mass = (target_mass+proj_mass) - largest_remnant_mass 
+            frag_core_frac = total_frag_core_mass/total_frag_mass # All fragments get the same CMF
+            
+            # Fragment CMF calculation tolerance
+            if frag_core_frac - 1.0 > 0.0 and frag_core_frac - 1.0 < 1.0e-5: # If fragment CMF is just above 1.0
+                frag_core_frac += 1.0 - frag_core_frac
+            if frag_core_frac < 0.0 and frag_core_frac > -1.0e-5: # If fragment CMF is just below 0.0
+                frag_core_frac += 0.0 - frag_core_frac
+            
+            # Fragment CMF error
+            if frag_core_frac < 0.0:
+                print ('ERROR: Fragment CMF is negative at time: ', time)
+                sys.exit(1)
+            elif frag_core_frac > 1.0:
+                print ('ERROR: Fragment CMF is greater than 1.0 at time: ', time)
+                sys.exit(1)
+                
+            for j in range(no_frags):
+                if frag_masses[j] < 0:
+                    print ('ERROR: Fragment mass is negative at time: ', time)
+                    sys.exit(1)
+                else:
+                    frag_data = [frag_hashes[j], frag_masses[j], frag_core_frac]
+                    compositions.append(frag_data) # Fragment now added to the object tracking list
+                
+        compositions[targ_idx][1] = largest_remnant_mass # Changes target mass to largest remnant mass
+        
+        # Checks to see if there are any errors with the largest remnant's properties 
+        for j in range(len(compositions[targ_idx])):
+            if j == 1:
+                if compositions[targ_idx][j] < 0.0: 
+                    print ('ERROR: Largest remnant mass is negative at time: ', time)
+                    sys.exit(1)
+            elif j > 1:
+                if compositions[targ_idx][j] < 0.0:
+                    print ('ERROR: Largest remnant CMF is negative at time: ', time)
+                    sys.exit(1)
+                elif compositions[targ_idx][j] > 1.0:
+                    print ('ERROR: Largest remnant CMF is greater than 1.0 at time: ', time)
+                    sys.exit(1)
+                    
+                    
+        # Checks to make sure the projectile isn't a second largest remnant before deletion
+        for hsh in frag_hashes:
+            if hsh != proj_hash and hsh == frag_hashes[-1]:
+                destroyed_object_hashes.append(proj_hash) 
+            elif hsh == proj_hash:
+                break
+            else:
+                continue
+        
+        if collision_type == 1:  
+            destroyed_object_hashes.append(proj_hash) # The projectile in a merger is always destroyed
+    
+    ############### END OF MAIN LOOP ###############
+    
+    # Removes destroyed objects from compositions list    
+    for hsh in destroyed_object_hashes:
+        for i in range(len(compositions)):
+            if compositions[i][0] == hsh:
+                compositions.pop(i)
+                break
+            else:
+                continue
+    
+    # Removes ejected objects from compositions list
+    f = open(ejection_file, 'r')
+    ejections_raw = [line.split() for line in f.readlines()]
+    ejections = [abs(int(ejections_raw[j][2])) for j in range(len(ejections_raw))]
+    for hsh in ejections:
+        for i in range(len(compositions)):
+            if compositions[i][0] == hsh:
+                compositions.pop(i)
+                break
+            else:
+                continue
+    f.close()
+         
+    return(compositions)
+
+
+def write_output(compositions, composition_output_file):
+    """Writes final objects and their propeties to output file"""
+    f = open(composition_output_file, "w")
+    for obj in compositions: 
+        for i in range(len(obj)): 
+                f.write(str(obj[i]) + ' ')
+        f.write('\n')#go to a new line and to a new particle
+    f.close()
+ 
+

@@ -1,0 +1,1487 @@
+N_tot=  289       t=  0.000000  dt=  0.003000  cpu=  0.000000 [s]  Walltime(s) = 0.000000 
+TIME OF COLLISION: 6.578059e+00
+Target hash, mass = 659524895 2.793176e-08
+Projectile hash, mass = 2542835646 2.793176e-08
+Mp/Mt:    1.0000
+Mlr/Mt:    1.9480
+Mlr/Mtot:    0.9740
+b/Rtarg:     1.5148
+Vimp/Vesc:     3.0736
+Q/ Qstar:     0.0520
+tot_no_frags:     0
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 7.493309e+01
+Target hash, mass = 276262414 2.793176e-07
+Projectile hash, mass = 1134175585 2.793176e-08
+Mp/Mt:    0.1000
+Mlr/Mt:    1.0948
+Mlr/Mtot:    0.9953
+b/Rtarg:     1.0794
+Vimp/Vesc:     2.7239
+Q/ Qstar:     0.0095
+tot_no_frags:     0
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 8.923017e+01
+Target hash, mass = 3129006749 2.793176e-08
+Projectile hash, mass = 905418128 2.793176e-08
+Mp/Mt:    1.0000
+Mlr/Mt:    1.6840
+Mlr/Mtot:    0.8420
+b/Rtarg:     1.2298
+Vimp/Vesc:     4.6307
+Q/ Qstar:     0.3160
+tot_no_frags:     0
+COLLISION TYPE: ELASTIC BOUNCE
+TIME OF COLLISION: 9.421439e+01
+Target hash, mass = 3384709749 2.793176e-08
+Projectile hash, mass = 3938221642 2.793176e-08
+Mp/Mt:    1.0000
+Mlr/Mt:    1.8984
+Mlr/Mtot:    0.9492
+b/Rtarg:     1.6306
+Vimp/Vesc:     6.0120
+Q/ Qstar:     0.1016
+tot_no_frags:     0
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 1.254380e+02
+Target hash, mass = 1134132465 2.793176e-08
+Projectile hash, mass = 717226258 2.793176e-08
+Mp/Mt:    1.0000
+Mlr/Mt:    1.9176
+Mlr/Mtot:    0.9588
+b/Rtarg:     0.4702
+Vimp/Vesc:     1.4845
+Q/ Qstar:     0.0824
+tot_no_frags:     0
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 1.352011e+02
+Target hash, mass = 343742982 2.793176e-08
+Projectile hash, mass = 3747246174 2.793176e-08
+Mp/Mt:    1.0000
+Mlr/Mt:    1.7150
+Mlr/Mtot:    0.8575
+b/Rtarg:     0.3353
+Vimp/Vesc:     2.6817
+Q/ Qstar:     0.2850
+tot_no_frags:     0
+COLLISION TYPE: PARTIAL ACCRETION
+FRAG1 hash, mass:      3687573659 7.960025e-09
+TIME OF COLLISION: 2.890685e+02
+Target hash, mass = 276262414 3.072493e-07
+Projectile hash, mass = 4080189872 2.793176e-07
+Mp/Mt:    0.9091
+Mlr/Mt:    1.9029
+Mlr/Mtot:    0.9968
+b/Rtarg:     1.6724
+Vimp/Vesc:     2.0050
+Q/ Qstar:     0.0065
+tot_no_frags:     1
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 5.005958e+02
+Target hash, mass = 865537991 2.793176e-08
+Projectile hash, mass = 3150420704 2.793176e-08
+Mp/Mt:    1.0000
+Mlr/Mt:    1.6968
+Mlr/Mtot:    0.8484
+b/Rtarg:     0.6267
+Vimp/Vesc:     2.9855
+Q/ Qstar:     0.3032
+tot_no_frags:     1
+COLLISION TYPE: PARTIAL ACCRETION
+FRAG2 hash, mass:      3196256300 8.469170e-09
+TIME OF COLLISION: 5.128660e+02
+Target hash, mass = 1119993136 2.793176e-07
+Projectile hash, mass = 1584276479 2.793176e-08
+Mp/Mt:    0.1000
+Mlr/Mt:    1.0991
+Mlr/Mtot:    0.9992
+b/Rtarg:     1.0442
+Vimp/Vesc:     1.0170
+Q/ Qstar:     0.0016
+tot_no_frags:     2
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 5.638470e+02
+Target hash, mass = 276262414 5.865669e-07
+Projectile hash, mass = 3228084226 2.793176e-08
+Mp/Mt:    0.0476
+Mlr/Mt:    1.0476
+Mlr/Mtot:    0.9999
+b/Rtarg:     1.2104
+Vimp/Vesc:     1.2899
+Q/ Qstar:     0.0001
+tot_no_frags:     2
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 5.913231e+02
+Target hash, mass = 3037779432 2.793176e-08
+Projectile hash, mass = 582973675 2.793176e-08
+Mp/Mt:    1.0000
+Mlr/Mt:    1.7785
+Mlr/Mtot:    0.8892
+b/Rtarg:     1.0110
+Vimp/Vesc:     3.1369
+Q/ Qstar:     0.2215
+tot_no_frags:     2
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 6.021014e+02
+Target hash, mass = 3471981902 2.793176e-07
+Projectile hash, mass = 1503861029 2.793176e-08
+Mp/Mt:    0.1000
+Mlr/Mt:    1.0979
+Mlr/Mtot:    0.9981
+b/Rtarg:     1.0926
+Vimp/Vesc:     1.8107
+Q/ Qstar:     0.0039
+tot_no_frags:     2
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 6.433220e+02
+Target hash, mass = 343742982 4.790349e-08
+Projectile hash, mass = 811613008 2.793176e-08
+Mp/Mt:    0.5831
+Mlr/Mt:    1.5831
+Mlr/Mtot:    1.0000
+b/Rtarg:     1.8084
+Vimp/Vesc:     4.2076
+Q/ Qstar:     0.0000
+tot_no_frags:     2
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 6.597995e+02
+Target hash, mass = 1119993136 3.072493e-07
+Projectile hash, mass = 416783067 2.793176e-07
+Mp/Mt:    0.9091
+Mlr/Mt:    1.9057
+Mlr/Mtot:    0.9982
+b/Rtarg:     1.5661
+Vimp/Vesc:     0.9918
+Q/ Qstar:     0.0035
+tot_no_frags:     2
+COLLISION TYPE: SIMPLY MERGED
+TIME OF COLLISION: 7.202821e+02
+Target hash, mass = 2759854154 2.793176e-07
+Projectile hash, mass = 333964007 2.793176e-08
+Mp/Mt:    0.1000
+Mlr/Mt:    1.0982
+Mlr/Mtot:    0.9984
+b/Rtarg:     1.2707
+Vimp/Vesc:     3.8093
+Q/ Qstar:     0.0032
+tot_no_frags:     2
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 7.228376e+02
+Target hash, mass = 2759854154 3.072493e-07
+Projectile hash, mass = 343742982 7.583525e-08
+Mp/Mt:    0.2468
+Mlr/Mt:    1.2451
+Mlr/Mtot:    0.9986
+b/Rtarg:     1.2548
+Vimp/Vesc:     1.1021
+Q/ Qstar:     0.0027
+tot_no_frags:     2
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 7.554057e+02
+Target hash, mass = 3865200818 2.793176e-07
+Projectile hash, mass = 3015378843 2.793176e-08
+Mp/Mt:    0.1000
+Mlr/Mt:    1.1000
+Mlr/Mtot:    1.0000
+b/Rtarg:     1.4065
+Vimp/Vesc:     1.7139
+Q/ Qstar:     0.0000
+tot_no_frags:     2
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 8.613545e+02
+Target hash, mass = 4231632140 2.793176e-08
+Projectile hash, mass = 2038493855 2.793176e-08
+Mp/Mt:    1.0000
+Mlr/Mt:    1.9629
+Mlr/Mtot:    0.9814
+b/Rtarg:     1.5671
+Vimp/Vesc:     2.9799
+Q/ Qstar:     0.0371
+tot_no_frags:     2
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 8.840538e+02
+Target hash, mass = 3865200818 3.072493e-07
+Projectile hash, mass = 3037779432 5.586351e-08
+Mp/Mt:    0.1818
+Mlr/Mt:    1.1622
+Mlr/Mtot:    0.9834
+b/Rtarg:     1.0692
+Vimp/Vesc:     2.9990
+Q/ Qstar:     0.0331
+tot_no_frags:     2
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 9.109562e+02
+Target hash, mass = 2759854154 3.830846e-07
+Projectile hash, mass = 2046083849 2.793176e-08
+Mp/Mt:    0.0729
+Mlr/Mt:    1.0662
+Mlr/Mtot:    0.9938
+b/Rtarg:     0.1531
+Vimp/Vesc:     2.0072
+Q/ Qstar:     0.0125
+tot_no_frags:     2
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 9.536070e+02
+Target hash, mass = 4126262021 2.793176e-07
+Projectile hash, mass = 858471941 2.793176e-07
+Mp/Mt:    1.0000
+Mlr/Mt:    1.9855
+Mlr/Mtot:    0.9927
+b/Rtarg:     1.4041
+Vimp/Vesc:     1.2866
+Q/ Qstar:     0.0145
+tot_no_frags:     2
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  271       t=  1000.002000  dt=  0.003000  cpu=  934.378090 [s]  Walltime(s) = 934.330641 
+TIME OF COLLISION: 1.018777e+03
+Target hash, mass = 1134132465 5.586351e-08
+Projectile hash, mass = 314650893 2.793176e-08
+Mp/Mt:    0.5000
+Mlr/Mt:    1.1841
+Mlr/Mtot:    0.7894
+b/Rtarg:     0.9420
+Vimp/Vesc:     4.8784
+Q/ Qstar:     0.4212
+tot_no_frags:     2
+COLLISION TYPE: PARTIAL ACCRETION
+FRAG3 hash, mass:      848448836 8.824619e-09
+FRAG4 hash, mass:      2211003714 8.824619e-09
+TIME OF COLLISION: 1.136940e+03
+Target hash, mass = 1909946179 2.793176e-07
+Projectile hash, mass = 3953846011 2.793176e-08
+Mp/Mt:    0.1000
+Mlr/Mt:    1.0832
+Mlr/Mtot:    0.9848
+b/Rtarg:     0.9202
+Vimp/Vesc:     3.3628
+Q/ Qstar:     0.0305
+tot_no_frags:     4
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 1.236148e+03
+Target hash, mass = 3357643131 2.793176e-08
+Projectile hash, mass = 2737363250 2.793176e-08
+Mp/Mt:    1.0000
+Mlr/Mt:    1.9532
+Mlr/Mtot:    0.9766
+b/Rtarg:     1.3726
+Vimp/Vesc:     2.1863
+Q/ Qstar:     0.0468
+tot_no_frags:     4
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 1.255111e+03
+Target hash, mass = 3357643131 5.586351e-08
+Projectile hash, mass = 916523109 2.793176e-08
+Mp/Mt:    0.5000
+Mlr/Mt:    1.4752
+Mlr/Mtot:    0.9835
+b/Rtarg:     0.8464
+Vimp/Vesc:     1.2544
+Q/ Qstar:     0.0330
+tot_no_frags:     4
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 1.311352e+03
+Target hash, mass = 659524895 5.586351e-08
+Projectile hash, mass = 3421887303 2.793176e-08
+Mp/Mt:    0.5000
+Mlr/Mt:    1.5000
+Mlr/Mtot:    1.0000
+b/Rtarg:     1.7723
+Vimp/Vesc:     1.9068
+Q/ Qstar:     0.0000
+tot_no_frags:     4
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 1.318646e+03
+Target hash, mass = 2759854154 4.110163e-07
+Projectile hash, mass = 3891448235 2.793176e-08
+Mp/Mt:    0.0680
+Mlr/Mt:    1.0650
+Mlr/Mtot:    0.9972
+b/Rtarg:     1.0613
+Vimp/Vesc:     2.8000
+Q/ Qstar:     0.0055
+tot_no_frags:     4
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 1.395045e+03
+Target hash, mass = 2759854154 4.389481e-07
+Projectile hash, mass = 1134132465 6.614603e-08
+Mp/Mt:    0.1507
+Mlr/Mt:    1.1356
+Mlr/Mtot:    0.9869
+b/Rtarg:     0.6500
+Vimp/Vesc:     1.7559
+Q/ Qstar:     0.0262
+tot_no_frags:     4
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 1.481898e+03
+Target hash, mass = 3471981902 3.072493e-07
+Projectile hash, mass = 4046076794 2.793176e-08
+Mp/Mt:    0.0909
+Mlr/Mt:    1.0904
+Mlr/Mtot:    0.9995
+b/Rtarg:     1.1474
+Vimp/Vesc:     1.2470
+Q/ Qstar:     0.0010
+tot_no_frags:     4
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 1.490287e+03
+Target hash, mass = 3616865126 2.793176e-08
+Projectile hash, mass = 4263717482 2.793176e-08
+Mp/Mt:    1.0000
+Mlr/Mt:    1.7859
+Mlr/Mtot:    0.8930
+b/Rtarg:     0.7528
+Vimp/Vesc:     2.6408
+Q/ Qstar:     0.2141
+tot_no_frags:     4
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 1.517769e+03
+Target hash, mass = 3384709749 5.586351e-08
+Projectile hash, mass = 90391199 2.793176e-08
+Mp/Mt:    0.5000
+Mlr/Mt:    1.2713
+Mlr/Mtot:    0.8475
+b/Rtarg:     0.6635
+Vimp/Vesc:     3.3814
+Q/ Qstar:     0.3050
+tot_no_frags:     4
+COLLISION TYPE: PARTIAL ACCRETION
+FRAG5 hash, mass:      2916276788 1.277857e-08
+TIME OF COLLISION: 1.758278e+03
+Target hash, mass = 276262414 6.144986e-07
+Projectile hash, mass = 2074240873 2.793176e-08
+Mp/Mt:    0.0455
+Mlr/Mt:    1.0447
+Mlr/Mtot:    0.9993
+b/Rtarg:     0.4987
+Vimp/Vesc:     1.0282
+Q/ Qstar:     0.0015
+tot_no_frags:     5
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  263       t=  2000.001000  dt=  0.003000  cpu=  817.103482 [s]  Walltime(s) = 1751.395153 
+TIME OF COLLISION: 2.255078e+03
+Target hash, mass = 4143790437 2.793176e-07
+Projectile hash, mass = 1434594601 2.793176e-08
+Mp/Mt:    0.1000
+Mlr/Mt:    1.0996
+Mlr/Mtot:    0.9996
+b/Rtarg:     1.2754
+Vimp/Vesc:     1.8789
+Q/ Qstar:     0.0007
+tot_no_frags:     5
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 2.333742e+03
+Target hash, mass = 4143790437 3.072493e-07
+Projectile hash, mass = 2023909660 2.793176e-07
+Mp/Mt:    0.9091
+Mlr/Mt:    1.9044
+Mlr/Mtot:    0.9975
+b/Rtarg:     1.7206
+Vimp/Vesc:     2.2301
+Q/ Qstar:     0.0049
+tot_no_frags:     5
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 2.680721e+03
+Target hash, mass = 870896792 2.793176e-07
+Projectile hash, mass = 728028737 2.793176e-08
+Mp/Mt:    0.1000
+Mlr/Mt:    1.0976
+Mlr/Mtot:    0.9978
+b/Rtarg:     0.7440
+Vimp/Vesc:     1.0106
+Q/ Qstar:     0.0044
+tot_no_frags:     5
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 2.815034e+03
+Target hash, mass = 1498734392 2.793176e-08
+Projectile hash, mass = 3382444416 2.793176e-08
+Mp/Mt:    1.0000
+Mlr/Mt:    1.9652
+Mlr/Mtot:    0.9826
+b/Rtarg:     1.4492
+Vimp/Vesc:     2.1714
+Q/ Qstar:     0.0348
+tot_no_frags:     5
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 2.905982e+03
+Target hash, mass = 3384709749 7.101670e-08
+Projectile hash, mass = 4252347608 2.793176e-08
+Mp/Mt:    0.3933
+Mlr/Mt:    1.3923
+Mlr/Mtot:    0.9993
+b/Rtarg:     1.6090
+Vimp/Vesc:     3.3636
+Q/ Qstar:     0.0015
+tot_no_frags:     5
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 2.941269e+03
+Target hash, mass = 2729381062 2.793176e-08
+Projectile hash, mass = 3481866093 2.793176e-08
+Mp/Mt:    1.0000
+Mlr/Mt:    1.9137
+Mlr/Mtot:    0.9568
+b/Rtarg:     1.4973
+Vimp/Vesc:     3.7982
+Q/ Qstar:     0.0863
+tot_no_frags:     5
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  257       t=  3000.000000  dt=  0.003000  cpu=  778.227092 [s]  Walltime(s) = 2529.584031 
+TIME OF COLLISION: 3.255232e+03
+Target hash, mass = 3616865126 5.586351e-08
+Projectile hash, mass = 245436729 2.793176e-08
+Mp/Mt:    0.5000
+Mlr/Mt:    1.4994
+Mlr/Mtot:    0.9996
+b/Rtarg:     1.6028
+Vimp/Vesc:     1.2644
+Q/ Qstar:     0.0008
+tot_no_frags:     5
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 3.572111e+03
+Target hash, mass = 1236021306 2.793176e-08
+Projectile hash, mass = 2916276788 1.277857e-08
+Mp/Mt:    0.4575
+Mlr/Mt:    1.4565
+Mlr/Mtot:    0.9993
+b/Rtarg:     1.6933
+Vimp/Vesc:     6.3833
+Q/ Qstar:     0.0014
+tot_no_frags:     5
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 3.984366e+03
+Target hash, mass = 2759854154 5.050941e-07
+Projectile hash, mass = 4188445920 2.793176e-08
+Mp/Mt:    0.0553
+Mlr/Mt:    1.0540
+Mlr/Mtot:    0.9987
+b/Rtarg:     0.8296
+Vimp/Vesc:     1.3155
+Q/ Qstar:     0.0025
+tot_no_frags:     5
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  254       t=  4000.002000  dt=  0.003000  cpu=  743.083712 [s]  Walltime(s) = 3272.630388 
+TIME OF COLLISION: 4.314886e+03
+Target hash, mass = 3709881891 2.793176e-08
+Projectile hash, mass = 2451350669 2.793176e-08
+Mp/Mt:    1.0000
+Mlr/Mt:    1.9446
+Mlr/Mtot:    0.9723
+b/Rtarg:     0.7734
+Vimp/Vesc:     1.3565
+Q/ Qstar:     0.0554
+tot_no_frags:     5
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 4.331849e+03
+Target hash, mass = 1593850299 2.793176e-08
+Projectile hash, mass = 1425083048 2.793176e-08
+Mp/Mt:    1.0000
+Mlr/Mt:    1.8891
+Mlr/Mtot:    0.9446
+b/Rtarg:     0.8699
+Vimp/Vesc:     2.0194
+Q/ Qstar:     0.1109
+tot_no_frags:     5
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 4.386702e+03
+Target hash, mass = 941534069 2.793176e-08
+Projectile hash, mass = 486050091 2.793176e-08
+Mp/Mt:    1.0000
+Mlr/Mt:    1.8486
+Mlr/Mtot:    0.9243
+b/Rtarg:     1.3991
+Vimp/Vesc:     4.1165
+Q/ Qstar:     0.1514
+tot_no_frags:     5
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 4.463392e+03
+Target hash, mass = 659524895 8.379527e-08
+Projectile hash, mass = 3616865126 8.379527e-08
+Mp/Mt:    1.0000
+Mlr/Mt:    1.9235
+Mlr/Mtot:    0.9618
+b/Rtarg:     1.4389
+Vimp/Vesc:     3.1545
+Q/ Qstar:     0.0765
+tot_no_frags:     5
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 4.623094e+03
+Target hash, mass = 4126262021 5.586351e-07
+Projectile hash, mass = 2406269022 2.793176e-08
+Mp/Mt:    0.0500
+Mlr/Mt:    1.0494
+Mlr/Mtot:    0.9994
+b/Rtarg:     0.8870
+Vimp/Vesc:     1.0517
+Q/ Qstar:     0.0011
+tot_no_frags:     5
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 4.917250e+03
+Target hash, mass = 2263814062 2.793176e-08
+Projectile hash, mass = 4122240121 2.793176e-08
+Mp/Mt:    1.0000
+Mlr/Mt:    2.0000
+Mlr/Mtot:    1.0000
+b/Rtarg:     1.9895
+Vimp/Vesc:     6.2123
+Q/ Qstar:     0.0000
+tot_no_frags:     5
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 4.941146e+03
+Target hash, mass = 2729381062 5.586351e-08
+Projectile hash, mass = 941534069 5.586351e-08
+Mp/Mt:    1.0000
+Mlr/Mt:    1.9995
+Mlr/Mtot:    0.9998
+b/Rtarg:     1.8249
+Vimp/Vesc:     1.1179
+Q/ Qstar:     0.0005
+tot_no_frags:     5
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  247       t=  5000.001000  dt=  0.003000  cpu=  713.323051 [s]  Walltime(s) = 3985.917117 
+TIME OF COLLISION: 5.159640e+03
+Target hash, mass = 4231632140 5.586351e-08
+Projectile hash, mass = 865537991 4.739434e-08
+Mp/Mt:    0.8484
+Mlr/Mt:    1.7429
+Mlr/Mtot:    0.9429
+b/Rtarg:     1.0875
+Vimp/Vesc:     2.4837
+Q/ Qstar:     0.1141
+tot_no_frags:     5
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 5.352876e+03
+Target hash, mass = 2759854154 5.330259e-07
+Projectile hash, mass = 741863299 2.793176e-08
+Mp/Mt:    0.0524
+Mlr/Mt:    1.0522
+Mlr/Mtot:    0.9998
+b/Rtarg:     1.2061
+Vimp/Vesc:     2.3231
+Q/ Qstar:     0.0005
+tot_no_frags:     5
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 5.629015e+03
+Target hash, mass = 2759854154 5.609576e-07
+Projectile hash, mass = 2211003714 8.824619e-09
+Mp/Mt:    0.0157
+Mlr/Mt:    1.0155
+Mlr/Mtot:    0.9997
+b/Rtarg:     0.7527
+Vimp/Vesc:     1.6202
+Q/ Qstar:     0.0005
+tot_no_frags:     5
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  244       t=  6000.003000  dt=  0.003000  cpu=  703.455813 [s]  Walltime(s) = 4689.323354 
+TIME OF COLLISION: 6.183151e+03
+Target hash, mass = 2298477853 2.793176e-08
+Projectile hash, mass = 1651612823 2.793176e-08
+Mp/Mt:    1.0000
+Mlr/Mt:    1.9705
+Mlr/Mtot:    0.9852
+b/Rtarg:     1.5378
+Vimp/Vesc:     2.4529
+Q/ Qstar:     0.0295
+tot_no_frags:     5
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 6.648576e+03
+Target hash, mass = 659524895 1.675905e-07
+Projectile hash, mass = 3498415124 2.793176e-08
+Mp/Mt:    0.1667
+Mlr/Mt:    1.1595
+Mlr/Mtot:    0.9938
+b/Rtarg:     0.8820
+Vimp/Vesc:     1.4015
+Q/ Qstar:     0.0123
+tot_no_frags:     5
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 6.782163e+03
+Target hash, mass = 3384709749 9.894845e-08
+Projectile hash, mass = 1516068388 2.793176e-08
+Mp/Mt:    0.2823
+Mlr/Mt:    1.2646
+Mlr/Mtot:    0.9862
+b/Rtarg:     1.1848
+Vimp/Vesc:     2.5497
+Q/ Qstar:     0.0276
+tot_no_frags:     5
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 6.831758e+03
+Target hash, mass = 2298477853 5.586351e-08
+Projectile hash, mass = 3268335666 2.793176e-08
+Mp/Mt:    0.5000
+Mlr/Mt:    1.4296
+Mlr/Mtot:    0.9530
+b/Rtarg:     0.7357
+Vimp/Vesc:     1.9551
+Q/ Qstar:     0.0939
+tot_no_frags:     5
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  240       t=  7000.002000  dt=  0.003000  cpu=  690.116981 [s]  Walltime(s) = 5379.390992 
+TIME OF COLLISION: 7.366887e+03
+Target hash, mass = 3384709749 1.268802e-07
+Projectile hash, mass = 2298477853 8.379527e-08
+Mp/Mt:    0.6604
+Mlr/Mt:    1.5988
+Mlr/Mtot:    0.9629
+b/Rtarg:     0.6953
+Vimp/Vesc:     1.5843
+Q/ Qstar:     0.0742
+tot_no_frags:     5
+COLLISION TYPE: PARTIAL ACCRETION
+FRAG6 hash, mass:      3696193412 7.813786e-09
+TIME OF COLLISION: 7.452387e+03
+Target hash, mass = 1119993136 5.865669e-07
+Projectile hash, mass = 1128709694 2.793176e-08
+Mp/Mt:    0.0476
+Mlr/Mt:    1.0473
+Mlr/Mtot:    0.9997
+b/Rtarg:     1.0140
+Vimp/Vesc:     1.0996
+Q/ Qstar:     0.0006
+tot_no_frags:     6
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 7.675776e+03
+Target hash, mass = 2263814062 5.586351e-08
+Projectile hash, mass = 1123501568 2.793176e-08
+Mp/Mt:    0.5000
+Mlr/Mt:    1.2060
+Mlr/Mtot:    0.8040
+b/Rtarg:     0.1439
+Vimp/Vesc:     3.4121
+Q/ Qstar:     0.3919
+tot_no_frags:     6
+COLLISION TYPE: PARTIAL ACCRETION
+FRAG7 hash, mass:      15308464 8.210598e-09
+FRAG8 hash, mass:      1239307652 8.210598e-09
+TIME OF COLLISION: 7.689774e+03
+Target hash, mass = 4143790437 5.865669e-07
+Projectile hash, mass = 754869367 2.793176e-08
+Mp/Mt:    0.0476
+Mlr/Mt:    1.0451
+Mlr/Mtot:    0.9976
+b/Rtarg:     0.1386
+Vimp/Vesc:     1.8077
+Q/ Qstar:     0.0049
+tot_no_frags:     8
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 7.839097e+03
+Target hash, mass = 2263814062 6.737407e-08
+Projectile hash, mass = 1239307652 8.210598e-09
+Mp/Mt:    0.1219
+Mlr/Mt:    1.1216
+Mlr/Mtot:    0.9998
+b/Rtarg:     1.2721
+Vimp/Vesc:     1.0541
+Q/ Qstar:     0.0004
+tot_no_frags:     8
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  238       t=  8000.001000  dt=  0.003000  cpu=  653.132956 [s]  Walltime(s) = 6032.481540 
+TIME OF COLLISION: 8.435453e+03
+Target hash, mass = 2759854154 5.697822e-07
+Projectile hash, mass = 3687573659 7.960025e-09
+Mp/Mt:    0.0140
+Mlr/Mt:    1.0139
+Mlr/Mtot:    0.9999
+b/Rtarg:     0.6883
+Vimp/Vesc:     1.0898
+Q/ Qstar:     0.0002
+tot_no_frags:     8
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  237       t=  9000.003000  dt=  0.003000  cpu=  633.401081 [s]  Walltime(s) = 6665.845592 
+TIME OF COLLISION: 9.129452e+03
+Target hash, mass = 3384709749 2.028617e-07
+Projectile hash, mass = 1735432893 2.793176e-08
+Mp/Mt:    0.1377
+Mlr/Mt:    1.1176
+Mlr/Mtot:    0.9823
+b/Rtarg:     1.0094
+Vimp/Vesc:     3.3713
+Q/ Qstar:     0.0353
+tot_no_frags:     8
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  236       t=  10000.002000  dt=  0.003000  cpu=  624.538834 [s]  Walltime(s) = 7290.349840 
+TIME OF COLLISION: 1.007535e+04
+Target hash, mass = 290926289 2.793176e-08
+Projectile hash, mass = 259930472 2.793176e-08
+Mp/Mt:    1.0000
+Mlr/Mt:    1.7996
+Mlr/Mtot:    0.8998
+b/Rtarg:     0.7505
+Vimp/Vesc:     2.5522
+Q/ Qstar:     0.2004
+tot_no_frags:     8
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  235       t=  11000.001000  dt=  0.003000  cpu=  617.246466 [s]  Walltime(s) = 7907.561071 
+TIME OF COLLISION: 1.100028e+04
+Target hash, mass = 2759854154 5.777423e-07
+Projectile hash, mass = 4231632140 1.032579e-07
+Mp/Mt:    0.1787
+Mlr/Mt:    1.1662
+Mlr/Mtot:    0.9893
+b/Rtarg:     0.4039
+Vimp/Vesc:     1.3365
+Q/ Qstar:     0.0213
+tot_no_frags:     8
+COLLISION TYPE: PARTIAL ACCRETION
+FRAG9 hash, mass:      1945448119 7.264237e-09
+TIME OF COLLISION: 1.130483e+04
+Target hash, mass = 2759854154 6.737359e-07
+Projectile hash, mass = 1945448119 7.264237e-09
+Mp/Mt:    0.0108
+Mlr/Mt:    1.0108
+Mlr/Mtot:    1.0000
+b/Rtarg:     1.1315
+Vimp/Vesc:     1.0465
+Q/ Qstar:     0.0000
+tot_no_frags:     9
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 1.175941e+04
+Target hash, mass = 3680235706 2.793176e-07
+Projectile hash, mass = 770580294 2.793176e-08
+Mp/Mt:    0.1000
+Mlr/Mt:    1.0995
+Mlr/Mtot:    0.9995
+b/Rtarg:     1.1937
+Vimp/Vesc:     1.3535
+Q/ Qstar:     0.0010
+tot_no_frags:     9
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  233       t=  12000.000000  dt=  0.003000  cpu=  610.896472 [s]  Walltime(s) = 8518.422874 
+TIME OF COLLISION: 1.275843e+04
+Target hash, mass = 4143790437 6.144986e-07
+Projectile hash, mass = 253808213 2.793176e-08
+Mp/Mt:    0.0455
+Mlr/Mt:    1.0426
+Mlr/Mtot:    0.9973
+b/Rtarg:     0.7435
+Vimp/Vesc:     2.0712
+Q/ Qstar:     0.0055
+tot_no_frags:     9
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  232       t=  13000.002001  dt=  0.003000  cpu=  606.150078 [s]  Walltime(s) = 9124.538704 
+TIME OF COLLISION: 1.373320e+04
+Target hash, mass = 3475245566 2.793176e-08
+Projectile hash, mass = 911013108 2.793176e-08
+Mp/Mt:    1.0000
+Mlr/Mt:    1.9139
+Mlr/Mtot:    0.9569
+b/Rtarg:     1.1940
+Vimp/Vesc:     2.3186
+Q/ Qstar:     0.0861
+tot_no_frags:     9
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 1.386637e+04
+Target hash, mass = 2759854154 6.810001e-07
+Projectile hash, mass = 848448836 8.824619e-09
+Mp/Mt:    0.0130
+Mlr/Mt:    1.0128
+Mlr/Mtot:    0.9998
+b/Rtarg:     0.7944
+Vimp/Vesc:     1.5342
+Q/ Qstar:     0.0003
+tot_no_frags:     9
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 1.395028e+04
+Target hash, mass = 2759854154 6.898247e-07
+Projectile hash, mass = 905418128 2.793176e-08
+Mp/Mt:    0.0405
+Mlr/Mt:    1.0400
+Mlr/Mtot:    0.9996
+b/Rtarg:     1.0160
+Vimp/Vesc:     1.5422
+Q/ Qstar:     0.0009
+tot_no_frags:     9
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  229       t=  14000.001001  dt=  0.003000  cpu=  597.184371 [s]  Walltime(s) = 9721.689969 
+TIME OF COLLISION: 1.424685e+04
+Target hash, mass = 810769555 2.793176e-08
+Projectile hash, mass = 3933289935 2.793176e-08
+Mp/Mt:    1.0000
+Mlr/Mt:    1.9324
+Mlr/Mtot:    0.9662
+b/Rtarg:     1.4436
+Vimp/Vesc:     2.9937
+Q/ Qstar:     0.0676
+tot_no_frags:     9
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 1.444528e+04
+Target hash, mass = 1876278061 2.793176e-07
+Projectile hash, mass = 3555679070 2.793176e-08
+Mp/Mt:    0.1000
+Mlr/Mt:    1.0964
+Mlr/Mtot:    0.9968
+b/Rtarg:     0.5533
+Vimp/Vesc:     1.1242
+Q/ Qstar:     0.0065
+tot_no_frags:     9
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  227       t=  15000.000001  dt=  0.003000  cpu=  577.795251 [s]  Walltime(s) = 10299.450988 
+TIME OF COLLISION: 1.500734e+04
+Target hash, mass = 2729381062 1.117270e-07
+Projectile hash, mass = 2504591099 2.793176e-08
+Mp/Mt:    0.2500
+Mlr/Mt:    1.1490
+Mlr/Mtot:    0.9192
+b/Rtarg:     0.4190
+Vimp/Vesc:     2.9976
+Q/ Qstar:     0.1615
+tot_no_frags:     9
+COLLISION TYPE: PARTIAL ACCRETION
+FRAG10 hash, mass:      3396227953 1.128004e-08
+TIME OF COLLISION: 1.536841e+04
+Target hash, mass = 276262414 6.424304e-07
+Projectile hash, mass = 2693713428 2.793176e-08
+Mp/Mt:    0.0435
+Mlr/Mt:    1.0435
+Mlr/Mtot:    1.0000
+b/Rtarg:     1.3394
+Vimp/Vesc:     1.6080
+Q/ Qstar:     0.0000
+tot_no_frags:     10
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  226       t=  16000.002001  dt=  0.003000  cpu=  570.180348 [s]  Walltime(s) = 10869.597378 
+TIME OF COLLISION: 1.665217e+04
+Target hash, mass = 276262414 6.703622e-07
+Projectile hash, mass = 15308464 8.210598e-09
+Mp/Mt:    0.0122
+Mlr/Mt:    1.0122
+Mlr/Mtot:    0.9999
+b/Rtarg:     0.5675
+Vimp/Vesc:     1.1274
+Q/ Qstar:     0.0002
+tot_no_frags:     10
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  225       t=  17000.001001  dt=  0.003000  cpu=  569.960779 [s]  Walltime(s) = 11439.523544 
+TIME OF COLLISION: 1.712818e+04
+Target hash, mass = 2759854154 7.177565e-07
+Projectile hash, mass = 40245973 2.793176e-08
+Mp/Mt:    0.0389
+Mlr/Mt:    1.0377
+Mlr/Mtot:    0.9988
+b/Rtarg:     0.6614
+Vimp/Vesc:     1.5033
+Q/ Qstar:     0.0024
+tot_no_frags:     10
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 1.719457e+04
+Target hash, mass = 3266729976 2.793176e-07
+Projectile hash, mass = 3709881891 5.586351e-08
+Mp/Mt:    0.2000
+Mlr/Mt:    1.1985
+Mlr/Mtot:    0.9988
+b/Rtarg:     1.1882
+Vimp/Vesc:     1.0331
+Q/ Qstar:     0.0025
+tot_no_frags:     10
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 1.768047e+04
+Target hash, mass = 3384709749 2.307935e-07
+Projectile hash, mass = 3396227953 1.128004e-08
+Mp/Mt:    0.0489
+Mlr/Mt:    1.0487
+Mlr/Mtot:    0.9999
+b/Rtarg:     1.1595
+Vimp/Vesc:     1.3405
+Q/ Qstar:     0.0003
+tot_no_frags:     10
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  222       t=  18000.000002  dt=  0.003000  cpu=  555.832755 [s]  Walltime(s) = 11995.321799 
+TIME OF COLLISION: 1.824209e+04
+Target hash, mass = 3384709749 2.420735e-07
+Projectile hash, mass = 3696193412 7.813786e-09
+Mp/Mt:    0.0323
+Mlr/Mt:    1.0319
+Mlr/Mtot:    0.9996
+b/Rtarg:     0.1608
+Vimp/Vesc:     1.0338
+Q/ Qstar:     0.0008
+tot_no_frags:     10
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  221       t=  19000.002002  dt=  0.003000  cpu=  546.505541 [s]  Walltime(s) = 12541.793150 
+TIME OF COLLISION: 1.963472e+04
+Target hash, mass = 29350397 2.793176e-08
+Projectile hash, mass = 3833318790 2.793176e-08
+Mp/Mt:    1.0000
+Mlr/Mt:    1.3902
+Mlr/Mtot:    0.6951
+b/Rtarg:     0.5948
+Vimp/Vesc:     4.1876
+Q/ Qstar:     0.6098
+tot_no_frags:     10
+COLLISION TYPE: PARTIAL ACCRETION
+FRAG11 hash, mass:      3321237907 8.516655e-09
+FRAG12 hash, mass:      3187199216 8.516655e-09
+N_tot=  222       t=  20000.001002  dt=  0.003000  cpu=  549.741851 [s]  Walltime(s) = 13091.501023 
+TIME OF COLLISION: 2.083899e+04
+Target hash, mass = 3680235706 3.072493e-07
+Projectile hash, mass = 482917538 2.793176e-08
+Mp/Mt:    0.0909
+Mlr/Mt:    1.0909
+Mlr/Mtot:    1.0000
+b/Rtarg:     1.4228
+Vimp/Vesc:     1.1319
+Q/ Qstar:     0.0000
+tot_no_frags:     12
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 2.099795e+04
+Target hash, mass = 511603307 2.793176e-08
+Projectile hash, mass = 870323177 2.793176e-08
+Mp/Mt:    1.0000
+Mlr/Mt:    1.9996
+Mlr/Mtot:    0.9998
+b/Rtarg:     1.8250
+Vimp/Vesc:     1.0255
+Q/ Qstar:     0.0004
+tot_no_frags:     12
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  220       t=  21000.000002  dt=  0.003000  cpu=  550.242122 [s]  Walltime(s) = 13641.709291 
+N_tot=  220       t=  22000.002002  dt=  0.003000  cpu=  538.898729 [s]  Walltime(s) = 14180.574521 
+TIME OF COLLISION: 2.220246e+04
+Target hash, mass = 3384709749 2.498873e-07
+Projectile hash, mass = 838860310 2.793176e-08
+Mp/Mt:    0.1118
+Mlr/Mt:    1.1116
+Mlr/Mtot:    0.9998
+b/Rtarg:     1.3402
+Vimp/Vesc:     1.9341
+Q/ Qstar:     0.0004
+tot_no_frags:     12
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 2.261765e+04
+Target hash, mass = 4143790437 6.424304e-07
+Projectile hash, mass = 2250757420 2.793176e-08
+Mp/Mt:    0.0435
+Mlr/Mt:    1.0415
+Mlr/Mtot:    0.9981
+b/Rtarg:     0.7373
+Vimp/Vesc:     1.7923
+Q/ Qstar:     0.0038
+tot_no_frags:     12
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  218       t=  23000.001003  dt=  0.003000  cpu=  531.726190 [s]  Walltime(s) = 14712.266781 
+N_tot=  218       t=  24000.000003  dt=  0.003000  cpu=  528.269627 [s]  Walltime(s) = 15240.503043 
+TIME OF COLLISION: 2.406891e+04
+Target hash, mass = 870896792 3.072493e-07
+Projectile hash, mass = 3621383820 2.793176e-08
+Mp/Mt:    0.0909
+Mlr/Mt:    1.0886
+Mlr/Mtot:    0.9979
+b/Rtarg:     0.8701
+Vimp/Vesc:     1.2435
+Q/ Qstar:     0.0043
+tot_no_frags:     12
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  217       t=  25000.002003  dt=  0.003000  cpu=  524.023761 [s]  Walltime(s) = 15764.492802 
+N_tot=  217       t=  26000.001003  dt=  0.003000  cpu=  523.964438 [s]  Walltime(s) = 16288.423714 
+N_tot=  217       t=  27000.000004  dt=  0.003000  cpu=  523.307699 [s]  Walltime(s) = 16811.697682 
+TIME OF COLLISION: 2.751300e+04
+Target hash, mass = 810769555 5.586351e-08
+Projectile hash, mass = 858320168 2.793176e-08
+Mp/Mt:    0.5000
+Mlr/Mt:    1.5000
+Mlr/Mtot:    1.0000
+b/Rtarg:     1.7654
+Vimp/Vesc:     1.8908
+Q/ Qstar:     0.0000
+tot_no_frags:     12
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 2.784517e+04
+Target hash, mass = 2681375347 2.793176e-08
+Projectile hash, mass = 632754209 2.793176e-08
+Mp/Mt:    1.0000
+Mlr/Mt:    1.0652
+Mlr/Mtot:    0.5326
+b/Rtarg:     0.9805
+Vimp/Vesc:     6.2991
+Q/ Qstar:     0.9348
+tot_no_frags:     12
+COLLISION TYPE: PARTIAL ACCRETION
+FRAG13 hash, mass:      3330100144 8.703243e-09
+FRAG14 hash, mass:      310481256 8.703243e-09
+FRAG15 hash, mass:      817087088 8.703243e-09
+N_tot=  218       t=  28000.002004  dt=  0.003000  cpu=  522.142413 [s]  Walltime(s) = 17333.806484 
+N_tot=  218       t=  29000.001004  dt=  0.003000  cpu=  531.046590 [s]  Walltime(s) = 17864.819774 
+N_tot=  218       t=  30000.000004  dt=  0.003000  cpu=  527.972342 [s]  Walltime(s) = 18392.758486 
+TIME OF COLLISION: 3.005929e+04
+Target hash, mass = 2759854154 7.456883e-07
+Projectile hash, mass = 659524895 1.955223e-07
+Mp/Mt:    0.2622
+Mlr/Mt:    1.2620
+Mlr/Mtot:    0.9999
+b/Rtarg:     1.4912
+Vimp/Vesc:     1.1376
+Q/ Qstar:     0.0002
+tot_no_frags:     15
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  217       t=  31000.002004  dt=  0.003000  cpu=  522.990396 [s]  Walltime(s) = 18915.715299 
+N_tot=  217       t=  32000.001005  dt=  0.003000  cpu=  523.440957 [s]  Walltime(s) = 19439.122944 
+TIME OF COLLISION: 3.212651e+04
+Target hash, mass = 3266729976 3.351811e-07
+Projectile hash, mass = 3160176677 2.793176e-07
+Mp/Mt:    0.8333
+Mlr/Mt:    1.8333
+Mlr/Mtot:    1.0000
+b/Rtarg:     1.9167
+Vimp/Vesc:     1.0546
+Q/ Qstar:     0.0000
+tot_no_frags:     15
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 3.287078e+04
+Target hash, mass = 1119993136 6.144986e-07
+Projectile hash, mass = 1498734392 5.586351e-08
+Mp/Mt:    0.0909
+Mlr/Mt:    1.0901
+Mlr/Mtot:    0.9993
+b/Rtarg:     1.1450
+Vimp/Vesc:     1.4619
+Q/ Qstar:     0.0014
+tot_no_frags:     15
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  215       t=  33000.000004  dt=  0.003000  cpu=  519.304110 [s]  Walltime(s) = 19958.393317 
+TIME OF COLLISION: 3.361947e+04
+Target hash, mass = 3471981902 3.351811e-07
+Projectile hash, mass = 2487301543 2.793176e-08
+Mp/Mt:    0.0833
+Mlr/Mt:    1.0832
+Mlr/Mtot:    0.9998
+b/Rtarg:     1.2523
+Vimp/Vesc:     1.4175
+Q/ Qstar:     0.0003
+tot_no_frags:     15
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  214       t=  34000.002003  dt=  0.003000  cpu=  511.865329 [s]  Walltime(s) = 20470.225484 
+N_tot=  214       t=  35000.001002  dt=  0.003000  cpu=  512.078700 [s]  Walltime(s) = 20982.270818 
+N_tot=  214       t=  36000.000001  dt=  0.003000  cpu=  508.869345 [s]  Walltime(s) = 21491.106289 
+N_tot=  214       t=  37000.002000  dt=  0.003000  cpu=  509.776349 [s]  Walltime(s) = 22000.848771 
+N_tot=  214       t=  38000.000999  dt=  0.003000  cpu=  511.232323 [s]  Walltime(s) = 22512.047746 
+N_tot=  214       t=  39000.002998  dt=  0.003000  cpu=  509.912320 [s]  Walltime(s) = 23021.926691 
+TIME OF COLLISION: 3.994943e+04
+Target hash, mass = 455065046 2.793176e-07
+Projectile hash, mass = 443746396 2.793176e-08
+Mp/Mt:    0.1000
+Mlr/Mt:    1.1000
+Mlr/Mtot:    1.0000
+b/Rtarg:     1.3650
+Vimp/Vesc:     1.1573
+Q/ Qstar:     0.0000
+tot_no_frags:     15
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  213       t=  40000.001997  dt=  0.003000  cpu=  510.843097 [s]  Walltime(s) = 23532.736099 
+TIME OF COLLISION: 4.075467e+04
+Target hash, mass = 2759854154 9.412106e-07
+Projectile hash, mass = 3196256300 8.469170e-09
+Mp/Mt:    0.0090
+Mlr/Mt:    1.0088
+Mlr/Mtot:    0.9998
+b/Rtarg:     0.4345
+Vimp/Vesc:     2.2643
+Q/ Qstar:     0.0004
+tot_no_frags:     15
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  212       t=  41000.000996  dt=  0.003000  cpu=  504.686584 [s]  Walltime(s) = 24037.389161 
+N_tot=  212       t=  42000.002995  dt=  0.003000  cpu=  500.797576 [s]  Walltime(s) = 24538.153752 
+N_tot=  212       t=  43000.001994  dt=  0.003000  cpu=  501.344918 [s]  Walltime(s) = 25039.465606 
+N_tot=  212       t=  44000.000993  dt=  0.003000  cpu=  498.905494 [s]  Walltime(s) = 25538.337852 
+TIME OF COLLISION: 4.414440e+04
+Target hash, mass = 4143790437 6.703622e-07
+Projectile hash, mass = 2308721517 2.793176e-08
+Mp/Mt:    0.0417
+Mlr/Mt:    1.0417
+Mlr/Mtot:    1.0000
+b/Rtarg:     1.3271
+Vimp/Vesc:     1.8043
+Q/ Qstar:     0.0000
+tot_no_frags:     15
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  211       t=  45000.002992  dt=  0.003000  cpu=  501.491274 [s]  Walltime(s) = 26039.795399 
+N_tot=  211       t=  46000.001991  dt=  0.003000  cpu=  494.378561 [s]  Walltime(s) = 26534.140537 
+N_tot=  211       t=  47000.000990  dt=  0.003000  cpu=  494.972291 [s]  Walltime(s) = 27029.079610 
+N_tot=  211       t=  48000.002989  dt=  0.003000  cpu=  496.623617 [s]  Walltime(s) = 27525.669818 
+N_tot=  211       t=  49000.001988  dt=  0.003000  cpu=  495.023301 [s]  Walltime(s) = 28020.659935 
+TIME OF COLLISION: 4.973473e+04
+Target hash, mass = 3471981902 3.631128e-07
+Projectile hash, mass = 3919026803 2.793176e-08
+Mp/Mt:    0.0769
+Mlr/Mt:    1.0717
+Mlr/Mtot:    0.9952
+b/Rtarg:     0.5398
+Vimp/Vesc:     1.6866
+Q/ Qstar:     0.0096
+tot_no_frags:     15
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 4.991042e+04
+Target hash, mass = 1347872676 2.793176e-08
+Projectile hash, mass = 2125112500 2.793176e-08
+Mp/Mt:    1.0000
+Mlr/Mt:    1.5510
+Mlr/Mtot:    0.7755
+b/Rtarg:     1.0987
+Vimp/Vesc:     4.8067
+Q/ Qstar:     0.4490
+tot_no_frags:     15
+COLLISION TYPE: ELASTIC BOUNCE
+N_tot=  210       t=  50000.000987  dt=  0.003000  cpu=  495.270244 [s]  Walltime(s) = 28515.897251 
+TIME OF COLLISION: 5.017417e+04
+Target hash, mass = 3384709749 2.778190e-07
+Projectile hash, mass = 2729381062 1.283787e-07
+Mp/Mt:    0.4621
+Mlr/Mt:    1.4610
+Mlr/Mtot:    0.9992
+b/Rtarg:     1.5823
+Vimp/Vesc:     1.8117
+Q/ Qstar:     0.0015
+tot_no_frags:     15
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 5.048373e+04
+Target hash, mass = 2681375347 2.975378e-08
+Projectile hash, mass = 561528368 2.793176e-08
+Mp/Mt:    0.9388
+Mlr/Mt:    1.8913
+Mlr/Mtot:    0.9755
+b/Rtarg:     1.5285
+Vimp/Vesc:     3.2349
+Q/ Qstar:     0.0489
+tot_no_frags:     15
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  208       t=  51000.002986  dt=  0.003000  cpu=  487.861984 [s]  Walltime(s) = 29003.725821 
+N_tot=  208       t=  52000.001985  dt=  0.003000  cpu=  480.997423 [s]  Walltime(s) = 29484.690477 
+TIME OF COLLISION: 5.245882e+04
+Target hash, mass = 1119993136 6.703622e-07
+Projectile hash, mass = 1768543625 2.793176e-08
+Mp/Mt:    0.0417
+Mlr/Mt:    1.0417
+Mlr/Mtot:    1.0000
+b/Rtarg:     1.2370
+Vimp/Vesc:     1.0141
+Q/ Qstar:     0.0000
+tot_no_frags:     15
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  207       t=  53000.000984  dt=  0.003000  cpu=  479.141355 [s]  Walltime(s) = 29963.798565 
+N_tot=  207       t=  54000.002983  dt=  0.003000  cpu=  476.133836 [s]  Walltime(s) = 30439.899634 
+N_tot=  207       t=  55000.001982  dt=  0.003000  cpu=  475.439214 [s]  Walltime(s) = 30915.305616 
+N_tot=  207       t=  56000.000981  dt=  0.003000  cpu=  475.257715 [s]  Walltime(s) = 31390.530379 
+TIME OF COLLISION: 5.654843e+04
+Target hash, mass = 3749853089 2.793176e-08
+Projectile hash, mass = 1206764858 2.793176e-08
+Mp/Mt:    1.0000
+Mlr/Mt:    1.9824
+Mlr/Mtot:    0.9912
+b/Rtarg:     1.4389
+Vimp/Vesc:     1.5110
+Q/ Qstar:     0.0176
+tot_no_frags:     15
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  206       t=  57000.002980  dt=  0.003000  cpu=  473.924325 [s]  Walltime(s) = 31864.421851 
+TIME OF COLLISION: 5.780747e+04
+Target hash, mass = 997905375 2.793176e-08
+Projectile hash, mass = 199935986 2.793176e-08
+Mp/Mt:    1.0000
+Mlr/Mt:    1.7602
+Mlr/Mtot:    0.8801
+b/Rtarg:     1.3693
+Vimp/Vesc:     4.9206
+Q/ Qstar:     0.2398
+tot_no_frags:     15
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  205       t=  58000.001979  dt=  0.003000  cpu=  473.096407 [s]  Walltime(s) = 32337.485310 
+TIME OF COLLISION: 5.882571e+04
+Target hash, mass = 3384709749 4.061978e-07
+Projectile hash, mass = 1236021306 4.071033e-08
+Mp/Mt:    0.1002
+Mlr/Mt:    1.0980
+Mlr/Mtot:    0.9979
+b/Rtarg:     1.0657
+Vimp/Vesc:     1.7202
+Q/ Qstar:     0.0041
+tot_no_frags:     15
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  204       t=  59000.000978  dt=  0.003000  cpu=  465.445313 [s]  Walltime(s) = 32802.897837 
+TIME OF COLLISION: 5.977552e+04
+Target hash, mass = 276262414 6.785728e-07
+Projectile hash, mass = 1790255658 2.793176e-08
+Mp/Mt:    0.0412
+Mlr/Mt:    1.0400
+Mlr/Mtot:    0.9989
+b/Rtarg:     0.3937
+Vimp/Vesc:     1.3574
+Q/ Qstar:     0.0021
+tot_no_frags:     15
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  203       t=  60000.002977  dt=  0.003000  cpu=  460.167620 [s]  Walltime(s) = 33263.032604 
+TIME OF COLLISION: 6.063633e+04
+Target hash, mass = 870896792 3.351811e-07
+Projectile hash, mass = 1661091397 2.793176e-08
+Mp/Mt:    0.0833
+Mlr/Mt:    1.0826
+Mlr/Mtot:    0.9994
+b/Rtarg:     1.0563
+Vimp/Vesc:     1.1047
+Q/ Qstar:     0.0013
+tot_no_frags:     15
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 6.083256e+04
+Target hash, mass = 2263814062 7.558467e-08
+Projectile hash, mass = 392861532 2.793176e-08
+Mp/Mt:    0.3695
+Mlr/Mt:    0.9685
+Mlr/Mtot:    0.7072
+b/Rtarg:     1.0528
+Vimp/Vesc:     7.5964
+Q/ Qstar:     0.5857
+tot_no_frags:     15
+COLLISION TYPE: PARTIAL EROSION
+FRAG16 hash, mass:      551137729 7.578228e-09
+FRAG17 hash, mass:      1218250404 7.578228e-09
+FRAG18 hash, mass:      1035956119 7.578228e-09
+FRAG19 hash, mass:      1211996162 7.578228e-09
+N_tot=  205       t=  61000.001976  dt=  0.003000  cpu=  461.166057 [s]  Walltime(s) = 33724.165722 
+N_tot=  205       t=  62000.000975  dt=  0.003000  cpu=  467.347075 [s]  Walltime(s) = 34191.480063 
+TIME OF COLLISION: 6.286552e+04
+Target hash, mass = 3823986536 2.793176e-07
+Projectile hash, mass = 331336395 2.793176e-08
+Mp/Mt:    0.1000
+Mlr/Mt:    1.0987
+Mlr/Mtot:    0.9988
+b/Rtarg:     1.1974
+Vimp/Vesc:     2.1131
+Q/ Qstar:     0.0023
+tot_no_frags:     19
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  204       t=  63000.002974  dt=  0.003000  cpu=  467.461120 [s]  Walltime(s) = 34658.907446 
+N_tot=  204       t=  64000.001973  dt=  0.003000  cpu=  462.539707 [s]  Walltime(s) = 35121.413561 
+N_tot=  204       t=  65000.000972  dt=  0.003000  cpu=  465.674094 [s]  Walltime(s) = 35587.054128 
+N_tot=  204       t=  66000.002971  dt=  0.003000  cpu=  462.597338 [s]  Walltime(s) = 36049.617702 
+N_tot=  204       t=  67000.001970  dt=  0.003000  cpu=  463.013301 [s]  Walltime(s) = 36512.597203 
+PARTICLE REMOVED: semi-major axis grew bigger than 100 au
+particle hash:     598947138
+TIME OF COLLISION: 6.720477e+04
+Target hash, mass = 4143790437 6.982939e-07
+Projectile hash, mass = 2263814062 7.320352e-08
+Mp/Mt:    0.1048
+Mlr/Mt:    1.0964
+Mlr/Mtot:    0.9924
+b/Rtarg:     0.8575
+Vimp/Vesc:     2.0804
+Q/ Qstar:     0.0152
+tot_no_frags:     19
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  202       t=  68000.000969  dt=  0.003000  cpu=  454.690865 [s]  Walltime(s) = 36967.210348 
+N_tot=  202       t=  69000.002968  dt=  0.003000  cpu=  454.429136 [s]  Walltime(s) = 37421.606817 
+N_tot=  202       t=  70000.001967  dt=  0.003000  cpu=  456.399603 [s]  Walltime(s) = 37877.974003 
+TIME OF COLLISION: 7.075645e+04
+Target hash, mass = 3266729976 6.144986e-07
+Projectile hash, mass = 2906924538 2.793176e-08
+Mp/Mt:    0.0455
+Mlr/Mt:    1.0454
+Mlr/Mtot:    1.0000
+b/Rtarg:     1.2668
+Vimp/Vesc:     0.9914
+Q/ Qstar:     0.0000
+tot_no_frags:     19
+COLLISION TYPE: SIMPLY MERGED
+N_tot=  201       t=  71000.000966  dt=  0.003000  cpu=  452.030032 [s]  Walltime(s) = 38329.971101 
+N_tot=  201       t=  72000.002965  dt=  0.003000  cpu=  448.622219 [s]  Walltime(s) = 38778.560492 
+N_tot=  201       t=  73000.001964  dt=  0.003000  cpu=  450.422779 [s]  Walltime(s) = 39228.950853 
+N_tot=  201       t=  74000.000963  dt=  0.003000  cpu=  448.964530 [s]  Walltime(s) = 39677.882050 
+TIME OF COLLISION: 7.447842e+04
+Target hash, mass = 3865200818 3.631128e-07
+Projectile hash, mass = 3823443426 2.793176e-08
+Mp/Mt:    0.0769
+Mlr/Mt:    1.0767
+Mlr/Mtot:    0.9998
+b/Rtarg:     1.2845
+Vimp/Vesc:     2.4717
+Q/ Qstar:     0.0005
+tot_no_frags:     19
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  200       t=  75000.002962  dt=  0.003000  cpu=  447.043378 [s]  Walltime(s) = 40124.892060 
+N_tot=  200       t=  76000.001961  dt=  0.003000  cpu=  446.217008 [s]  Walltime(s) = 40571.076262 
+N_tot=  200       t=  77000.000960  dt=  0.003000  cpu=  445.384466 [s]  Walltime(s) = 41016.428043 
+TIME OF COLLISION: 7.706573e+04
+Target hash, mass = 3680235706 3.351811e-07
+Projectile hash, mass = 3061883439 2.793176e-08
+Mp/Mt:    0.0833
+Mlr/Mt:    1.0746
+Mlr/Mtot:    0.9920
+b/Rtarg:     0.8528
+Vimp/Vesc:     2.5154
+Q/ Qstar:     0.0161
+tot_no_frags:     19
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  199       t=  78000.002959  dt=  0.003000  cpu=  439.916962 [s]  Walltime(s) = 41456.312413 
+N_tot=  199       t=  79000.001958  dt=  0.003000  cpu=  440.141036 [s]  Walltime(s) = 41896.420357 
+TIME OF COLLISION: 7.978775e+04
+Target hash, mass = 1458665800 2.793176e-08
+Projectile hash, mass = 1731090175 2.793176e-08
+Mp/Mt:    1.0000
+Mlr/Mt:    1.9288
+Mlr/Mtot:    0.9644
+b/Rtarg:     1.3648
+Vimp/Vesc:     2.6616
+Q/ Qstar:     0.0712
+tot_no_frags:     19
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  198       t=  80000.000957  dt=  0.003000  cpu=  438.099493 [s]  Walltime(s) = 42334.486378 
+N_tot=  198       t=  81000.002956  dt=  0.003000  cpu=  437.480252 [s]  Walltime(s) = 42771.933375 
+TIME OF COLLISION: 8.110431e+04
+Target hash, mass = 869234806 2.793176e-08
+Projectile hash, mass = 3775452048 2.793176e-08
+Mp/Mt:    1.0000
+Mlr/Mt:    1.7713
+Mlr/Mtot:    0.8856
+b/Rtarg:     0.8276
+Vimp/Vesc:     2.8328
+Q/ Qstar:     0.2287
+tot_no_frags:     19
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 8.185756e+04
+Target hash, mass = 276262414 7.065045e-07
+Projectile hash, mass = 3330100144 8.703243e-09
+Mp/Mt:    0.0123
+Mlr/Mt:    1.0123
+Mlr/Mtot:    1.0000
+b/Rtarg:     1.2309
+Vimp/Vesc:     1.3964
+Q/ Qstar:     0.0000
+tot_no_frags:     19
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  196       t=  82000.001955  dt=  0.003000  cpu=  434.754752 [s]  Walltime(s) = 43206.655022 
+TIME OF COLLISION: 8.202156e+04
+Target hash, mass = 1119993136 6.982939e-07
+Projectile hash, mass = 3245569981 2.793176e-08
+Mp/Mt:    0.0400
+Mlr/Mt:    1.0397
+Mlr/Mtot:    0.9997
+b/Rtarg:     1.0563
+Vimp/Vesc:     1.4519
+Q/ Qstar:     0.0006
+tot_no_frags:     19
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  195       t=  83000.000954  dt=  0.003000  cpu=  421.587989 [s]  Walltime(s) = 43628.210447 
+TIME OF COLLISION: 8.322933e+04
+Target hash, mass = 3680235706 3.631128e-07
+Projectile hash, mass = 3704423751 2.793176e-08
+Mp/Mt:    0.0769
+Mlr/Mt:    1.0763
+Mlr/Mtot:    0.9994
+b/Rtarg:     1.0381
+Vimp/Vesc:     1.0520
+Q/ Qstar:     0.0011
+tot_no_frags:     19
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  194       t=  84000.002953  dt=  0.003000  cpu=  420.804570 [s]  Walltime(s) = 44048.982888 
+TIME OF COLLISION: 8.497392e+04
+Target hash, mass = 276262414 7.152078e-07
+Projectile hash, mass = 3919821980 2.793176e-08
+Mp/Mt:    0.0391
+Mlr/Mt:    1.0390
+Mlr/Mtot:    1.0000
+b/Rtarg:     1.1682
+Vimp/Vesc:     1.1080
+Q/ Qstar:     0.0001
+tot_no_frags:     19
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  193       t=  85000.001952  dt=  0.003000  cpu=  417.192969 [s]  Walltime(s) = 44466.142665 
+N_tot=  193       t=  86000.000951  dt=  0.003000  cpu=  413.505056 [s]  Walltime(s) = 44879.615092 
+N_tot=  193       t=  87000.002950  dt=  0.003000  cpu=  412.779360 [s]  Walltime(s) = 45292.362189 
+TIME OF COLLISION: 8.721858e+04
+Target hash, mass = 1963165541 2.793176e-08
+Projectile hash, mass = 4061687915 2.793176e-08
+Mp/Mt:    1.0000
+Mlr/Mt:    1.9975
+Mlr/Mtot:    0.9988
+b/Rtarg:     1.8623
+Vimp/Vesc:     3.6489
+Q/ Qstar:     0.0025
+tot_no_frags:     19
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 8.724207e+04
+Target hash, mass = 4143790437 7.714974e-07
+Projectile hash, mass = 1909946179 3.072493e-07
+Mp/Mt:    0.3983
+Mlr/Mt:    1.3811
+Mlr/Mtot:    0.9878
+b/Rtarg:     0.6708
+Vimp/Vesc:     1.0382
+Q/ Qstar:     0.0245
+tot_no_frags:     19
+COLLISION TYPE: PARTIAL ACCRETION
+FRAG20 hash, mass:      188552836 1.321238e-08
+N_tot=  192       t=  88000.001949  dt=  0.003000  cpu=  410.286679 [s]  Walltime(s) = 45702.616689 
+TIME OF COLLISION: 8.858208e+04
+Target hash, mass = 4143790437 1.065534e-06
+Projectile hash, mass = 188552836 1.321238e-08
+Mp/Mt:    0.0124
+Mlr/Mt:    1.0123
+Mlr/Mtot:    0.9999
+b/Rtarg:     0.6454
+Vimp/Vesc:     1.0929
+Q/ Qstar:     0.0002
+tot_no_frags:     20
+COLLISION TYPE: EFFECTIVELY MERGED
+TIME OF COLLISION: 8.885789e+04
+Target hash, mass = 276262414 7.431395e-07
+Projectile hash, mass = 2779686750 2.793176e-08
+Mp/Mt:    0.0376
+Mlr/Mt:    1.0368
+Mlr/Mtot:    0.9992
+b/Rtarg:     0.9169
+Vimp/Vesc:     1.6573
+Q/ Qstar:     0.0016
+tot_no_frags:     20
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  190       t=  89000.000948  dt=  0.003000  cpu=  406.944168 [s]  Walltime(s) = 46109.528540 
+TIME OF COLLISION: 8.967376e+04
+Target hash, mass = 290926289 5.586351e-08
+Projectile hash, mass = 3428193420 2.793176e-08
+Mp/Mt:    0.5000
+Mlr/Mt:    1.4796
+Mlr/Mtot:    0.9864
+b/Rtarg:     1.0568
+Vimp/Vesc:     1.4126
+Q/ Qstar:     0.0272
+tot_no_frags:     20
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  189       t=  90000.002947  dt=  0.003000  cpu=  400.177632 [s]  Walltime(s) = 46509.673803 
+N_tot=  189       t=  91000.001946  dt=  0.003000  cpu=  396.631355 [s]  Walltime(s) = 46906.273271 
+TIME OF COLLISION: 9.153358e+04
+Target hash, mass = 276262414 7.710713e-07
+Projectile hash, mass = 870896792 3.631128e-07
+Mp/Mt:    0.4709
+Mlr/Mt:    1.4596
+Mlr/Mtot:    0.9923
+b/Rtarg:     1.1267
+Vimp/Vesc:     1.2086
+Q/ Qstar:     0.0154
+tot_no_frags:     20
+COLLISION TYPE: GRAZE AND MERGE
+N_tot=  188       t=  92000.000945  dt=  0.003000  cpu=  394.335706 [s]  Walltime(s) = 47300.577027 
+N_tot=  188       t=  93000.002944  dt=  0.003000  cpu=  392.755707 [s]  Walltime(s) = 47693.300555 
+N_tot=  188       t=  94000.001943  dt=  0.003000  cpu=  393.162255 [s]  Walltime(s) = 48086.430494 
+N_tot=  188       t=  95000.000942  dt=  0.003000  cpu=  392.807179 [s]  Walltime(s) = 48479.205162 
+N_tot=  188       t=  96000.002941  dt=  0.003000  cpu=  395.519784 [s]  Walltime(s) = 48874.692113 
+N_tot=  188       t=  97000.001940  dt=  0.003000  cpu=  393.293919 [s]  Walltime(s) = 49267.953698 
+TIME OF COLLISION: 9.782561e+04
+Target hash, mass = 4143790437 1.078747e-06
+Projectile hash, mass = 1211996162 7.578228e-09
+Mp/Mt:    0.0070
+Mlr/Mt:    1.0070
+Mlr/Mtot:    1.0000
+b/Rtarg:     1.0921
+Vimp/Vesc:     2.0470
+Q/ Qstar:     0.0000
+tot_no_frags:     20
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  187       t=  98000.000939  dt=  0.003000  cpu=  392.771386 [s]  Walltime(s) = 49660.692406 
+N_tot=  187       t=  99000.002938  dt=  0.003000  cpu=  389.427247 [s]  Walltime(s) = 50050.086787 
+TIME OF COLLISION: 9.913421e+04
+Target hash, mass = 1119993136 7.262257e-07
+Projectile hash, mass = 3732071459 2.793176e-08
+Mp/Mt:    0.0385
+Mlr/Mt:    1.0366
+Mlr/Mtot:    0.9982
+b/Rtarg:     0.2789
+Vimp/Vesc:     1.8855
+Q/ Qstar:     0.0037
+tot_no_frags:     20
+COLLISION TYPE: EFFECTIVELY MERGED
+N_tot=  186       t=  100000.000000  dt=  0.001063  cpu=  386.152240 [s]  Walltime(s) = 50436.206505 

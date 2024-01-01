@@ -33,7 +33,7 @@ for no in file_range:
         final_masses.append(obj[1]*mass_conversion)
         final_cmfs.append(obj[2])
 
-
+plt.rcParams['axes.axisbelow'] = True # Makes sure grid is behind points
 
 fig1, ax1 = plt.subplots(figsize=(6,5))
 ax1.scatter(final_masses, final_cmfs, s=5.0, color = 'black')
@@ -46,7 +46,7 @@ plt.xscale('log')
 ax1.set_ylim([-0.01, 1.1])
 plt.yticks(np.arange(0, 1.1, .1))
 ax1.minorticks_on()
-plt.grid()
+ax1.grid(alpha=0.7)
 plt.legend()
 
 plt.savefig("graphs/fig4.pdf", bbox_inches='tight', pad_inches=0.01)

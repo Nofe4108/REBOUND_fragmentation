@@ -20,8 +20,8 @@ from Differentiated_Body_Composition_Tracker_for_Paper import write_output
 
 start_time = time.time() #Timer to see how long running this code takes
 
-min_core_frac = 0.0 #mimimum fraction of core material in ejecta
-max_core_frac = 0.0 #maximum fraction of core material in ejecta
+min_ejecta_cmf = 0.0 #mimimum fraction of core material in ejecta
+max_ejecta_cmf = 0.0 #maximum fraction of core material in ejecta
 
 collision_file_pw = "new_collision_reports/new_collision_report"
 composition_input_file_pw = "DBCT_input/3step_DBCT_input"
@@ -40,7 +40,7 @@ for i in file_range:
     ejection_file = ejection_file_pw + str(i) + ".txt"
     output_file = output_file_pw + str(i) + ".txt"
 
-    write_output(track_composition(collision_file, composition_input_file, ejection_file, impact_parameter_file, min_core_frac, max_core_frac), output_file)
+    write_output(track_composition(collision_file, composition_input_file, ejection_file, impact_parameter_file, min_ejecta_cmf, max_ejecta_cmf), output_file)
     
     
     

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Created on Wed Dec 27 13:19:27 2023
 
@@ -8,17 +7,17 @@ Created on Wed Dec 27 13:19:27 2023
 import numpy as np
 import time
 import sys
+from astropy import units as u
 
-start_time = time.time() #Timer to see how long running this code takes
+start_time = time.time() # Timer to see how long running this code takes
 
-# Conversions
-distance_conversion = 1.49597870691e11 #m to au
-mass_conversion = 1.9885e30 #kg to Msun
-time_conversion = 31557600 #sec to yrs
+# Units
+kg_per_m_cubed = u.kg/u.m**3
+Msun_per_au_cubed = u.Msun/u.au**3
 
 # Densities
-core_density = 7874.0*(distance_conversion**3/mass_conversion) #kg m^-3 - density of iron
-mantle_density = 3000.0*(distance_conversion**3/mass_conversion) #kg m^3 -  density of mantle material
+core_density = ((7874.0*kg_per_m_cubed).to(Msun_per_au_cubed)) # Density of iron
+mantle_density = ((3000.0*kg_per_m_cubed).to(Msun_per_au_cubed)) # Density of mantle material
 
 def organize_compositions(init_compositions):
     """Data organizing function
@@ -114,7 +113,7 @@ def calc_ejecta_core_mantle_masses(targ_mass, lr_mass, obj_mass, obj_radius, obj
     Parameters:
     targ_mass (float) -- Mass of the target
     lr_mass (float) -- Mass of the largest remnant
-    obj_mass (float) -- Radius of the stripped object in collision
+    obj_mass (float) -- Mass of the stripped object in collision
     obj_radius (float) -- Radius of the stripped object in collision
     obj_cmf (float) -- Core mass fraction of stripped object
     ejecta_cmf (float) -- the ideal CMF of the collision ejecta
@@ -196,22 +195,19 @@ def track_composition(collision_report_file, composition_input_file, ejection_fi
         frag_hashes = [int(collision[j*2+6]) for j in range(1,no_frags+1)]
         frag_masses = [float(collision[j*2+7]) for j in range(1,no_frags+1)]
 
-        # Determines if object collided with something not in the compositions list (Star, Jupiter, etc.)
-        # If so, just destroys projectile and moves to the next collision
-        # If fragments created, adds those to compositions list with CMF of 0.3
-        #FIXME: Check to make sure this doesn't break anything
+        # Determines if the projectile collided with something not in the compositions list (Star, Jupiter, etc.)
         big_obj_collision_flag = 1
-        for j in range(len(compositions)):
-            if target_hash == compositions[j][0]:
+        for obj in compositions:
+            if target_hash == obj[0]:
                 big_obj_collision_flag += -1
                 break
         if big_obj_collision_flag == 1:
-            destroyed_object_hashes.append(proj_hash)
-            if no_frags != 0:
-                for k in range(no_frags):
-                     frag_data = [frag_hashes[k], frag_masses[k], 0.3]
+            destroyed_object_hashes.append(proj_hash) # Projectile is always considered destroyed in this type of collision
+            if no_frags != 0: # If fragments created, adds those to compositions list with CMF of 0.3
+                for j in range(no_frags):
+                     frag_data = [frag_hashes[j], frag_masses[j], 0.3]
                      compositions.append(frag_data) 
-            continue   
+            continue # Moves to the next collision
         
         targ_idx = [idx for idx in range(len(compositions)) if int(compositions[idx][0])==target_hash][0] # Index of target in the compositions list
         proj_idx = [idx for idx in range(len(compositions)) if int(compositions[idx][0])==proj_hash][0] # Index of projectile in the compositions list

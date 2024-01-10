@@ -1,9 +1,4 @@
-# -*- coding: utf-8 -*-
 """
-Created on Sat Dec 30 12:04:20 2023
-
-@author: nferi
-
 Produces Figures 11 and 12 from Ferich et al. (IN PREP).
 The plots focus on planets produced by each REBOUND simulation,
 which are objects that have a mass greater than 0.093 Mearth
@@ -12,20 +7,15 @@ which are objects that have a mass greater than 0.093 Mearth
 import numpy as np
 import time
 import matplotlib.pyplot as plt
-from matplotlib.lines import Line2D
-import decimal
-from Differentiated_Body_Composition_Tracker_for_Paper import organize_compositions
-from Differentiated_Body_Composition_Tracker_for_Paper import calc_core_radius
-from Differentiated_Body_Composition_Tracker_for_Paper import calc_radius
-from Differentiated_Body_Composition_Tracker_for_Paper import calc_ejecta_core_frac
-from Differentiated_Body_Composition_Tracker_for_Paper import calc_ejecta_core_mantle_masses
+from astropy import units as u
 from Differentiated_Body_Composition_Tracker_for_Paper import track_composition
-from Differentiated_Body_Composition_Tracker_for_Paper import write_output
-
-mass_conversion = 334672.021419 # Msun to Mearth
 
 start_time = time.time() #Timer to see how long running this code takes
 
+# Constants
+mass_conversion = ((1.0*u.Msun).to(u.Mearth)).value # Number that converts Msun to Mearth
+
+# File Pathways
 collision_file_pw = "new_collision_reports/new_collision_report"
 composition_input_file_pw = "DBCT_input/uni_DBCT_input"
 impact_parameter_file_pw = "impact_parameters/impact_parameters"
@@ -33,7 +23,6 @@ ejection_file_pw = "ejections/ejections"
 output_file_pw = "DBCT_output/uni_DBCT_output"
 
 file_range = np.arange(1,51,1) # Number of simulations the code produces data for
-
 
 ########### DATA COLLECTION AND PLOTTING FOR FIGURE 1 ##################
 

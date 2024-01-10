@@ -8,15 +8,17 @@ Produces Figure 9 and 10 from Ferich et al. (IN PREP).
 Also produces the data inputted into Table 1
 """
 
-import matplotlib as matplotlib
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from scipy import stats
+from astropy import units as u
 from Differentiated_Body_Composition_Tracker_for_Paper import organize_compositions
 
-mass_conversion = 334672.021419 # Msun to Mearth
+# Constants
+mass_conversion = ((1.0*u.Msun).to(u.Mearth)).value # Number that converts Msun to Mearth
 ef_colors = ['tab:blue', 'tab:orange', 'tab:green', 'tab:purple', 'tab:red'] # Colors that represent each expansion factor from sim: blue-3, orange-5, green-7, purple-10, red-15
+
 ############ DATA COLLECTION #################
 
 #Lists that will be used to produce final plot - bp stands for Big Planet - ef stands for expansion factor

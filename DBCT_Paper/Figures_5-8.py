@@ -1,16 +1,11 @@
-# -*- coding: utf-8 -*-
 """
-Created on Thu Dec 28 16:09:35 2023
-
-@author: nferi
-
 Produces plots 5 through 8 in Ferich et al. (IN PREP). The code pulls 
-a lot of data from the DBCT while it's running
+data from the DBCT while it's running
 """
-import matplotlib as matplotlib
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
+from astropy import units as u
 import time
 import sys
 
@@ -29,16 +24,17 @@ dc_ideal_ejecta_CMF = []
 dc_actual_ejecta_CMF = []
 dc_collision_types = [] # Blue is accretive, orange is erosive
 
-# Conversions
-distance_conversion = 1.49597870691e11 #m to au
-mass_conversion = 1.9885e30 #kg to Msun
-time_conversion = 31557600 #sec to yrs
-obj_mass_conversion = 334672.021419 #Msun to Me
+# Constants
 G = 39.478 #Gravitational Constant in AU/YR/Msun
+mass_conversion = ((1.0*u.Msun).to(u.Mearth)).value # Number that converts Msun to Mearth
+
+# Units
+kg_per_m_cubed = u.kg/u.m**3
+Msun_per_au_cubed = u.Msun/u.au**3
 
 # Densities
-core_density = 7874.0*(distance_conversion**3/mass_conversion) #kg m^-3 - density of iron
-mantle_density = 3000.0*(distance_conversion**3/mass_conversion) #kg m^3 -  density of mantle material
+core_density = ((7874.0*kg_per_m_cubed).to(Msun_per_au_cubed)) # Density of iron
+mantle_density = ((3000.0*kg_per_m_cubed).to(Msun_per_au_cubed)) # Density of mantle material
 
 def organize_compositions(init_compositions):
     """Data organizing function
@@ -274,11 +270,11 @@ def track_composition(collision_report_file, composition_input_file, ejection_fi
             # Collects impact data for Disruptive Collisions
             if target_mass != largest_remnant_mass and sum(frag_masses) != proj_mass:
                 dc_v_over_vesc.append(float(collision_velocities[i]))
-                dc_target_masses.append(target_mass*obj_mass_conversion)
-                dc_proj_masses.append(proj_mass*obj_mass_conversion)
-                dc_lr_masses.append(largest_remnant_mass*obj_mass_conversion)
+                dc_target_masses.append(target_mass*mass_conversion)
+                dc_proj_masses.append(proj_mass*mass_conversion)
+                dc_lr_masses.append(largest_remnant_mass*mass_conversion)
                 dc_target_cmfs.append(target_core_frac)
-                dc_fragment_masses.append([frag_masses[j]*obj_mass_conversion for j in range(len(frag_masses))])
+                dc_fragment_masses.append([frag_masses[j]*mass_conversion for j in range(len(frag_masses))])
                 dc_B_over_Rtarg.append(impact_parameter/target_radius)
                 dc_ideal_ejecta_CMF.append(ejecta_core_frac)
             
@@ -397,7 +393,6 @@ def track_composition(collision_report_file, composition_input_file, ejection_fi
          
     return(compositions)
 
-
 ######### DATA COLLECTION #################
 
 min_cmf = 0.0 #mimimum fraction of core material in ejecta
@@ -420,10 +415,10 @@ for i in file_range:
     final_composition = track_composition(collision_file, composition_input_file, ejec_file, impacter_param_file, velo_file, min_cmf, max_cmf) 
 
 # This sequence is used to calculate the impact velocity in km/sec
-total_radius = [calc_radius(dc_target_masses[i]/obj_mass_conversion, 0, mantle_density, 0)+calc_radius(dc_proj_masses[i]/obj_mass_conversion, 0, mantle_density, 0) for i in range(len(dc_target_masses))] #supposed to have units of au
-total_mass = [(dc_target_masses[i]+dc_proj_masses[i])/obj_mass_conversion for i in range(len(dc_target_masses))]    
+total_radius = [calc_radius(dc_target_masses[i]/mass_conversion, 0, mantle_density, 0)+calc_radius(dc_proj_masses[i]/mass_conversion, 0, mantle_density, 0) for i in range(len(dc_target_masses))] #supposed to have units of au
+total_mass = [(dc_target_masses[i]+dc_proj_masses[i])/mass_conversion for i in range(len(dc_target_masses))]    
 v_esc_au_yr = [np.sqrt(2*G*total_mass[i]/total_radius[i]) for i in range(len(dc_target_masses))]
-v_esc = [v_esc_au_yr[i]*distance_conversion/(time_conversion*1000) for i in range(len(dc_target_masses))] #should be km/s
+v_esc = [v_esc_au_yr[i]*(u.au/u.yr).to(u.km/u.s) for i in range(len(dc_target_masses))] # Should be km/s
 v_impact = [dc_v_over_vesc[i]*v_esc[i] for i in range(len(dc_target_masses))]
 
 ######### PLOTTING ##################
@@ -463,7 +458,6 @@ plt.yscale("log")
 ax2.axvline(.093, label='Embryo Mass', color='tab:red', linestyle='--', alpha=0.4, zorder=1)
 ax2.axvline(.0093, label = 'Planetesimal Mass', color = 'tab:green', linestyle = '--', alpha=0.4, zorder=1)
 ax2.axvline(0.00465, label = 'Minimum Fragment Mass', color = 'tab:purple', linestyle = '--', alpha=0.4, zorder=1)
-#ax2.set_ylim([1.0,250])
 ax2.set_ylim([0.95,105.1])
 ax2_legend_elements_1 = [Line2D([], [], color='tab:red', linestyle='--',label='Embryo Mass', alpha=0.4),
                       Line2D([], [], color='tab:green', linestyle='--', label='Planetesimal Mass', alpha=0.4),
@@ -515,3 +509,5 @@ legend = plt.legend(handles=ax4_legend_elements, loc = 'upper right', framealpha
 plt.savefig("graphs/fig8.pdf", bbox_inches='tight', pad_inches=0.01)
 plt.savefig('graphs/fig8.eps', bbox_inches='tight', pad_inches=0.01)
 plt.savefig('graphs/fig8.png', bbox_inches='tight', dpi=300)
+
+print("--- %s seconds ---" % (time.time() - start_time))

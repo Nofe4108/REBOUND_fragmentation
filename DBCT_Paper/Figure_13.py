@@ -1,19 +1,12 @@
-# -*- coding: utf-8 -*-
 """
-Created on Sun Dec 31 16:05:28 2023
-
-@author: nferi
-
 Produces Figure 13 from Ferich et al. (IN PREP)
-Need a new version of the Organize Compositions 
-functions to extract the data
+Needs another version of the Organize Compositions 
+function to extract the data
 """
 
-import matplotlib as matplotlib
-import numpy as np
 import matplotlib.pyplot as plt
 import cmasher as cmr
-from Differentiated_Body_Composition_Tracker_for_Paper import organize_compositions
+from astropy import units as u
 
 def organize_compositions(init_compositions):
     """Data organizing function
@@ -39,49 +32,49 @@ def organize_compositions(init_compositions):
         compositions.append(particle_data) #add all the data about the particle to the compositions list
     return(compositions)
 
+# Constants
+mass_conversion = ((1.0*u.Msun).to(u.Mearth)).value # Number that converts Msun to Mearth
+mass_expansion_factor = 1200 # Artificially inflates a particle's mass for graphing
+distribution_list = ['3step', 'lin', 'exp'] #Used to create full pathways to input files
+
+# Lists used for grqphing
+initial_masses = []
+initial_cmfs = []
+initial_sa = []
+initial_e = []
+
+# File pathways
 composition_input_file1 = "DBCT_input/3step_DBCT_input.txt"
 composition_input_file2 = "DBCT_input/lin_DBCT_input.txt"
 composition_input_file3 = "DBCT_input/exp_DBCT_input.txt"
+DBCT_input_file_pw = "DBCT_input/"
+DBCT_input_file_name = "_DBCT_input"
 
-mass_conversion = 334672.021419 # Msun to Mearth
+for distr in distribution_list:
+    composition_input_file = DBCT_input_file_pw + distr + DBCT_input_file_name + ".txt"
+    f = open(composition_input_file, 'r')
+    raw_compositions = [line.split() for line in f.readlines()] #reads each line in file and splits its value into an array (hash - mass - composition fractions) (all values are strings)
+    init_compositions = organize_compositions(raw_compositions) #organzies the data from the file
+    init_masses = [obj[1]*mass_conversion*mass_expansion_factor for obj in init_compositions]
+    init_cmfs = [obj[2] for obj in init_compositions]
+    init_sa = [obj[3] for obj in init_compositions]
+    init_e = [obj[4] for obj in init_compositions]
+    initial_masses.append(init_masses)
+    initial_cmfs.append(init_cmfs)
+    initial_sa.append(init_sa)
+    initial_e.append(init_e)
+    f.close()
 
-f = open(composition_input_file1, 'r')
-init_compositions1 = [line.split() for line in f.readlines()] #reads each line in file and splits its value into an array (hash - mass - composition fractions) (all values are strings)
-original_compositions1 = organize_compositions(init_compositions1) #organzies the data from the file
-original_masses1 = [original_compositions1[i][1]*334672.021419*1200 for i in range(len(original_compositions1))]
-original_core_fracs1 = [original_compositions1[i][2] for i in range(len(original_compositions1))]
-original_a1 = [original_compositions1[i][3] for i in range(len(original_compositions1))]
-original_e1 = [original_compositions1[i][4] for i in range(len(original_compositions1))]
-f.close()
-
-f = open(composition_input_file2, 'r')
-init_compositions2 = [line.split() for line in f.readlines()] #reads each line in file and splits its value into an array (hash - mass - composition fractions) (all values are strings)
-original_compositions2 = organize_compositions(init_compositions2) #organzies the data from the file
-original_masses2 = [original_compositions2[i][1]*334672.021419*1200 for i in range(len(original_compositions2))]
-original_core_fracs2 = [original_compositions2[i][2] for i in range(len(original_compositions2))]
-original_a2 = [original_compositions2[i][3] for i in range(len(original_compositions2))]
-original_e2 = [original_compositions2[i][4] for i in range(len(original_compositions2))]
-f.close()
-
-f = open(composition_input_file3, 'r')
-init_compositions3 = [line.split() for line in f.readlines()] #reads each line in file and splits its value into an array (hash - mass - composition fractions) (all values are strings)
-original_compositions3 = organize_compositions(init_compositions3) #organzies the data from the file
-original_masses3 = [original_compositions3[i][1]*334672.021419*1200 for i in range(len(original_compositions3))]
-original_core_fracs3 = [original_compositions3[i][2] for i in range(len(original_compositions3))]
-original_a3 = [original_compositions3[i][3] for i in range(len(original_compositions3))]
-original_e3 = [original_compositions3[i][4] for i in range(len(original_compositions3))]
-f.close()
-
-min_frac_init = min(original_core_fracs3)
-max_frac_init = max(original_core_fracs3)
+min_initial_cmf = min(initial_cmfs[2]) # Found in the exponential distriubtion
+max_initial_cmf = max(initial_cmfs[2]) # Found in the exponential distriubtion
 
 # Figure 13
 color_map = cmr.sapphire_r
 fig1, (ax1, ax2, ax3) = plt.subplots(nrows=1, ncols=3, sharex=True, sharey=True, gridspec_kw={'width_ratios': [10, 10, 10.5]}, figsize=(10,5))
 fig1.subplots_adjust(wspace=0)
-p1 = ax1.scatter(original_a1, original_e1, marker='o', s=original_masses1, c=original_core_fracs1, cmap=color_map, vmin=min_frac_init, vmax=max_frac_init+.01)
-p2 = ax2.scatter(original_a2, original_e2, marker='o', s=original_masses2, c=original_core_fracs2, cmap=color_map, vmin=min_frac_init, vmax=max_frac_init+.01)
-p3 = ax3.scatter(original_a3, original_e3, marker='o', s=original_masses3, c=original_core_fracs3, cmap=color_map, vmin=min_frac_init, vmax=max_frac_init+.01)
+p1 = ax1.scatter(initial_sa[0], initial_e[0], marker='o', s=initial_masses[0], c=initial_cmfs[0], cmap=color_map, vmin=min_initial_cmf, vmax=max_initial_cmf+.01)
+p2 = ax2.scatter(initial_sa[1], initial_e[1], marker='o', s=initial_masses[1], c=initial_cmfs[1], cmap=color_map, vmin=min_initial_cmf, vmax=max_initial_cmf+.01)
+p3 = ax3.scatter(initial_sa[2], initial_e[2], marker='o', s=initial_masses[2], c=initial_cmfs[2], cmap=color_map, vmin=min_initial_cmf, vmax=max_initial_cmf+.01)
 ax1.minorticks_on()
 ax1.set_title('a)', fontsize='x-large')
 ax2.set_title('b)', fontsize='x-large')
@@ -96,6 +89,3 @@ cbar.minorticks_on()
 plt.savefig("graphs/fig13.pdf", bbox_inches='tight', pad_inches=0.01)
 plt.savefig('graphs/fig13.eps', bbox_inches='tight', pad_inches=0.01)
 plt.savefig('graphs/fig13.png', bbox_inches='tight', dpi=300)
-
-
-

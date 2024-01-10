@@ -10,30 +10,24 @@ objects in the disc"""
 
 import numpy as np
 import time
-from Differentiated_Body_Composition_Tracker_for_Paper import organize_compositions
-from Differentiated_Body_Composition_Tracker_for_Paper import calc_core_radius
-from Differentiated_Body_Composition_Tracker_for_Paper import calc_radius
-from Differentiated_Body_Composition_Tracker_for_Paper import calc_ejecta_core_frac
-from Differentiated_Body_Composition_Tracker_for_Paper import calc_ejecta_core_mantle_masses
 from Differentiated_Body_Composition_Tracker_for_Paper import track_composition
 from Differentiated_Body_Composition_Tracker_for_Paper import write_output
 
 start_time = time.time() #Timer to see how long running this code takes
 
 min_ejecta_cmf = 0.0 #mimimum fraction of core material in ejecta
-max_ejecta_cmf = 0.0 #maximum fraction of core material in ejecta
+max_ejecta_cmf = 1.0 #maximum fraction of core material in ejecta
 
 collision_file_pw = "new_collision_reports/new_collision_report"
-composition_input_file_pw = "DBCT_input/3step_DBCT_input"
+composition_input_file_pw = "DBCT_input/uni_DBCT_input"
 impact_parameter_file_pw = "impact_parameters/impact_parameters"
 ejection_file_pw = "ejections/ejections"
-output_file_pw = "DBCT_output/3step_DBCT_output"
+output_file_pw = "DBCT_output/uni_DBCT_output"
 
 file_range = np.arange(1,51,1) # Number of simulations the code produces data for
 
 for i in file_range:
     print(i)
-
     collision_file = collision_file_pw + str(i) + ".txt"
     composition_input_file = composition_input_file_pw + ".txt"
     impact_parameter_file = impact_parameter_file_pw + str(i) + ".txt"

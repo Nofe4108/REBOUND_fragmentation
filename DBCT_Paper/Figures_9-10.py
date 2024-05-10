@@ -52,9 +52,7 @@ for no in file_range:
             efs.append('tab:purple')
         elif 41 <= no < 51:
             efs.append('tab:red')
-
-
-        
+    
 # Extracts masses and compositional data for planets produced by REBOUND simulations
 for i in range(len(final_masses)):
     if final_masses[i] >= 0.093:
@@ -68,7 +66,7 @@ for i in range(len(final_masses)):
     
 plt.rcParams['axes.axisbelow'] = True # Makes sure grid is behind points
 
-# Figure 9
+"""# Figure 9
 fig1, ax1 = plt.subplots(figsize=(6,5))
 n_bins = np.linspace(.25, .36, num=22, endpoint=False)
 #n_bins = np.linspace(.05, .55, num=50, endpoint=False)
@@ -90,10 +88,10 @@ legend = plt.legend(handles=ax4_legend_elements, loc = 'upper right', framealpha
 plt.gca().add_artist(legend)
 plt.savefig("graphs/fig9.pdf", bbox_inches='tight', pad_inches=0.01)
 plt.savefig('graphs/fig9.eps', bbox_inches='tight', pad_inches=0.01)
-plt.savefig('graphs/fig9.png', bbox_inches='tight', dpi=300)
+plt.savefig('graphs/fig9.png', bbox_inches='tight', dpi=300)"""
     
 # Figure 10
-n_bins = np.linspace(.25, .36, num=132, endpoint=False)
+n_bins = np.linspace(.25, .36, num=4224, endpoint=False)
 fig2, ax2 = plt.subplots(figsize=(6,5))
 for i in range(len(bp_final_cmfs)):
     ax2.hist(bp_final_cmfs[i], bins=n_bins, density='True', histtype='step', lw=1.8, color=ef_colors[i], alpha = 0.7, cumulative='True')
@@ -101,19 +99,29 @@ ax2.set_xlabel('CMF',fontsize='large')
 ax2.set_ylabel('Probability of Occurrence', fontsize='large')
 ax2.grid(alpha=0.7)
 ax2.minorticks_on()
-ax2.set_xlim([0.25, 0.358])
+ax2.set_xlim([0.275, 0.358])
 ax2.set_ylim([-0.01, 1.05])
 ax2_legend_elements = [mpatches.Rectangle((0,0), width=0.1, height=0.1, edgecolor='tab:blue', facecolor='tab:blue', label='ef=3'),
                        mpatches.Rectangle((0,0), width=0.1, height=0.1, edgecolor='tab:orange', facecolor='tab:orange', label='ef=5'),
                        mpatches.Rectangle((0,0), width=0.1, height=0.1, edgecolor='tab:green', facecolor='tab:green', label='ef=7'),
                        mpatches.Rectangle((0,0), width=0.1, height=0.1, edgecolor='tab:purple', facecolor='tab:purple', label='ef=10'),
                        mpatches.Rectangle((0,0), width=0.1, height=0.1, edgecolor='tab:red', facecolor='tab:red', label='ef=15')]
-legend = plt.legend(handles=ax2_legend_elements, loc = 'upper left', framealpha = .7)
+legend = plt.legend(handles=ax2_legend_elements, loc = 'lower right', framealpha = .7)
 plt.gca().add_artist(legend)
-plt.savefig("graphs/fig10.pdf", bbox_inches='tight', pad_inches=0.01)
-plt.savefig('graphs/fig10.eps', bbox_inches='tight', pad_inches=0.01)
-plt.savefig('graphs/fig10.png', bbox_inches='tight', dpi=300)
-    
+plt.savefig("graphs/expansion_factor_CMF_CDF.pdf", bbox_inches='tight', pad_inches=0.01)
+plt.savefig('graphs/expansion_factor_CMF_CDF.eps', bbox_inches='tight', pad_inches=0.01)
+plt.savefig('graphs/expansion_factor_CMF_CDF.png', bbox_inches='tight', dpi=300)
+  
+# Stats for Caption
+for i, cmf in enumerate(bp_final_cmfs[0]):
+    if cmf < 0.1:
+        bp_final_cmfs[0].pop(i)
+averages = [np.average(final_cmfs) for final_cmfs in bp_final_cmfs]
+sds = [np.std(final_cmfs) for final_cmfs in bp_final_cmfs]
+print(averages)
+print(sds)
+
+  
 # Table 1
 statistics = []
 p_values = []
@@ -126,8 +134,6 @@ for i in(range(len(bp_final_cmfs))):
         p_val.append(test_result.pvalue)
     statistics.append(stat)
     p_values.append(p_val)
-print(statistics)
-print(p_values)
 
 ef_values = ['3', '5', '7', '10', '15']
 print("Expansion Factor KS Test Results:")
@@ -135,3 +141,5 @@ for i in range(len(p_values)):
     for j in range(len(p_values[i])):
         if i < j:
             print("P-value between", ef_values[i], "and", ef_values[j]+': ', str(p_values[i][j]))
+            
+# Averages and STD Cmfs

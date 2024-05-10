@@ -2,6 +2,7 @@
 Produces plots 5 through 8 in Ferich et al. (IN PREP). The code pulls 
 data from the DBCT while it's running
 """
+
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
@@ -398,6 +399,7 @@ def track_composition(collision_report_file, composition_input_file, ejection_fi
 min_cmf = 0.0 #mimimum fraction of core material in ejecta
 max_cmf = 1.0 #maximum fraction of core material in ejecta
 
+# File pathways
 collision_file_pw = "new_collision_reports/new_collision_report"
 composition_input_file_pw = "DBCT_input/uni_DBCT_input"
 impacter_param_file_pw = "impact_parameters/impact_parameters"
@@ -461,18 +463,20 @@ ax2.axvline(0.00465, label = 'Minimum Fragment Mass', color = 'tab:purple', line
 ax2.set_ylim([0.95,105.1])
 ax2_legend_elements_1 = [Line2D([], [], color='tab:red', linestyle='--',label='Embryo Mass', alpha=0.4),
                       Line2D([], [], color='tab:green', linestyle='--', label='Planetesimal Mass', alpha=0.4),
-                      Line2D([], [], color='tab:purple', linestyle='--', label='Minimum Fragment Mass', alpha=0.4)] 
-ax2_legend_elements_2 = [Line2D([], [], color='tab:blue', marker='o', lw=0.0, label='Accretive Collision', markerfacecolor='tab:blue', markersize=10.0),
-                      Line2D([], [], color='tab:orange', marker='o', lw=0.0, label='Erosive Collision', markerfacecolor='tab:orange', markersize=10.0)] 
-legend2_1 = plt.legend(handles=ax2_legend_elements_1, loc='upper right', framealpha=0.7)
-Legend2_2 = plt.legend(handles=ax2_legend_elements_2, loc = 'upper right', framealpha = 0.7)
+                      Line2D([], [], color='tab:purple', linestyle='--', label='Minimum Fragment Mass', alpha=0.4),
+                      Line2D([], [], color='tab:blue', marker='o', lw=0.0, label='Accretive Collision', markerfacecolor='tab:blue', markersize=7.0),
+                      Line2D([], [], color='tab:orange', marker='o', lw=0.0, label='Erosive Collision', markerfacecolor='tab:orange', markersize=7.0)] 
+"""ax2_legend_elements_2 = [Line2D([], [], color='tab:blue', marker='o', lw=0.0, label='Accretive Collision', markerfacecolor='tab:blue', markersize=10.0),
+                      Line2D([], [], color='tab:orange', marker='o', lw=0.0, label='Erosive Collision', markerfacecolor='tab:orange', markersize=10.0)] """
+legend2_1 = plt.legend(handles=ax2_legend_elements_1, loc='upper right', framealpha=0.7, fontsize=8.0)
+#Legend2_2 = plt.legend(handles=ax2_legend_elements_2, loc = 'upper left', framealpha = 0.7, fontsize=8.0)
 plt.gca().add_artist(legend2_1)
-plt.gca().add_artist(Legend2_2)
+#plt.gca().add_artist(Legend2_2)
 plt.savefig("graphs/fig6.pdf", bbox_inches='tight', pad_inches=0.01)
 plt.savefig('graphs/fig6.eps', bbox_inches='tight', pad_inches=0.01)
 plt.savefig('graphs/fig6.png', bbox_inches='tight', dpi=300)
 
-#Figure 7
+"""# Figure 7
 fig3, (ax3_1, ax3_2) = plt.subplots(nrows=2, ncols=1, sharex=True, sharey=True, figsize=(6,10))
 fig3.subplots_adjust(hspace=0.03)
 ax3_1.scatter(dc_v_over_vesc, dc_ideal_ejecta_CMF, c=dc_collision_types, s=5.0, marker='o', linewidths=0, alpha=0.7)
@@ -487,14 +491,14 @@ ax3_2.set_ylabel('Actual Ejecta CMF', fontsize='large')
 plt.xscale("log")
 ax3_2.set_xlim([0.95, 105.1])
 ax3_2.grid(alpha=0.7)
-ax3_2_legend_elements = [Line2D([], [], color='tab:blue', marker='o', lw=0.0, label='accretive collision', markerfacecolor='tab:blue', markersize=5.5),
-                      Line2D([], [], color='tab:orange', marker='o', lw=0.0, label='erosive collision', markerfacecolor='tab:orange', markersize=5.5)] 
+ax3_2_legend_elements = [Line2D([], [], color='tab:blue', marker='o', lw=0.0, label='Accretive collision', markerfacecolor='tab:blue', markersize=5.5),
+                      Line2D([], [], color='tab:orange', marker='o', lw=0.0, label='Erosive collision', markerfacecolor='tab:orange', markersize=5.5)] 
 legend3 = ax3_2.legend(handles=ax3_2_legend_elements, loc = 'upper left', framealpha = 0.4, fontsize=6.5)
 plt.savefig("graphs/fig7.pdf", bbox_inches='tight', pad_inches=0.01)
 plt.savefig('graphs/fig7.eps', bbox_inches='tight', pad_inches=0.01)
 plt.savefig('graphs/fig7.png', bbox_inches='tight', dpi=300)
 
-#Figure 8
+# Figure 8
 fig4, ax4 = plt.subplots(figsize=(6,5))
 ax4.scatter(dc_target_cmfs, dc_lr_cmfs, c=dc_collision_types, s=3.0, marker='o', linewidths=0, alpha=0.6)
 ax4.set_xlabel('Target CMF', fontsize='large')
@@ -510,4 +514,4 @@ plt.savefig("graphs/fig8.pdf", bbox_inches='tight', pad_inches=0.01)
 plt.savefig('graphs/fig8.eps', bbox_inches='tight', pad_inches=0.01)
 plt.savefig('graphs/fig8.png', bbox_inches='tight', dpi=300)
 
-print("--- %s seconds ---" % (time.time() - start_time))
+print("--- %s seconds ---" % (time.time() - start_time))"""

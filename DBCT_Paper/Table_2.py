@@ -63,3 +63,11 @@ final_extreme_cmf_means = [np.mean(distr_extreme_cmfs[i]) for distr_extreme_cmfs
 print(final_cmf_sds)
 print(final_extreme_mass_means)
 print(final_cmf_medians)
+
+"""planets_above_cutoff = [[] for i in range(len(final_masses))]
+for i, distr in distribution_list:
+    for j, obj_mass in enumerate(bp_masses[i]):
+        if obj_mass > final"""
+        
+   
+    

@@ -56,7 +56,7 @@ for no in file_range:
     f = open(ejection_file, 'r')
     ejection_raw = [line.split() for line in f.readlines()]
     ejection_hashes = [int(ejec[2]) for ejec in ejection_raw]
-    print(len(ejection_hashes))
+    #print(len(ejection_hashes))
     ejection_masses = [float(ejec[3])*mass_conversion for ejec in ejection_raw]
     f.close()
     
@@ -76,7 +76,7 @@ for no in file_range:
             if ejec_hsh == init_hsh: # Checks to see if the object was in the initial disc
                 for k, collision_type in enumerate(collision_types):
                     if collision_type == 1 or collision_type == 2 or collision_type == 3 or collision_type == 4:
-                        if ejec_hsh == targ_hashes[k] or ejec_hsh == proj_hashes[k]: # Checks if an object was the target or projectil of composition changing collision
+                        if ejec_hsh == targ_hashes[k] or ejec_hsh == proj_hashes[k]: # Checks if an object was the target or projectile of composition-changing collision
                             dc_flag += 1
                             break
                 if dc_flag == 0:
@@ -90,8 +90,7 @@ for no in file_range:
         else: # If object is an embryo
             nd_ejection_masses[1].append("tab:orange")
             nd_ejection_sa[1].append(nd_ejec_sa[i])
-            
-      
+                 
 # Figure 16
 bp_colors = ['tab:blue', 'tab:orange']
 hist_type = 'barstacked'
